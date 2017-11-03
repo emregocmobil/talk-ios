@@ -64,4 +64,6 @@ platform :ios, '9.0'
 pod 'AFNetworking', '~> 2.5'
 pod 'DateTools'
 pod 'GoogleWebRTC'
+pod 'Firebase/Core'
+pod 'Firebase/Messaging'
 end
