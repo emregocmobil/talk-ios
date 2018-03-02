@@ -66,6 +66,7 @@ target "VideoCalls" do
 pod 'AFNetworking', '~> 3.0'
 pod 'DateTools'
 pod 'GoogleWebRTC'
+pod 'JDStatusBarNotification'
 pod 'Firebase/Core'
 pod 'Firebase/Messaging'
 end
