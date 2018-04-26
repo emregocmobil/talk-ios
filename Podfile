@@ -63,12 +63,13 @@ target "VideoCalls" do
 platform :ios, '9.0'
 
 target "VideoCalls" do
-pod 'AFNetworking', '~> 3.0'
+pod 'AFNetworking', "3.1.0"
 pod 'DateTools'
-pod 'GoogleWebRTC'
+pod 'GoogleWebRTC', "1.1.20266"
 pod 'JDStatusBarNotification'
 pod 'Firebase/Core'
 pod 'Firebase/Messaging'
+pod 'SlackTextViewController'
 end
 
 target "NotificationServiceExtension" do
