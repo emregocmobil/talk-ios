@@ -69,5 +69,6 @@ pod 'GoogleWebRTC', "1.1.20266"
 pod 'JDStatusBarNotification'
 pod 'SocketRocket'
 pod 'DBImageColorPicker'
+pod 'Realm'
 end
 
