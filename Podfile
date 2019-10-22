@@ -70,5 +70,6 @@ pod 'JDStatusBarNotification'
 pod 'SocketRocket'
 pod 'DBImageColorPicker'
 pod 'Realm'
+pod 'FTPopOverMenu'
 end
 
