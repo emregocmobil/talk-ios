@@ -265,7 +265,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     NSMutableArray *actionsArray = [NSMutableArray new];
     for (TalkAccount *account in [TalkAccount allObjects]) {
         NSString *accountName = [NSString stringWithFormat:@"%@ (%@)", account.userDisplayName, [[NSURL URLWithString:account.server] host]];
-        UIImage *accountImage = [[NCAPIController sharedInstance] userProfileImageForAccount:account];
+        UIImage *accountImage = [[NCAPIController sharedInstance] userProfileImageForAccount:account withSize:CGSizeMake(90, 90)];
         FTPopOverMenuModel *accountModel = [[FTPopOverMenuModel alloc] initWithTitle:accountName image:accountImage selected:NO];
         [menuArray addObject:accountModel];
         [actionsArray addObject:account];
@@ -390,7 +390,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     profileButton.layer.cornerRadius = 15;
     
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    UIImage *profileImage = [[NCAPIController sharedInstance] userProfileImageForAccount:activeAccount];
+    UIImage *profileImage = [[NCAPIController sharedInstance] userProfileImageForAccount:activeAccount withSize:CGSizeMake(90, 90)];
     if (profileImage) {
         [profileButton setImage:profileImage forState:UIControlStateNormal];
     } else {
