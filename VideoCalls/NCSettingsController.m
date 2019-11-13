@@ -47,6 +47,8 @@ NSString * const kNCDeviceIdentifier    = @"ncDeviceIdentifier";
 NSString * const kNCDeviceSignature     = @"ncDeviceSignature";
 NSString * const kNCUserPublicKey       = @"ncUserPublicKey";
 NSString * const kNCUserDefaultBrowser  = @"ncUserDefaultBrowser";
+NSString * const kNCBlockCode           = @"ncBlockCode";
+NSString * const kNCBlockCodeUseSimply  = @"ncBlockCodeUseSimply";
 
 NSString * const kCapabilityChatV2              = @"chat-v2";
 NSString * const kCapabilityMultiRoomUsers      = @"multi-room-users";
@@ -214,6 +216,9 @@ NSString * const NCUserProfileImageUpdatedNotification = @"NCUserProfileImageUpd
     _ncDeviceSignature = [_keychain stringForKey:kNCDeviceSignature];
     _ncUserPublicKey = [_keychain stringForKey:kNCUserPublicKey];
     _defaultBrowser = [_keychain stringForKey:kNCUserDefaultBrowser];
+    
+    _ncBlockCode = [_keychain stringForKey:kNCBlockCode];
+    _ncBlockCodeUseSimply =[_keychain stringForKey:kNCBlockCodeUseSimply];
 }
 
 - (void)cleanUserAndServerStoredValues
