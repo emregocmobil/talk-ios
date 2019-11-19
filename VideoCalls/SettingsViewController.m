@@ -101,6 +101,8 @@ typedef enum AboutSection {
     }
     // Configuration section
     [sections addObject:[NSNumber numberWithInt:kSettingsSectionConfiguration]];
+    // Lock section
+    [sections addObject:[NSNumber numberWithInt:kSettingsSectionLock]];
     // About section
     [sections addObject:[NSNumber numberWithInt:kSettingsSectionAbout]];
 
