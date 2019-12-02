@@ -705,7 +705,6 @@ typedef enum AboutSection {
     viewController.type = BKPasscodeViewControllerCheckPasscodeType;
     viewController.fromType = CCBKPasscodeFromSimply;
     viewController.title = NSLocalizedString(@"Change password type", nil);
-    viewController.inputViewTitlePassword = YES;
     
     if([[NCSettingsController sharedInstance].ncBlockCodeUseSimply isEqualToString:@"true"]){
         
@@ -739,7 +738,6 @@ typedef enum AboutSection {
         viewController.delegate = self;
         viewController.type = BKPasscodeViewControllerNewPasscodeType;
         viewController.fromType = CCBKPasscodeFromSettingsPasscode;
-        viewController.inputViewTitlePassword = YES;
         
         if([[NCSettingsController sharedInstance].ncBlockCodeUseSimply isEqualToString:@"true"]){
 
@@ -773,7 +771,6 @@ typedef enum AboutSection {
         viewController.delegate = self;
         viewController.type = BKPasscodeViewControllerCheckPasscodeType;
         viewController.fromType = CCBKPasscodeFromSettingsPasscode;
-        viewController.inputViewTitlePassword = YES;
 
         if([[NCSettingsController sharedInstance].ncBlockCodeUseSimply isEqualToString:@"true"]){
 

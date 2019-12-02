@@ -70,5 +70,6 @@ pod 'JDStatusBarNotification'
 pod 'SocketRocket'
 pod 'DBImageColorPicker'
 pod 'Realm'
+pod 'BKPasscodeView', '~> 0.1.2'
 end
 
