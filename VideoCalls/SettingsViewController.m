@@ -527,8 +527,9 @@ typedef enum AboutSection {
             [keychain setString:@"true" forKey:@"ncBlockCodeUseSimply"];
             [[NCSettingsController sharedInstance] readValuesFromKeyChain];
         }
+        NSIndexPath *passwordTypeIP = [NSIndexPath indexPathForRow:kLockSectionUseSimply inSection:[self getSectionForSettingsSection:kSettingsSectionLock]];
+        [self.tableView reloadRowsAtIndexPaths:@[passwordTypeIP] withRowAnimation:UITableViewRowAnimationNone];
     }
-    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
