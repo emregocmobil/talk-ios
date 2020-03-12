@@ -409,7 +409,7 @@ NSString * const NCRoomsManagerDidReceiveChatMessagesNotification   = @"ChatMess
 {
     NCChatController *chatController = [_chatControllers objectForKey:room.internalId];
     if (chatController) {
-        [chatController stopReceivingChatMessages];
+        [chatController stopReceivingNewChatMessages];
     } else {
         NSLog(@"Trying to stop receiving message from a room where you are not active.");
     }
