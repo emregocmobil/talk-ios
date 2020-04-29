@@ -72,5 +72,6 @@ pod 'DBImageColorPicker'
 pod 'Realm'
 pod "AFViewShaker", "~> 0.0.5"
 pod 'BKPasscodeView', '~> 0.1.2'
+pod 'MaterialComponents/ActivityIndicator'
 end
 
