@@ -614,9 +614,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NCRoom *room = [_rooms objectAtIndex:indexPath.row];
-
     if (tableView == _resultTableViewController.tableView) {
         room = [_filteredRooms objectAtIndex:indexPath.row];
+        isFilteredTable = YES;
     }
 
     BOOL hasChatPermission = ![[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityChatPermission] || (room.permissions & NCPermissionChat) != 0;
