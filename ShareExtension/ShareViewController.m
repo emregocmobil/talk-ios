@@ -511,8 +511,10 @@
                                       completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
                                           if ([(NSObject *)item isKindOfClass:[NSURL class]]) {
                                               NSLog(@"Shared Image = %@", item);
-                                              UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:(NSURL *)item]];
-                                              [self sendSharedImage:image];
+                                              NSURL *imageURL = (NSURL *)item;
+                                              NSString *imageName = imageURL.lastPathComponent;
+                                              UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:imageURL]];
+                                              [self sendSharedImage:image withName:imageName];
                                           }
                                       }];
             }
