@@ -169,6 +169,14 @@
     
     [self setupShareViewForAccount:nil];
     
+    // Configure communication lib
+    NSString *userToken = [[NCSettingsController sharedInstance] tokenForAccountId:_activeAccount.accountId];
+    NSString *userAgent = [NSString stringWithFormat:@"Mozilla/5.0 (iOS) Nextcloud-Talk v%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+    NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", _activeAccount.accountId];
+    _serverCapabilities = [[ServerCapabilities alloc] initWithValue:[ServerCapabilities objectsWithPredicate:query].firstObject];
+    
+    [[NCCommunicationCommon shared] setupWithAccount:_activeAccount.accountId user:_activeAccount.user userId:_activeAccount.userId password:userToken url:_activeAccount.server userAgent:userAgent capabilitiesGroup:@"group.com.nextcloud.Talk" webDavRoot:_serverCapabilities.webDAVRoot davRoot:nil nextcloudVersion:_serverCapabilities.versionMajor delegate:self];
+    
     // Configure table views
     NSBundle *bundle = [NSBundle bundleForClass:[ShareTableViewCell class]];
     [self.tableView registerNib:[UINib nibWithNibName:kShareTableCellNibName bundle:bundle] forCellReuseIdentifier:kShareCellIdentifier];
