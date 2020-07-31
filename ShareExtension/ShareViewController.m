@@ -504,6 +504,18 @@
                                           }
                                       }];
             }
+            // Check if shared image
+            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage
+                                                options:nil
+                                      completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
+                                          if ([(NSObject *)item isKindOfClass:[NSURL class]]) {
+                                              NSLog(@"Shared Image = %@", item);
+                                              UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:(NSURL *)item]];
+                                              [self sendSharedImage:image];
+                                          }
+                                      }];
+            }
         }];
     }];
 }
