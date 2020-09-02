@@ -173,9 +173,8 @@
     NSString *userToken = [[NCSettingsController sharedInstance] tokenForAccountId:_activeAccount.accountId];
     NSString *userAgent = [NSString stringWithFormat:@"Mozilla/5.0 (iOS) Nextcloud-Talk v%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", _activeAccount.accountId];
-    _serverCapabilities = [[ServerCapabilities alloc] initWithValue:[ServerCapabilities objectsWithPredicate:query].firstObject];
-    
-    [[NCCommunicationCommon shared] setupWithAccount:_activeAccount.accountId user:_activeAccount.user userId:_activeAccount.userId password:userToken url:_activeAccount.server userAgent:userAgent capabilitiesGroup:@"group.com.nextcloud.Talk" webDavRoot:_serverCapabilities.webDAVRoot davRoot:nil nextcloudVersion:_serverCapabilities.versionMajor delegate:self];
+    ServerCapabilities *managedServerCapabilities = [ServerCapabilities objectsInRealm:realm withPredicate:query].firstObject;
+    _serverCapabilities = [[ServerCapabilities alloc] initWithValue:managedServerCapabilities];
     
     // Configure table views
     NSBundle *bundle = [NSBundle bundleForClass:[ShareTableViewCell class]];
@@ -514,7 +513,9 @@
                                               NSURL *imageURL = (NSURL *)item;
                                               NSString *imageName = imageURL.lastPathComponent;
                                               UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:imageURL]];
-                                              [self sendSharedImage:image withName:imageName];
+                                              shareConfirmationVC.type = ShareConfirmationTypeImage;
+                                              shareConfirmationVC.sharedImageName = imageName;
+                                              shareConfirmationVC.sharedImage = image;
                                           }
                                       }];
             }
