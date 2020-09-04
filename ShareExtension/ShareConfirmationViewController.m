@@ -206,6 +206,8 @@
     if (item) {
         [self.shareItemController removeItem:item];
     }
+    
+    [self startAnimatingSharingIndicator];
 }
 
 - (IBAction)cropItemButtonPressed:(id)sender {
@@ -504,12 +506,14 @@
                     [self->_uploadErrors addObject:error.errorDescription];
                     dispatch_group_leave(self->_uploadGroup);
                 }
+                [self stopAnimatingSharingIndicator];
             }];
         } else {
             self->_uploadFailed = YES;
             [self->_uploadErrors addObject:error.errorDescription];
             dispatch_group_leave(self->_uploadGroup);
         }
+        [self stopAnimatingSharingIndicator];
     }];
 }
 
