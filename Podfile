@@ -75,6 +75,7 @@ pod 'BKPasscodeView', '~> 0.1.2'
 pod 'MaterialComponents/ActivityIndicator'
 pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
+pod 'MBProgressHUD', '~> 1.2.0'
 end
 
 target "NotificationServiceExtension" do
@@ -91,6 +92,7 @@ pod 'BKPasscodeView', '~> 0.1.2'
 pod 'MaterialComponents/ActivityIndicator'
 pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
+pod 'MBProgressHUD', '~> 1.2.0'
 end
 
 target "ShareExtension" do
@@ -107,6 +109,7 @@ pod 'BKPasscodeView', '~> 0.1.2'
 pod 'MaterialComponents/ActivityIndicator'
 pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
+pod 'MBProgressHUD', '~> 1.2.0'
 end
 
 post_install do |installer|
