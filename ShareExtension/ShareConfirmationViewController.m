@@ -187,6 +187,11 @@
     [self.delegate shareConfirmationViewControllerDidFinish:self];
 }
 
+- (void)cancelButtonPressed
+{
+    [self.delegate shareConfirmationViewControllerDidFinish:self];
+}
+
 - (void)sendButtonPressed
 {
     if (_type == ShareConfirmationTypeText) {
@@ -371,6 +376,11 @@
         documentPicker.delegate = self;
         [self presentViewController:documentPicker animated:YES completion:nil];
     });
+}
+
+- (void)setIsModal:(BOOL)isModal
+{
+    _isModal = isModal;
 }
 
 #pragma mark - Actions
