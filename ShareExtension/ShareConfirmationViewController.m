@@ -378,6 +378,27 @@
     });
 }
 
+- (void)setSharedFileName:(NSString *)sharedFileName
+{
+    _sharedFileName = sharedFileName;
+    
+    self.shareFileTextView.text = _sharedFileName;
+    self.shareFileTextView.editable = NO;
+}
+
+- (void)setSharedFile:(NSData *)sharedFile
+{
+    _sharedFile = sharedFile;
+    
+    [self.shareFileImageView setImage:[UIImage imageNamed:@"file"]];
+}
+
+- (void)setType:(ShareConfirmationType)type
+{
+    _type = type;
+    [self setUIForShareType:_type];
+}
+
 - (void)setIsModal:(BOOL)isModal
 {
     _isModal = isModal;
@@ -522,6 +543,41 @@
             self->_uploadFailed = YES;
             [self->_uploadErrors addObject:error.errorDescription];
             dispatch_group_leave(self->_uploadGroup);
+        }
+        [self stopAnimatingSharingIndicator];
+    }];
+}
+
+- (void)sendSharedFile
+{
+    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", attachmentsFolder, _sharedFileName];
+    NSString *fileServerURL = [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, filePath];
+    NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    NSURL *fileLocalURL = [[tmpDirURL URLByAppendingPathComponent:@"file"] URLByAppendingPathExtension:@"data"];
+    [_sharedFile writeToFile:[fileLocalURL path] atomically:YES];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeAnnularDeterminate;
+    hud.label.text = @"Uploading file";
+    
+    [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:[fileLocalURL path] dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
+        hud.progress = progress.fractionCompleted;
+    } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSInteger errorCode, NSString *errorDescription) {
+        NSLog(@"Upload completed with error code: %ld", (long)errorCode);
+        [hud hideAnimated:YES];
+        if (errorCode == 0) {
+            [[NCAPIController sharedInstance] shareFileOrFolderForAccount:self->_account atPath:filePath toRoom:self->_room.token withCompletionBlock:^(NSError *error) {
+                if (error) {
+                    [self.delegate shareConfirmationViewControllerDidFailed:self];
+                    NSLog(@"Failed to send shared file");
+                } else {
+                    [self.delegate shareConfirmationViewControllerDidFinish:self];
+                }
+                [self stopAnimatingSharingIndicator];
+            }];
+        } else {
+            [self.delegate shareConfirmationViewControllerDidFailed:self];
         }
         [self stopAnimatingSharingIndicator];
     }];
