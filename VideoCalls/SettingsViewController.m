@@ -49,6 +49,13 @@ typedef enum AboutSection {
     kAboutSectionNumber
 } AboutSection;
 
+@interface SettingsViewController ()
+{
+    NSDictionary *_activeUserStatus;
+}
+
+@end
+
 @implementation SettingsViewController
 
 - (void)viewDidLoad
@@ -137,6 +144,14 @@ typedef enum AboutSection {
 {
     [[NCSettingsController sharedInstance] getUserProfileWithCompletionBlock:^(NSError *error) {
         [self.tableView reloadData];
+    }];
+    
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [[NCAPIController sharedInstance] getUserStatusForAccount:activeAccount withCompletionBlock:^(NSDictionary *userStatus, NSError *error) {
+        if (!error && userStatus) {
+            self->_activeUserStatus = userStatus;
+            [self.tableView reloadData];
+        }
     }];
 }
 
@@ -395,6 +410,7 @@ typedef enum AboutSection {
             NSString *accountServer = [activeAccount.server stringByReplacingOccurrencesOfString:[[NSURL URLWithString:activeAccount.server] scheme] withString:@""];
             cell.serverAddressLabel.text = [accountServer stringByReplacingOccurrencesOfString:@"://" withString:@""];
             [cell.userImageView setImage:[[NCAPIController sharedInstance] userProfileImageForAccount:activeAccount withSize:CGSizeMake(160, 160)]];
+            [cell setUserStatus:[_activeUserStatus objectForKey:@"status"]];
             return cell;
         }
             break;
