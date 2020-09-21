@@ -382,15 +382,19 @@
 {
     _sharedFileName = sharedFileName;
     
-    self.shareFileTextView.text = _sharedFileName;
-    self.shareFileTextView.editable = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.shareFileTextView.text = self->_sharedFileName;
+        self.shareFileTextView.editable = NO;
+    });
 }
 
 - (void)setSharedFile:(NSData *)sharedFile
 {
     _sharedFile = sharedFile;
     
-    [self.shareFileImageView setImage:[UIImage imageNamed:@"file"]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.shareFileImageView setImage:[UIImage imageNamed:@"file"]];
+    });
 }
 
 - (void)setType:(ShareConfirmationType)type
