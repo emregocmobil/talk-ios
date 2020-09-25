@@ -382,24 +382,30 @@
 {
     _sharedFileName = sharedFileName;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.shareFileTextView.text = self->_sharedFileName;
-        self.shareFileTextView.editable = NO;
-    });
-}
-
-- (void)setSharedFile:(NSData *)sharedFile
-{
-    _sharedFile = sharedFile;
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:fileURL]];
+    if (image) {
+        _type = ShareConfirmationTypeImageFile;
+        _sharedImage = image;
+    }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.shareFileImageView setImage:[UIImage imageNamed:@"file"]];
-    });
+    CFStringRef fileExtension = (__bridge CFStringRef)[fileURL pathExtension];
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+    CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    
+    NSString *mimeType = (__bridge NSString *)MIMEType;
+    NSString *imageName = [NCUtils previewImageForFileMIMEType:mimeType];
+    _sharedFileImage = [UIImage imageNamed:imageName];
+    
+    [self setUIForShareType:_type];
 }
 
-- (void)setType:(ShareConfirmationType)type
+- (void)setSharedImage:(UIImage *)image withImageName:(NSString *)imageName
 {
-    _type = type;
+    _sharedImage = image;
+    _sharedImageName = imageName;
+    
+    _type = ShareConfirmationTypeImage;
     [self setUIForShareType:_type];
 }
 
