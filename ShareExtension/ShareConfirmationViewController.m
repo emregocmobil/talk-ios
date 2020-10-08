@@ -554,31 +554,16 @@
             [self->_uploadErrors addObject:error.errorDescription];
             dispatch_group_leave(self->_uploadGroup);
         }
-        [self stopAnimatingSharingIndicator];
     }];
 }
 
-- (void)sendSharedFile
+- (void)uploadFileToServerURL:(NSString *)fileServerURL withFilePath:(NSString *)filePath locatedInLocalPath:(NSString *)fileLocalPath
 {
-    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@", attachmentsFolder, _sharedFileName];
-    NSString *fileServerURL = [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, filePath];
-    NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-    NSURL *fileLocalURL = [[tmpDirURL URLByAppendingPathComponent:@"file"] URLByAppendingPathExtension:@"data"];
-    [_sharedFile writeToFile:[fileLocalURL path] atomically:YES];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeAnnularDeterminate;
-    hud.label.text = @"Uploading file";
-    if (_type == ShareConfirmationTypeImageFile) {
-        hud.label.text = @"Uploading image";
-    }
-    
-    [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:[fileLocalURL path] dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
-        hud.progress = progress.fractionCompleted;
+    [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:fileLocalPath dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
+        self->_hud.progress = progress.fractionCompleted;
     } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSInteger errorCode, NSString *errorDescription) {
         NSLog(@"Upload completed with error code: %ld", (long)errorCode);
-        [hud hideAnimated:YES];
+        [self->_hud hideAnimated:YES];
         if (errorCode == 0) {
             [[NCAPIController sharedInstance] shareFileOrFolderForAccount:self->_account atPath:filePath toRoom:self->_room.token withCompletionBlock:^(NSError *error) {
                 if (error) {
@@ -594,6 +579,53 @@
         }
         [self stopAnimatingSharingIndicator];
     }];
+}
+
+#pragma mark - Utils
+
+- (NSString *)serverFilePathForFileName:(NSString *)fileName
+{
+    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
+    return [NSString stringWithFormat:@"%@/%@", attachmentsFolder, fileName];
+}
+
+- (NSString *)serverFileURLForFilePath:(NSString *)filePath
+{
+    return [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, filePath];
+}
+
+- (NSString *)localFilePath
+{
+    NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    NSURL *fileLocalURL = [[tmpDirURL URLByAppendingPathComponent:@"file"] URLByAppendingPathExtension:@"data"];
+    
+    return [fileLocalURL path];
+}
+
+- (NSString *)alternativeNameForFileName:(NSString *)fileName original:(BOOL)isOriginal
+{
+    NSString *extension = [fileName pathExtension];
+    NSString *nameWithoutExtension = [fileName stringByDeletingPathExtension];
+    NSString *alternativeName = nameWithoutExtension;
+    NSString *newSuffix = @" (1)";
+    
+    if (!isOriginal) {
+        // Check if the name ends with ` (n)`
+        NSError *error = nil;
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@" \\((\\d+)\\)$" options:NSRegularExpressionCaseInsensitive error:&error];
+        NSTextCheckingResult *match = [regex firstMatchInString:nameWithoutExtension options:0 range:NSMakeRange(0, nameWithoutExtension.length)];
+        if ([match numberOfRanges] > 1) {
+            NSRange suffixRange = [match rangeAtIndex: 0];
+            NSInteger suffixNumber = [[nameWithoutExtension substringWithRange:[match rangeAtIndex: 1]] intValue];
+            newSuffix = [NSString stringWithFormat:@" (%ld)", suffixNumber + 1];
+            alternativeName = [nameWithoutExtension stringByReplacingCharactersInRange:suffixRange withString:@""];
+        }
+    }
+    
+    alternativeName = [alternativeName stringByAppendingString:newSuffix];
+    alternativeName = [alternativeName stringByAppendingPathExtension:extension];
+    
+    return alternativeName;
 }
 
 #pragma mark - User Interface
