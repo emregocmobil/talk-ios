@@ -574,6 +574,8 @@
                 }
                 [self stopAnimatingSharingIndicator];
             }];
+        } else if (errorCode == 404) {
+            [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath locatedInLocalPath:fileLocalPath];
         } else {
             [self.delegate shareConfirmationViewControllerDidFailed:self];
         }
@@ -587,6 +589,12 @@
 {
     NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
     return [NSString stringWithFormat:@"%@/%@", attachmentsFolder, fileName];
+}
+
+- (NSString *)attachmentFolderServerURL
+{
+    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
+    return [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, attachmentsFolder];
 }
 
 - (NSString *)serverFileURLForFilePath:(NSString *)filePath
