@@ -94,7 +94,6 @@ NSString * const AudioSessionDidChangeRoutingInformationNotification   = @"Audio
     [_rtcAudioSession lockForConfiguration];
     BOOL hasSucceeded = NO;
     NSError *error = nil;
-
     if (_rtcAudioSession.isActive) {
         hasSucceeded = [_rtcAudioSession setConfiguration:configuration error:&error];
     } else {

@@ -294,7 +294,6 @@ NSString *const kRoomTypeScreen = @"screen";
     }
     
     _candidate = candidate;
-
     return self;
 }
 

@@ -332,7 +332,6 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
             }];
         }
     }
-
     // Create an unmanaged copy of the messages
     NSMutableArray *sortedMessages = [NSMutableArray new];
     for (NCChatMessage *managedMessage in managedSortedTemporaryMessages) {

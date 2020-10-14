@@ -74,7 +74,6 @@ NSString * const kNCAuthTokenFlowEndpoint               = @"/index.php/login/flo
     {
         [storage deleteCookie:cookie];
     }
-
     NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
     NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
     [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{

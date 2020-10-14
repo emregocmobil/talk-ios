@@ -21,7 +21,6 @@
  */
 
 #import "NCAPISessionManager.h"
-
 #import "CCCertificate.h"
 
 @implementation NCAPISessionManager

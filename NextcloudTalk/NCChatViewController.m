@@ -936,7 +936,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [realm transactionWithBlock:^{
         [realm addObject:temporaryMessage];
     }];
-
     NCChatMessage *unmanagedTemporaryMessage = [[NCChatMessage alloc] initWithValue:temporaryMessage];
     return unmanagedTemporaryMessage;
 }

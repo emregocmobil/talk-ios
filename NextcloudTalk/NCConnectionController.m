@@ -23,7 +23,6 @@
 #import "NCConnectionController.h"
 
 #import "AFNetworking.h"
-
 #import "NCAPIController.h"
 #import "NCDatabaseManager.h"
 #import "NCSettingsController.h"
