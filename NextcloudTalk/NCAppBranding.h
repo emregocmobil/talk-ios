@@ -57,6 +57,10 @@ extern BOOL const customNavigationLogo;
 + (UIStatusBarStyle)statusBarStyleForBrandColor;
 + (UIStatusBarStyle)statusBarStyleForThemeColor;
 
+// Theming
+extern NSString * const themeColor;
++ (UIColor *)primaryColor;
+
 @end
 
 NS_ASSUME_NONNULL_END
