@@ -60,6 +60,7 @@ extern BOOL const customNavigationLogo;
 // Theming
 extern NSString * const themeColor;
 + (UIColor *)primaryColor;
++ (UIColor *)primaryTextColor;
 
 @end
 
