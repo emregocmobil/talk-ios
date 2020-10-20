@@ -22,11 +22,7 @@
 
 #import "NCChatTitleView.h"
 
-#import "UIImageView+AFNetworking.h"
-
-#import "NCAPIController.h"
 #import "NCAppBranding.h"
-#import "NCUserStatus.h"
 
 @interface NCChatTitleView ()
 
@@ -44,7 +40,16 @@
     self = [super init];
     
     if (self) {
-        [self commonInit];
+        [[NSBundle mainBundle] loadNibNamed:@"NCChatTitleView" owner:self options:nil];
+        
+        [self addSubview:self.contentView];
+        
+        self.contentView.frame = self.bounds;
+        self.image.layer.cornerRadius = 15.0f;
+        self.image.clipsToBounds = YES;
+        self.title.titleLabel.adjustsFontSizeToFitWidth = YES;
+        self.title.titleLabel.minimumScaleFactor = 0.75;
+        [self.title setTitleColor:[NCAppBranding primaryTextColor] forState:UIControlStateNormal];
     }
     
     return self;
