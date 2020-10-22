@@ -225,12 +225,23 @@ BOOL const useServerThemimg = YES;
 
 #pragma mark - Theming
 
-NSString * const themeColor = @"#0082C9";
+NSString * const brandColor = @"#0082C9";
+NSString * const brandTextColor = @"#FFFFFF";
 BOOL const customNavigationLogo = NO;
+
++ (UIColor *)brandPrimaryColor
+{
+    return [self colorFromHexString:brandColor];
+}
+
++ (UIColor *)brandPrimaryTextColor
+{
+    return [self colorFromHexString:brandTextColor];
+}
 
 + (UIColor *)primaryColor
 {
-    return [self colorFromHexString:themeColor];
+    return [self colorFromHexString:brandColor];
 }
 
 + (UIColor *)primaryTextColor
