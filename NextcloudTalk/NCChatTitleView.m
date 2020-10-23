@@ -49,7 +49,7 @@
         self.image.clipsToBounds = YES;
         self.title.titleLabel.adjustsFontSizeToFitWidth = YES;
         self.title.titleLabel.minimumScaleFactor = 0.75;
-        [self.title setTitleColor:[NCAppBranding primaryTextColor] forState:UIControlStateNormal];
+        [self.title setTitleColor:[NCAppBranding themeTextColor] forState:UIControlStateNormal];
     }
     
     return self;
