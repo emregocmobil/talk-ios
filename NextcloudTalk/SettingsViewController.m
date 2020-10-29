@@ -508,7 +508,6 @@ typedef enum AboutSection {
     if (settingsSection == kSettingsSectionAbout) {
         NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
         NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
-        NSString *copyright = @"© 2020 Nextcloud GmbH";
         return [NSString stringWithFormat:@"%@ %@ %@", appName, appVersion, copyright];
     }
     if (settingsSection == kSettingsSectionUserStatus && [_activeUserStatus.status isEqualToString:kUserStatusDND]) {
