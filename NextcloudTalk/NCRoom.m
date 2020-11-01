@@ -84,6 +84,11 @@ NSString * const NCRoomObjectTypeRoom           = @"room";
         room.pendingMessage = [roomDict objectForKey:@"pendingMessage"];
     }
     
+    // Local-only field -> update only if there's actually a value
+    if ([roomDict objectForKey:@"pendingMessage"] != nil) {
+        room.pendingMessage = [roomDict objectForKey:@"pendingMessage"];
+    }
+    
     id name = [roomDict objectForKey:@"name"];
     if ([name isKindOfClass:[NSString class]]) {
         room.name = name;
