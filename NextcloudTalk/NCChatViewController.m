@@ -2372,6 +2372,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     });
 }
 
+- (void)didLeaveRoom:(NSNotification *)notification
+{
+    [self disableRoomControls];
+}
+
 #pragma mark - Chat Controller notifications
 
 - (void)didReceiveInitialChatHistory:(NSNotification *)notification
