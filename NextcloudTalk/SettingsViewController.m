@@ -29,6 +29,7 @@
 #import "AccountTableViewCell.h"
 #import "UserSettingsTableViewCell.h"
 #import "NCAPIController.h"
+#import "NCNavigationController.h"
 #import "NCUserInterfaceController.h"
 #import "NCUserStatus.h"
 #import "NCConnectionController.h"
@@ -849,7 +850,7 @@ typedef enum AboutSection {
     
     viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    NCNavigationController *navigationController = [[NCNavigationController alloc] initWithRootViewController:viewController];
     navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:navigationController animated:YES completion:nil];
 }
@@ -879,7 +880,7 @@ typedef enum AboutSection {
         
         viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
         
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        NCNavigationController *navigationController = [[NCNavigationController alloc] initWithRootViewController:viewController];
         navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:navigationController animated:YES completion:nil];
 
@@ -906,7 +907,7 @@ typedef enum AboutSection {
 
         viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
 
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        NCNavigationController *navigationController = [[NCNavigationController alloc] initWithRootViewController:viewController];
         navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:navigationController animated:YES completion:nil];
     }
