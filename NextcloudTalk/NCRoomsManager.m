@@ -765,6 +765,8 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
                 // That's why we set currentRoom = nil, so when leaveRoom() is called in extSignalingController the currentRoom
                 // is no longer the room we want to leave (so no message is sent to the external signaling server).
                 extSignalingController.currentRoom = nil;
+                [_chatViewController leaveChat];
+                [[NCUserInterfaceController sharedInstance] presentConversationsList];
             }
         }
 
