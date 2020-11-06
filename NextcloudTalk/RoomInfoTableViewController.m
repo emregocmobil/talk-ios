@@ -1888,6 +1888,31 @@ typedef enum FileAction {
                     return cell;
                 }
                     break;
+                case kRoomActionGotoFile:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:gotoFileCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:gotoFileCellIdentifier];
+                    }
+                    
+                    cell.textLabel.text = NSLocalizedString(@"Go to file", nil);
+                    NSString *fileName = _room.name;
+                    NSString *fileExt = [fileName pathExtension];
+                    
+                    [cell.imageView setImage:[UIImage imageNamed:[NCUtils previewImageForFileExtension:fileExt]]];
+                    
+                    // Make sure the file icon has the same size as all other cell-images
+                    // https://stackoverflow.com/questions/2788028/
+                    CGSize itemSize = CGSizeMake(24, 24);
+                    UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
+                    CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+                    [cell.imageView.image drawInRect:imageRect];
+                    cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                    
+                    return cell;
+                }
+                    break;
             }
         }
             break;
@@ -2364,6 +2389,9 @@ typedef enum FileAction {
                     break;
                 case kFileActionOpenInFilesApp:
                     [self openRoomFileInFilesApp:indexPath];
+                    break;
+                case kRoomActionGotoFile:
+                    [self gotoRoomFile];
                     break;
             }
         }
