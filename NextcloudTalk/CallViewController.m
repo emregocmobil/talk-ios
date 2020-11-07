@@ -194,6 +194,11 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     UILongPressGestureRecognizer *pushToTalkRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePushToTalk:)];
     [self.audioMuteButton addGestureRecognizer:pushToTalkRecognizer];
     
+    
+    UILongPressGestureRecognizer *pushToTalkRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    pushToTalkRecognizer.delegate = self;
+    [self.audioMuteButton addGestureRecognizer:pushToTalkRecognizer];
+    
     [_screensharingView setHidden:YES];
     [_screensharingView setClipsToBounds:YES];
 
@@ -1489,6 +1494,34 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
                 [strongSelf showDetailedViewWithTimer];
             }
         }];
+    }
+}
+
+- (void)setHaloToAudioMuteButton
+{
+    [_haloPushToTalk removeFromSuperlayer];
+    
+    if (_buttonsContainerView) {
+        _haloPushToTalk = [PulsingHaloLayer layer];
+        _haloPushToTalk.position = _audioMuteButton.center;
+        UIColor *color = [UIColor colorWithRed:118/255.f green:213/255.f blue:114/255.f alpha:1];
+        _haloPushToTalk.backgroundColor = color.CGColor;
+        _haloPushToTalk.radius = 40.0;
+        _haloPushToTalk.haloLayerNumber = 2;
+        _haloPushToTalk.keyTimeForHalfOpacity = 0.75;
+        _haloPushToTalk.fromValueForRadius = 0.75;
+        [_buttonsContainerView.layer addSublayer:_haloPushToTalk];
+        [_haloPushToTalk start];
+        
+        [_buttonsContainerView bringSubviewToFront:_audioMuteButton];
+    }
+    
+}
+
+- (void)removeHaloFromAudioMuteButton
+{
+    if (_haloPushToTalk) {
+        [_haloPushToTalk removeFromSuperlayer];
     }
 }
 
