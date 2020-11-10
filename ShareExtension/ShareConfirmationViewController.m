@@ -561,7 +561,7 @@
 {
     [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:fileLocalPath dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
         self->_hud.progress = progress.fractionCompleted;
-    } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSInteger errorCode, NSString *errorDescription) {
+    } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSDictionary *allHeaderFields, NSInteger errorCode, NSString *errorDescription) {
         NSLog(@"Upload completed with error code: %ld", (long)errorCode);
         [self->_hud hideAnimated:YES];
         if (errorCode == 0) {
