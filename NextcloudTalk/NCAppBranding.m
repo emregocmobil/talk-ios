@@ -275,4 +275,9 @@ BOOL const useServerThemimg = YES;
     return imageName;
 }
 
++ (UIColor *)placeholderColor
+{
+    return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 1.00]; // #d5d5d5
+}
+
 @end
