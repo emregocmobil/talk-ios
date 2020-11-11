@@ -21,6 +21,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <NCCommunication/NCCommunication.h>
 
 #import "AFNetworking.h"
 #import "AFImageDownloader.h"
