@@ -32,6 +32,8 @@
 #import <BackgroundTasks/BGTaskRequest.h>
 #import <BackgroundTasks/BGTask.h>
 
+#import <UserNotifications/UserNotifications.h>
+
 #import "NCAudioController.h"
 #import "NCAppBranding.h"
 #import "NCDatabaseManager.h"
