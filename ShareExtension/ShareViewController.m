@@ -467,6 +467,19 @@
                                       }];
                 return;
             }
+            // Check if shared image
+            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage
+                                                options:nil
+                                      completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
+                                          if ([(NSObject *)item isKindOfClass:[NSURL class]]) {
+                                              NSLog(@"Shared Image = %@", item);
+                                              NSURL *imageURL = (NSURL *)item;
+                                              [shareConfirmationVC setSharedFileWithFileURL:imageURL];
+                                          }
+                                      }];
+                return;
+            }
             // Check if shared URL
             if ([itemProvider hasItemConformingToTypeIdentifier:@"public.url"]) {
                 [itemProvider loadItemForTypeIdentifier:@"public.url"
