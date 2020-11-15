@@ -1656,6 +1656,39 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
+- (void)didPressReply:(NCChatMessage *)message {
+    // Use dispatch here to have a smooth animation with native contextmenu
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.replyMessageView = (ReplyMessageView *)self.typingIndicatorProxyView;
+        [self.replyMessageView dismiss];
+        [self.replyMessageView presentReplyViewWithMessage:message];
+        [self presentKeyboard:YES];
+    });
+}
+
+- (void)didPressReplyPrivately:(NCChatMessage *)message {
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [userInfo setObject:message.actorId forKey:@"actorId"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NCChatViewControllerJoinChatAndReplyPrivately
+                                                        object:self
+                                                      userInfo:userInfo];
+}
+
+- (void)didPressResend:(NCChatMessage *)message {
+    [self removePermanentlyTemporaryMessage:message];
+    [self sendChatMessage:message.message fromInputField:NO];
+}
+
+- (void)didPressCopy:(NCChatMessage *)message {
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = message.parsedMessage.string;
+    [self.view makeToast:NSLocalizedString(@"Message copied", nil) duration:1.5 position:CSToastPositionCenter];
+}
+
+- (void)didPressDelete:(NCChatMessage *)message {
+    [self removePermanentlyTemporaryMessage:message];
+}
+
 #pragma mark - UIImagePickerController Delegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
