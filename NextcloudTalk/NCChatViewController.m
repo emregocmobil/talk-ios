@@ -1669,7 +1669,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)didPressReplyPrivately:(NCChatMessage *)message {
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     [userInfo setObject:message.actorId forKey:@"actorId"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NCChatViewControllerJoinChatAndReplyPrivately
+    [[NSNotificationCenter defaultCenter] postNotificationName:NCChatViewControllerReplyPrivatelyNotification
                                                         object:self
                                                       userInfo:userInfo];
 }
