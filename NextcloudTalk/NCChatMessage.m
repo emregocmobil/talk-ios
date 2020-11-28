@@ -456,6 +456,12 @@ NSString * const kSharedItemTypeRecording   = @"recording";
         [attributedMessage addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0f] range:NSMakeRange(0,parsedMessage.length)];
     }
     
+    if (self.isEmojiMessage) {
+        [attributedMessage addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:36.0f] range:NSMakeRange(0,parsedMessage.length)];
+    } else {
+        [attributedMessage addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0f] range:NSMakeRange(0,parsedMessage.length)];
+    }
+    
     for (NCMessageParameter *param in parameters) {
         //Set color for mentions
         if ([param.type isEqualToString:@"user"] || [param.type isEqualToString:@"guest"] || [param.type isEqualToString:@"call"]) {
