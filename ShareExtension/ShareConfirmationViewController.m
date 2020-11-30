@@ -571,24 +571,24 @@
         [self updateHudProgress];
     } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSDictionary *allHeaderFields, NSInteger errorCode, NSString *errorDescription) {
         NSLog(@"Upload completed with error code: %ld", (long)errorCode);
-        [self->_hud hideAnimated:YES];
+
         if (errorCode == 0) {
             [[NCAPIController sharedInstance] shareFileOrFolderForAccount:self->_account atPath:filePath toRoom:self->_room.token withCompletionBlock:^(NSError *error) {
                 if (error) {
-                    [self.delegate shareConfirmationViewControllerDidFailed:self];
                     NSLog(@"Failed to send shared file");
+                    
+                    self->_uploadFailed = YES;
+                    dispatch_group_leave(self->_uploadGroup);
                 } else {
-                    [self.delegate shareConfirmationViewControllerDidFinish:self];
-                    [self.shareItemController removeItem:item];
+                    dispatch_group_leave(self->_uploadGroup);
                 }
-                [self stopAnimatingSharingIndicator];
             }];
         } else if (errorCode == 404) {
             [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
         } else {
-            [self.delegate shareConfirmationViewControllerDidFailed:self];
+            self->_uploadFailed = YES;
+            dispatch_group_leave(self->_uploadGroup);
         }
-        [self stopAnimatingSharingIndicator];
     }];
 }
 
