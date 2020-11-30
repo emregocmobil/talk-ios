@@ -39,6 +39,8 @@
 #import "NCUserDefaults.h"
 #import "NCUtils.h"
 #import "MBProgressHUD.h"
+#import <QuickLook/QuickLook.h>
+#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
 
 
 @interface ShareConfirmationViewController () <NKCommonDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, QLPreviewControllerDataSource, QLPreviewControllerDelegate, ShareItemControllerDelegate, TOCropViewControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
@@ -91,6 +93,11 @@
     self.navigationItem.scrollEdgeAppearance = appearance;
     
     self.pageControl.currentPageIndicatorTintColor = [NCAppBranding elementColor];
+    self.pageControl.pageIndicatorTintColor = [NCAppBranding placeholderColor];
+    self.pageControl.hidesForSinglePage = YES;
+    self.pageControl.numberOfPages = 1;
+    
+    self.pageControl.currentPageIndicatorTintColor = [NCAppBranding themeColor];
     self.pageControl.pageIndicatorTintColor = [NCAppBranding placeholderColor];
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.numberOfPages = 1;
@@ -557,10 +564,11 @@
     }];
 }
 
-- (void)uploadFileToServerURL:(NSString *)fileServerURL withFilePath:(NSString *)filePath locatedInLocalPath:(NSString *)fileLocalPath
+- (void)uploadFileToServerURL:(NSString *)fileServerURL withFilePath:(NSString *)filePath withItem:(ShareItem *)item
 {
-    [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:fileLocalPath dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
-        self->_hud.progress = progress.fractionCompleted;
+    [[NCCommunication shared] uploadWithServerUrlFileName:fileServerURL fileNameLocalPath:item.filePath dateCreationFile:nil dateModificationFile:nil customUserAgent:nil addCustomHeaders:nil progressHandler:^(NSProgress * progress) {
+        item.uploadProgress = progress.fractionCompleted;
+        [self updateHudProgress];
     } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSDictionary *allHeaderFields, NSInteger errorCode, NSString *errorDescription) {
         NSLog(@"Upload completed with error code: %ld", (long)errorCode);
         [self->_hud hideAnimated:YES];
@@ -571,11 +579,12 @@
                     NSLog(@"Failed to send shared file");
                 } else {
                     [self.delegate shareConfirmationViewControllerDidFinish:self];
+                    [self.shareItemController removeItem:item];
                 }
                 [self stopAnimatingSharingIndicator];
             }];
         } else if (errorCode == 404) {
-            [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath locatedInLocalPath:fileLocalPath];
+            [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
         } else {
             [self.delegate shareConfirmationViewControllerDidFailed:self];
         }
@@ -600,14 +609,6 @@
 - (NSString *)serverFileURLForFilePath:(NSString *)filePath
 {
     return [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, filePath];
-}
-
-- (NSString *)localFilePath
-{
-    NSURL *tmpDirURL = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
-    NSURL *fileLocalURL = [[tmpDirURL URLByAppendingPathComponent:@"file"] URLByAppendingPathExtension:@"data"];
-    
-    return [fileLocalURL path];
 }
 
 - (NSString *)alternativeNameForFileName:(NSString *)fileName original:(BOOL)isOriginal
