@@ -1914,6 +1914,7 @@
 				1F61C767285E35A6004D74D8 /* DiagnosticsTableViewController.swift in Sources */,
 				2CD5F3242142781A006B71BF /* NCExternalSignalingController.m in Sources */,
 				2C0574851EDD9E8E00D9E7F2 /* AppDelegate.m in Sources */,
+				2C1ABDA125769F8400AEDFB6 /* ShareItemController.m in Sources */,
 				2C4987BD21E640E20060AC27 /* CallKitManager.m in Sources */,
 				2C4446F3265D51A600DF1DBC /* NCPushNotificationsUtils.m in Sources */,
 				2C1ABDE5257F883400AEDFB6 /* ABContact.m in Sources */,
