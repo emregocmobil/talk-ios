@@ -97,7 +97,7 @@
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.numberOfPages = 1;
     
-    self.pageControl.currentPageIndicatorTintColor = [NCAppBranding themeColor];
+    self.pageControl.currentPageIndicatorTintColor = [NCAppBranding elementColor];
     self.pageControl.pageIndicatorTintColor = [NCAppBranding placeholderColor];
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.numberOfPages = 1;
