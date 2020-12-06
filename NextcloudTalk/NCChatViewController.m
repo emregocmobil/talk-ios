@@ -1689,6 +1689,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self removePermanentlyTemporaryMessage:message];
 }
 
+- (void)didPressOpenInNextcloud:(NCChatMessage *)message {
+    if (message.file) {
+        [NCUtils openFileInNextcloudAppOrBrowser:message.file.path withFileLink:message.file.link];
+    }
+}
+
 #pragma mark - UIImagePickerController Delegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

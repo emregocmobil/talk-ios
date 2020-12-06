@@ -26,6 +26,12 @@
 #import "SLKUIConstants.h"
 #import "UIImageView+AFNetworking.h"
 #import "UIImageView+Letters.h"
+#import "CCCertificate.h"
+
+#import "NCAPIController.h"
+#import "NCDatabaseManager.h"
+#import "NCSettingsController.h"
+#import "NCChatFileController.h"
 
 #import "NCAPIController.h"
 #import "NCAppBranding.h"
@@ -415,6 +421,103 @@
 {
     [self.delegate cellDidSelectedReaction:reaction forMessage:self.message];
 }
+
+- (void)setupForMessage:(NCChatMessage *)message
+{
+    self.titleLabel.text = message.actorDisplayName;
+    self.bodyTextView.attributedText = message.parsedMessage;
+    self.messageId = message.messageId;
+    
+    NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:message.timestamp];
+    self.dateLabel.text = [NCUtils getTimeFromDate:date];
+    
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [self.avatarView setImageWithURLRequest:[[NCAPIController sharedInstance] createAvatarRequestForUser:message.actorId andSize:96 usingAccount:activeAccount]
+                               placeholderImage:nil success:nil failure:nil];
+    
+    NSString *imageName = [[NCUtils previewImageForFileMIMEType:message.file.mimetype] stringByAppendingString:@"-chat-preview"];
+    UIImage *filePreviewImage = [UIImage imageNamed:imageName];
+    __weak FilePreviewImageView *weakPreviewImageView = self.previewImageView;
+    [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId width:120 height:120 usingAccount:activeAccount]
+                                     placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+                                         [weakPreviewImageView setImage:image];
+                                         weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
+                                         weakPreviewImageView.layer.borderWidth = 1.0f;
+                                     } failure:nil];
+    
+    if (message.sendingFailed) {
+        UIImageView *errorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [errorView setImage:[UIImage imageNamed:@"error"]];
+        [self.statusView addSubview:errorView];
+    } else if (message.isTemporary) {
+        [self addActivityIndicator:0];
+    } else if (message.file.isDownloading && message.file.downloadProgress < 1) {
+        [self addActivityIndicator:message.file.downloadProgress];
+    }
+    
+    self.fileParameter = message.file;
+}
+
+- (void)didChangeIsDownloading:(NSNotification *)notification
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NCMessageFileParameter *receivedParameter = [notification.userInfo objectForKey:@"fileParameter"];
+        
+        if (receivedParameter.parameterId != self->_fileParameter.parameterId || ![receivedParameter.path isEqualToString:self->_fileParameter.path]) {
+            // Received a notification for a different cell
+            return;
+        }
+        
+        BOOL isDownloading = [[notification.userInfo objectForKey:@"isDownloading"] boolValue];
+        
+        if (isDownloading && !self->_activityIndicator) {
+            // Immediately show an indeterminate indicator as long as we don't have a progress value
+            [self addActivityIndicator:0];
+        } else if (!isDownloading && self->_activityIndicator) {
+            [self clearStatusView];
+        }
+    });
+}
+- (void)didChangeDownloadProgress:(NSNotification *)notification
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NCMessageFileParameter *receivedParameter = [notification.userInfo objectForKey:@"fileParameter"];
+        
+        if (receivedParameter.parameterId != self->_fileParameter.parameterId || ![receivedParameter.path isEqualToString:self->_fileParameter.path]) {
+            // Received a notification for a different cell
+            return;
+        }
+        
+        double progress = [[notification.userInfo objectForKey:@"progress"] doubleValue];
+
+        if (self->_activityIndicator) {
+            // Switch to determinate-mode and show progress
+            self->_activityIndicator.indicatorMode = MDCActivityIndicatorModeDeterminate;
+            [self->_activityIndicator setProgress:progress animated:YES];
+        } else {
+            // Make sure we have an activity indicator added to this cell
+            [self addActivityIndicator:progress];
+        }
+    });
+}
+
+- (void)addActivityIndicator:(CGFloat)progress
+{
+    [self clearStatusView];
+    
+    _activityIndicator = [[MDCActivityIndicator alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    _activityIndicator.radius = 7.0f;
+    _activityIndicator.cycleColors = @[UIColor.grayColor];
+    
+    if (progress > 0) {
+        _activityIndicator.indicatorMode = MDCActivityIndicatorModeDeterminate;
+        [_activityIndicator setProgress:progress animated:NO];
+    }
+    
+    [_activityIndicator startAnimating];
+    [self.statusView addSubview:_activityIndicator];
+}
+
 
 #pragma mark - Getters
 

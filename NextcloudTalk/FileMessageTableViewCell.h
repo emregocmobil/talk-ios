@@ -53,6 +53,8 @@ static NSString *GroupedFileMessageCellIdentifier   = @"GroupedFileMessageCellId
 
 @property (nonatomic, weak) id<FileMessageTableViewCellDelegate> delegate;
 
+@property (nonatomic, weak) id<FileMessageTableViewCellDelegate> delegate;
+
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) FilePreviewImageView *previewImageView;

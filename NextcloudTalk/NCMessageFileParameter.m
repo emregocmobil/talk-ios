@@ -32,6 +32,8 @@
         self.mimetype = [parameterDict objectForKey:@"mimetype"];
         self.size = [[parameterDict objectForKey:@"size"] integerValue];
         self.previewAvailable = [[parameterDict objectForKey:@"preview-available"] boolValue];
+        self.isDownloading = NO;
+        self.downloadProgress = 0;
     }
     
     return self;
