@@ -2391,7 +2391,7 @@ typedef enum FileAction {
                     [self openRoomFileInFilesApp:indexPath];
                     break;
                 case kRoomActionGotoFile:
-                    [self gotoRoomFile];
+                    [self gotoRoomFileFromIndexPath:indexPath];
                     break;
             }
         }
