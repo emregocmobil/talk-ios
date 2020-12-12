@@ -61,7 +61,8 @@ typedef enum RoomInfoSection {
     kRoomInfoSectionWebinar,
     kRoomInfoSectionSIP,
     kRoomInfoSectionParticipants,
-    kRoomInfoSectionDestructive
+    kRoomInfoSectionDestructive,
+    kRoomInfoSectionFile
 } RoomInfoSection;
 
 typedef enum NotificationAction {
@@ -1888,28 +1889,46 @@ typedef enum FileAction {
                     return cell;
                 }
                     break;
-                case kRoomActionGotoFile:
+            }
+        }
+            break;
+        case kRoomInfoSectionFile:
+        {
+            NSArray *actions = [self getFileActions];
+            FileAction action = [[actions objectAtIndex:indexPath.row] intValue];
+            switch (action) {
+                case kFileActionPreview:
                 {
-                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:gotoFileCellIdentifier];
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:previewFileCellIdentifier];
                     if (!cell) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:gotoFileCellIdentifier];
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:previewFileCellIdentifier];
                     }
                     
-                    cell.textLabel.text = NSLocalizedString(@"Go to file", nil);
-                    NSString *fileName = _room.name;
-                    NSString *fileExt = [fileName pathExtension];
+                    cell.textLabel.text = NSLocalizedString(@"Preview", nil);
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    [cell.imageView setImage:[UIImage imageNamed:@"preview-file-settings"]];
                     
-                    [cell.imageView setImage:[UIImage imageNamed:[NCUtils previewImageForFileExtension:fileExt]]];
+                    if (_fileDownloadIndicator) {
+                        // Set download indicator in case we're already downloading a file
+                        [cell setAccessoryView:_fileDownloadIndicator];
+                    }
                     
-                    // Make sure the file icon has the same size as all other cell-images
-                    // https://stackoverflow.com/questions/2788028/
-                    CGSize itemSize = CGSizeMake(24, 24);
-                    UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
-                    CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-                    [cell.imageView.image drawInRect:imageRect];
-                    cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
+                    return cell;
+                }
+                    break;
+                case kFileActionOpenInFilesApp:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:openFileCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:openFileCellIdentifier];
+                    }
                     
+                    cell.textLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Open in %@", nil), filesAppName];
+                    
+                    UIImage *nextcloudActionImage = [[UIImage imageNamed:@"logo-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                    [cell.imageView setImage:nextcloudActionImage];
+                    cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
+                                        
                     return cell;
                 }
                     break;
@@ -2390,8 +2409,19 @@ typedef enum FileAction {
                 case kFileActionOpenInFilesApp:
                     [self openRoomFileInFilesApp:indexPath];
                     break;
-                case kRoomActionGotoFile:
-                    [self gotoRoomFileFromIndexPath:indexPath];
+            }
+        }
+            break;
+        case kRoomInfoSectionFile:
+        {
+            NSArray *actions = [self getFileActions];
+            FileAction action = [[actions objectAtIndex:indexPath.row] intValue];
+            switch (action) {
+                case kFileActionPreview:
+                    [self previewRoomFile:indexPath];
+                    break;
+                case kFileActionOpenInFilesApp:
+                    [self openRoomFileInFilesApp:indexPath];
                     break;
             }
         }
