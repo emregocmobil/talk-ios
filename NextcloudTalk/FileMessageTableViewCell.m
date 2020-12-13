@@ -31,6 +31,7 @@
 #import "NCDatabaseManager.h"
 #import "NCSettingsController.h"
 #import "NCChatFileController.h"
+#import "NCAppBranding.h"
 
 #import "NCAPIController.h"
 #import "NCAppBranding.h"
@@ -444,7 +445,11 @@
     [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId width:120 height:120 usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
                                          [weakPreviewImageView setImage:image];
+                                         //TODO: How to adjust for dark mode?
                                          weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
+                                         if (@available(iOS 13.0, *)) {
+                                             weakPreviewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
+                                         }
                                          weakPreviewImageView.layer.borderWidth = 1.0f;
                                      } failure:nil];
     

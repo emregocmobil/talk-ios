@@ -23,6 +23,7 @@
 #import "RoomTableViewCell.h"
 
 #import "UIImageView+AFNetworking.h"
+#import "NCAppBranding.h"
 
 #import "NCAppBranding.h"
 #import "NCUserInterfaceController.h"
