@@ -4075,7 +4075,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         preview.navigationItem.compactAppearance = appearance;
         preview.navigationItem.scrollEdgeAppearance = appearance;
 
-        [self.navigationController pushViewController:preview animated:YES];
+        [self presentViewController:preview animated:YES completion:nil];
     });
 }
 
