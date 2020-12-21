@@ -39,8 +39,8 @@
 #import "NCUserDefaults.h"
 #import "NCUtils.h"
 #import "MBProgressHUD.h"
-#import <QuickLook/QuickLook.h>
-#import <QuickLookThumbnailing/QuickLookThumbnailing.h>
+#import "NCNavigationController.h"
+#import "NCUserInterfaceController.h"
 
 
 @interface ShareConfirmationViewController () <NKCommonDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, QLPreviewControllerDataSource, QLPreviewControllerDelegate, ShareItemControllerDelegate, TOCropViewControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
@@ -421,6 +421,111 @@
     _isModal = isModal;
 }
 
+#pragma mark - Add additional items
+- (void)presentAdditionalItemOptions
+{
+    UIAlertController *optionsActionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                                message:nil
+                                                                         preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Camera", nil)
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^void (UIAlertAction *action) {
+        [self checkAndPresentCamera];
+    }];
+    [cameraAction setValue:[[UIImage imageNamed:@"camera"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forKey:@"image"];
+    
+    UIAlertAction *photoLibraryAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Photo Library", nil)
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^void (UIAlertAction *action) {
+        [self presentPhotoLibrary];
+    }];
+    [photoLibraryAction setValue:[[UIImage imageNamed:@"photos"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+    
+    UIAlertAction *filesAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Files", nil)
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^void (UIAlertAction *action) {
+        [self presentDocumentPicker];
+    }];
+    [filesAction setValue:[[UIImage imageNamed:@"files"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forKey:@"image"];
+    
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+        [optionsActionSheet addAction:cameraAction];
+    }
+    
+    [optionsActionSheet addAction:photoLibraryAction];
+    [optionsActionSheet addAction:filesAction];
+    [optionsActionSheet addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+    
+    // Presentation on iPads
+    optionsActionSheet.popoverPresentationController.barButtonItem = self.addItemButton;
+    
+    [self presentViewController:optionsActionSheet animated:YES completion:nil];
+}
+
+- (void)checkAndPresentCamera
+{
+    // https://stackoverflow.com/a/20464727/2512312
+    NSString *mediaType = AVMediaTypeVideo;
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    
+    if(authStatus == AVAuthorizationStatusAuthorized) {
+        [self presentCamera];
+        return;
+    } else if(authStatus == AVAuthorizationStatusNotDetermined){
+        [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
+            if(granted){
+                [self presentCamera];
+            }
+        }];
+        return;
+    }
+    
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:NSLocalizedString(@"Could not access camera", nil)
+                                 message:NSLocalizedString(@"Camera access is not allowed. Check your settings.", nil)
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"OK", nil)
+                               style:UIAlertActionStyleDefault
+                               handler:nil];
+    
+    [alert addAction:okButton];
+    [[NCUserInterfaceController sharedInstance] presentAlertViewController:alert];
+}
+
+- (void)presentCamera
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->_imagePicker = [[UIImagePickerController alloc] init];
+        self->_imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        self->_imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:self->_imagePicker.sourceType];
+        self->_imagePicker.delegate = self;
+        [self presentViewController:self->_imagePicker animated:YES completion:nil];
+    });
+}
+
+- (void)presentPhotoLibrary
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->_imagePicker = [[UIImagePickerController alloc] init];
+        self->_imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        self->_imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:self->_imagePicker.sourceType];
+        self->_imagePicker.delegate = self;
+        [self presentViewController:self->_imagePicker animated:YES completion:nil];
+    });
+}
+
+- (void)presentDocumentPicker
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.item"] inMode:UIDocumentPickerModeImport];
+        documentPicker.delegate = self;
+        [self presentViewController:documentPicker animated:YES completion:nil];
+    });
+}
+
 #pragma mark - Actions
 
 - (void)sendSharedText
@@ -733,6 +838,75 @@
 }
 
 #pragma mark - UIDocumentPickerViewController Delegate
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
+{
+    [self shareDocumentsWithURLs:urls fromController:controller];
+}
+
+- (void)shareDocumentsWithURLs:(NSArray<NSURL *> *)urls fromController:(UIDocumentPickerViewController *)controller
+{
+    if (controller.documentPickerMode == UIDocumentPickerModeImport) {
+        for (NSURL* url in urls) {
+            [self.shareItemController addItemWithURL:url];
+        }
+        
+        [self collectionViewScrollToEnd];
+    }
+}
+
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller
+{
+    
+}
+
+- (void)updateToolbarForCurrentItem
+{
+    ShareItem *item = [self getCurrentShareItem];
+    
+    if (item) {
+        [UIView transitionWithView:self.itemToolbar duration:0.3 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+            [self.cropItemButton setEnabled:item.isImage];
+            [self.previewItemButton setEnabled:[QLPreviewController canPreviewItem:item.fileURL]];
+            [self.addItemButton setEnabled:([self.shareItemController.shareItems count] < 5)];
+        } completion:nil];
+    }
+}
+
+#pragma mark - UIImagePickerController Delegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    
+    if ([mediaType isEqualToString:@"public.image"]) {
+        UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.shareItemController addItemWithImage:image];
+            [self collectionViewScrollToEnd];
+        }];
+    } else if ([mediaType isEqualToString:@"public.movie"]) {
+        NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
+        
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.shareItemController addItemWithURL:videoURL];
+            [self collectionViewScrollToEnd];
+        }];
+    }
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIDocumentPickerViewController Delegate
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url
+{
+    [self shareDocumentsWithURLs:@[url] fromController:controller];
+}
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
 {

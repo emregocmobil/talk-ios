@@ -175,6 +175,23 @@ CGFloat const kShareItemControllerImageQuality = 0.7f;
     [self.delegate shareItemControllerItemsChanged:self];
 }
 
+- (UIImage *)getImageFromItem:(ShareItem *)item
+{
+    if (!item || !item.fileURL) {
+        return nil;
+    }
+        
+    return [self getImageFromFileURL:item.fileURL];
+}
+
+- (UIImage *)getImageFromFileURL:(NSURL *)fileURL
+{
+    NSData *fileData = [NSData dataWithContentsOfURL:fileURL];
+    UIImage *image = [UIImage imageWithData:fileData];
+    
+    return image;
+}
+
 - (void)updateItem:(ShareItem *)item withURL:(NSURL *)fileURL
 {
     // This is called when an item was edited in quicklook and we want to use the edited image
