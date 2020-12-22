@@ -21,7 +21,6 @@
  */
 
 #import "ChatMessageTableViewCell.h"
-
 #import "MaterialActivityIndicator.h"
 #import "SLKUIConstants.h"
 #import "UIImageView+AFNetworking.h"
