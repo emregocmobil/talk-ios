@@ -422,7 +422,7 @@
     [self.delegate cellDidSelectedReaction:reaction forMessage:self.message];
 }
 
-- (void)setupForMessage:(NCChatMessage *)message
+- (void)setupForMessage:(NCChatMessage *)message withLastCommonReadMessage:(NSInteger)lastCommonRead
 {
     self.titleLabel.text = message.actorDisplayName;
     self.bodyTextView.attributedText = message.parsedMessage;
@@ -460,7 +460,11 @@
     self.fileParameter = message.file;
     
     if ([message.actorId isEqualToString:activeAccount.userId] && [message.actorType isEqualToString:@"users"]) {
-        [self setDeliveryState:ChatMessageDeliveryStateSent];
+        if (lastCommonRead >= message.messageId) {
+            [self setDeliveryState:ChatMessageDeliveryStateRead];
+        } else {
+            [self setDeliveryState:ChatMessageDeliveryStateSent];
+        }
     }
 }
 

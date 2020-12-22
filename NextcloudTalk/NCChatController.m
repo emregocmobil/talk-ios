@@ -479,6 +479,7 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
                     [userInfo setObject:storedMessages forKey:@"messages"];
                 }
             }
+            [userInfo setObject:@(lastCommonReadMessage) forKey:@"lastCommonReadMessage"];
             [[NSNotificationCenter defaultCenter] postNotificationName:NCChatControllerDidReceiveInitialChatHistoryNotification
                                                                 object:self
                                                               userInfo:userInfo];

@@ -116,6 +116,7 @@ NSString * const kActionTypeTranscribeVoiceMessage   = @"transcribe-voice-messag
 @property (nonatomic, assign) BOOL hasStoredHistory;
 @property (nonatomic, assign) BOOL hasStopped;
 @property (nonatomic, assign) NSInteger lastReadMessage;
+@property (nonatomic, assign) NSInteger lastCommonReadMessage;
 @property (nonatomic, strong) NCChatMessage *unreadMessagesSeparator;
 @property (nonatomic, assign) NSInteger chatViewPresentedTimestamp;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingHistoryView;
@@ -368,6 +369,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.view addSubview:_unreadMessageButton];
     _chatViewPresentedTimestamp = [[NSDate date] timeIntervalSince1970];
     _lastReadMessage = _room.lastReadMessage;
+    _lastCommonReadMessage = _room.lastCommonReadMessage;
     
     // Check if there's a stored pending message
     if (_room.pendingMessage != nil) {
@@ -2558,6 +2560,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         NSError *error = [notification.userInfo objectForKey:@"error"];
         if (notification.object != self->_chatController || error) {
             return;
+        }
+        
+        NSInteger lastCommonRead = [[notification.userInfo objectForKey:@"lastCommonReadMessage"] integerValue];
+        if (lastCommonRead > 0) {
+            self->_lastCommonReadMessage = lastCommonRead;
         }
         
         BOOL firstNewMessagesAfterHistory = !self->_hasReceiveNewMessages;
