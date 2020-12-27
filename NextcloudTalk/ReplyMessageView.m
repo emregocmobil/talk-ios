@@ -49,6 +49,10 @@
 {
     self.backgroundColor = [UIColor secondarySystemBackgroundColor];
     
+    if (@available(iOS 13.0, *)) {
+        self.backgroundColor = [UIColor secondarySystemBackgroundColor];
+    }
+    
     [self addSubview:self.quoteContainerView];
     [self addSubview:self.cancelButton];
     [self.layer addSublayer:self.topBorder];
