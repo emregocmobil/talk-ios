@@ -657,6 +657,30 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }];
 }
 
+- (void)updateRoomWithDict:(NSDictionary *)roomDict withAccount:(TalkAccount *)activeAccount withTimestamp:(NSInteger)timestamp withRealm:(RLMRealm *)realm
+{
+    NCRoom *room = [NCRoom roomWithDictionary:roomDict andAccountId:activeAccount.accountId];
+    NSDictionary *messageDict = [roomDict objectForKey:@"lastMessage"];
+    NCChatMessage *lastMessage = [NCChatMessage messageWithDictionary:messageDict andAccountId:activeAccount.accountId];
+    room.lastUpdate = timestamp;
+    room.lastMessageId = lastMessage.internalId;
+    
+    NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
+    if (managedRoom) {
+        [NCRoom updateRoom:managedRoom withRoom:room];
+    } else if (room) {
+        [realm addObject:room];
+    }
+    
+    NCChatMessage *managedLastMessage = [NCChatMessage objectsWhere:@"internalId = %@", lastMessage.internalId].firstObject;
+    if (managedLastMessage) {
+        [NCChatMessage updateChatMessage:managedLastMessage withChatMessage:lastMessage];
+    } else if (lastMessage) {
+        NCChatController *chatController = [[NCChatController alloc] initForRoom:room];
+        [chatController storeMessages:@[messageDict] withRealm:realm];
+    }
+}
+
 - (void)updateRoomLocal:(NCRoom *)room
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
