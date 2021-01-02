@@ -280,16 +280,17 @@ BOOL const useServerThemimg = YES;
     ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
     if (serverCapabilities) {
         if (@available(iOS 13.0, *)) {
-            if ([self isValidColorString:serverCapabilities.colorElementBright] && [self isValidColorString:serverCapabilities.colorElementDark]) {
-                return [self getDynamicColor:[NCUtils colorFromHexString:serverCapabilities.colorElementBright] withDarkMode:[NCUtils colorFromHexString:serverCapabilities.colorElementDark]];
+            UIColor *elementColorBright = [NCUtils colorFromHexString:serverCapabilities.colorElementBright];
+            UIColor *elementColorDark = [NCUtils colorFromHexString:serverCapabilities.colorElementDark];
+            
+            if (elementColorBright && elementColorDark) {
+                return [self getDynamicColor:elementColorBright withDarkMode:elementColorDark];
             }
         }
 
-        if ([self isValidColorString:serverCapabilities.colorElement]) {
-            UIColor *color = [NCUtils colorFromHexString:serverCapabilities.colorElement];
-            if (color) {
-                return color;
-            }
+        UIColor *color = [NCUtils colorFromHexString:serverCapabilities.colorElement];
+        if (color) {
+            return color;
         }
     }
     
@@ -306,11 +307,6 @@ BOOL const useServerThemimg = YES;
         
         return lightModeColor;
     }];
-}
-
-+ (BOOL)isValidColorString:(NSString *)color
-{
-    return color && ![color isKindOfClass:[NSNull class]] && ![color isEqualToString:@""];
 }
 
 + (NSString *)navigationLogoImageName
@@ -347,7 +343,7 @@ BOOL const useServerThemimg = YES;
 + (UIColor *)chatForegroundColor
 {
     if (@available(iOS 13.0, *)) {
-        return [self getDynamicColor:[UIColor darkGrayColor] withDarkMode:[UIColor colorWithWhite:1 alpha:0.8]];
+        return [self getDynamicColor:[UIColor darkGrayColor] withDarkMode:[UIColor labelColor]];
     }
     
     return [UIColor darkGrayColor];
