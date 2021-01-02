@@ -45,6 +45,8 @@ static NSString *AutoCompletionCellIdentifier   = @"AutoCompletionCellIdentifier
 
 @property (nonatomic, weak) id<ChatMessageTableViewCellDelegate> delegate;
 
+@property (nonatomic, weak) id<ChatMessageTableViewCellDelegate> delegate;
+
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) QuotedMessageView *quotedMessageView;

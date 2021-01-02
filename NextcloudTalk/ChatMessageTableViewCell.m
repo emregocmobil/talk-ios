@@ -464,6 +464,12 @@
     }
 }
 
+- (void)quoteTapped:(UIGestureRecognizer *)gestureRecognizer {
+    if (self.delegate && self.message && self.message.parent) {
+        [self.delegate cellWantsToScrollToMessage:self.message.parent];
+    }
+}
+
 + (CGFloat)defaultFontSize
 {
     CGFloat pointSize = 16.0;
