@@ -2563,7 +2563,9 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         }
         
         NSInteger lastCommonRead = [[notification.userInfo objectForKey:@"lastCommonReadMessage"] integerValue];
+        BOOL shouldUpdateReadStatus = NO;
         if (lastCommonRead > 0) {
+            shouldUpdateReadStatus = lastCommonRead > self->_lastCommonReadMessage;
             self->_lastCommonReadMessage = lastCommonRead;
         }
         
