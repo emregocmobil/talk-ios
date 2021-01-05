@@ -119,6 +119,10 @@
     
     _previewImageView.contentMode = UIViewContentModeScaleAspectFit;
     
+    _fileStatusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kChatCellStatusViewHeight, kChatCellStatusViewHeight)];
+    _fileStatusView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentView addSubview:_fileStatusView];
+    
     NSDictionary *views = @{@"avatarView": self.avatarView,
                             @"statusStackView": self.statusStackView,
                             @"titleLabel": self.titleLabel,
@@ -504,7 +508,7 @@
             // Immediately show an indeterminate indicator as long as we don't have a progress value
             [self addActivityIndicator:0];
         } else if (!isDownloading && self->_activityIndicator) {
-            [self clearStatusView];
+            [self clearFileStatusView];
         }
     });
 }
@@ -533,7 +537,7 @@
 
 - (void)addActivityIndicator:(CGFloat)progress
 {
-    [self clearStatusView];
+    [self clearFileStatusView];
     
     _activityIndicator = [[MDCActivityIndicator alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     _activityIndicator.radius = 7.0f;
@@ -545,7 +549,7 @@
     }
     
     [_activityIndicator startAnimating];
-    [self.statusView addSubview:_activityIndicator];
+    [self.fileStatusView addSubview:_activityIndicator];
 }
 
 
@@ -614,7 +618,6 @@
         [_activityIndicator stopAnimating];
         _activityIndicator = nil;
     }
-
     [self.fileStatusView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
 }
 
