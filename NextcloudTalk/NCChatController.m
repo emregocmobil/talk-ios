@@ -45,6 +45,7 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
 @interface NCChatController ()
 
 @property (nonatomic, assign) BOOL stopChatMessagesPoll;
+@property (nonatomic, assign) NSInteger lastCommonReadMessage;
 @property (nonatomic, strong) TalkAccount *account;
 @property (nonatomic, strong) NSURLSessionTask *getHistoryTask;
 @property (nonatomic, strong) NSURLSessionTask *pullMessagesTask;
@@ -58,6 +59,7 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
     self = [super init];
     if (self) {
         _room = room;
+        _lastCommonReadMessage = room.lastCommonReadMessage;
         _account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:_room.accountId];
     }
     
@@ -479,7 +481,10 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
                     [userInfo setObject:storedMessages forKey:@"messages"];
                 }
             }
-            [userInfo setObject:@(lastCommonReadMessage) forKey:@"lastCommonReadMessage"];
+            if (lastCommonReadMessage > 0) {
+                self->_lastCommonReadMessage = lastCommonReadMessage;
+                [userInfo setObject:@(lastCommonReadMessage) forKey:@"lastCommonReadMessage"];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:NCChatControllerDidReceiveInitialChatHistoryNotification
                                                                 object:self
                                                               userInfo:userInfo];
