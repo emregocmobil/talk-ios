@@ -116,7 +116,6 @@ NSString * const kActionTypeTranscribeVoiceMessage   = @"transcribe-voice-messag
 @property (nonatomic, assign) BOOL hasStoredHistory;
 @property (nonatomic, assign) BOOL hasStopped;
 @property (nonatomic, assign) NSInteger lastReadMessage;
-@property (nonatomic, assign) NSInteger lastCommonReadMessage;
 @property (nonatomic, strong) NCChatMessage *unreadMessagesSeparator;
 @property (nonatomic, assign) NSInteger chatViewPresentedTimestamp;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingHistoryView;
@@ -369,7 +368,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.view addSubview:_unreadMessageButton];
     _chatViewPresentedTimestamp = [[NSDate date] timeIntervalSince1970];
     _lastReadMessage = _room.lastReadMessage;
-    _lastCommonReadMessage = _room.lastCommonReadMessage;
     
     // Check if there's a stored pending message
     if (_room.pendingMessage != nil) {
@@ -2562,13 +2560,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
             return;
         }
         
-        NSInteger lastCommonRead = [[notification.userInfo objectForKey:@"lastCommonReadMessage"] integerValue];
-        BOOL shouldUpdateReadStatus = NO;
-        if (lastCommonRead > 0) {
-            shouldUpdateReadStatus = lastCommonRead > self->_lastCommonReadMessage;
-            self->_lastCommonReadMessage = lastCommonRead;
-        }
-        
         BOOL firstNewMessagesAfterHistory = !self->_hasReceiveNewMessages;
         self->_hasReceiveNewMessages = YES;
         
@@ -2753,6 +2744,26 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         _hasRequestedInitialHistory = YES;
         [_chatController getInitialChatHistory];
     }
+}
+
+- (void)didReceiveNewerCommonReadMessage:(NSNotification *)notification
+{
+    if (notification.object != _chatController) {
+        return;
+    }
+    
+    NSMutableArray *reloadCells = [NSMutableArray new];
+    for (NSIndexPath *visibleIndexPath in self.tableView.indexPathsForVisibleRows) {
+        NSDate *sectionDate = [_dateSections objectAtIndex:visibleIndexPath.section];
+        NCChatMessage *message = [[_messages objectForKey:sectionDate] objectAtIndex:visibleIndexPath.row];
+        if (message.messageId > 0 && message.messageId <= _chatController.lastCommonReadMessage) {
+            [reloadCells addObject:visibleIndexPath];
+        }
+    }
+    
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:reloadCells withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - Lobby functions
