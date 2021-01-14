@@ -44,7 +44,6 @@ extern NSString * const NCChatControllerDidReceiveCallEndedMessageNotification;
 @interface NCChatController : NSObject
 
 @property (nonatomic, strong) NCRoom *room;
-@property (nonatomic, assign) NSInteger lastCommonReadMessage;
 
 - (instancetype)initForRoom:(NCRoom *)room;
 - (void)sendChatMessage:(NSString *)message replyTo:(NSInteger)replyTo referenceId:(NSString *)referenceId silently:(BOOL)silently;

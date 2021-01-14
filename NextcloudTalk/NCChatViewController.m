@@ -2756,7 +2756,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     for (NSIndexPath *visibleIndexPath in self.tableView.indexPathsForVisibleRows) {
         NSDate *sectionDate = [_dateSections objectAtIndex:visibleIndexPath.section];
         NCChatMessage *message = [[_messages objectForKey:sectionDate] objectAtIndex:visibleIndexPath.row];
-        if (message.messageId > 0 && message.messageId <= _chatController.lastCommonReadMessage) {
+        if (message.messageId > 0 && message.messageId <= _room.lastCommonReadMessage) {
             [reloadCells addObject:visibleIndexPath];
         }
     }

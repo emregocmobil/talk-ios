@@ -58,7 +58,6 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
     self = [super init];
     if (self) {
         _room = room;
-        _lastCommonReadMessage = room.lastCommonReadMessage;
         _account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:_room.accountId];
     }
     
