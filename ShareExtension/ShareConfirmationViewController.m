@@ -875,6 +875,9 @@
             [self.addItemButton setEnabled:([self.shareItemController.shareItems count] < 5)];
         } completion:nil];
     }
+    
+    [self.removeItemButton setEnabled:([self.shareItemController.shareItems count] > 1)];
+    [self.removeItemButton setTintColor:([self.shareItemController.shareItems count] > 1) ? nil : [UIColor clearColor]];
 }
 
 #pragma mark - UIImagePickerController Delegate
