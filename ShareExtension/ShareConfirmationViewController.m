@@ -687,15 +687,16 @@
                     NSLog(@"Failed to send shared file");
                     
                     self->_uploadFailed = YES;
-                    dispatch_group_leave(self->_uploadGroup);
-                } else {
-                    dispatch_group_leave(self->_uploadGroup);
+                    [self->_uploadErrors addObject:error.description];
                 }
+                
+                dispatch_group_leave(self->_uploadGroup);
             }];
         } else if (errorCode == 404) {
             [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
         } else {
             self->_uploadFailed = YES;
+            [self->_uploadErrors addObject:errorDescription];
             dispatch_group_leave(self->_uploadGroup);
         }
     }];
