@@ -380,7 +380,12 @@ BOOL const useServerThemimg = YES;
 {
     switch (style) {
         case NCTextColorStyleDark:
+        {
+            if (@available(iOS 13.0, *)) {
+                return UIStatusBarStyleDarkContent;
+            }
             return UIStatusBarStyleDefault;
+        }
             break;
         case NCTextColorStyleLight:
         default:
