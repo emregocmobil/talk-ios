@@ -1675,6 +1675,9 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 }
 
 - (void)didPressResend:(NCChatMessage *)message {
+    // Make sure there's no unread message separator, as the indexpath could be invalid after removing a message
+    [self removeUnreadMessagesSeparator];
+    
     [self removePermanentlyTemporaryMessage:message];
     [self sendChatMessage:message.message fromInputField:NO];
 }
