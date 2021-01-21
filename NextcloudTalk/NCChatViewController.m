@@ -1662,7 +1662,9 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         self.replyMessageView = (ReplyMessageView *)self.typingIndicatorProxyView;
         [self.replyMessageView dismiss];
         [self.replyMessageView presentReplyViewWithMessage:message];
-        [self presentKeyboard:YES];
+        
+        // Make sure we're really at the bottom after showing the replyMessageView
+        [self.tableView slk_scrollToBottomAnimated:YES];
     });
 }
 
