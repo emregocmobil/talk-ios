@@ -498,7 +498,6 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     [[NCAPIController sharedInstance] getRoomsForAccount:activeAccount updateStatus:updateStatus withCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         NSMutableArray *roomsWithNewMessages = [NSMutableArray new];
-
         if (!error) {
             BGTaskHelper *bgTask = [BGTaskHelper startBackgroundTaskWithName:@"NCUpdateRoomsTransaction" expirationHandler:nil];
 
@@ -508,13 +507,11 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
                 NSInteger updateTimestamp = [[NSDate date] timeIntervalSince1970];
                 for (NSDictionary *roomDict in rooms) {
                     BOOL roomContainsNewMessages = [self updateRoomWithDict:roomDict withAccount:activeAccount withTimestamp:updateTimestamp withRealm:realm];
-
                     if (roomContainsNewMessages) {
                         NCRoom *room = [NCRoom roomWithDictionary:roomDict andAccountId:activeAccount.accountId];
                         [roomsWithNewMessages addObject:room];
                     }
                 }
-
                 // Delete old rooms
                 NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@ AND lastUpdate != %ld", activeAccount.accountId, (long)updateTimestamp];
                 RLMResults *managedRoomsToBeDeleted = [NCRoom objectsWithPredicate:query];
@@ -657,8 +654,10 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }];
 }
 
-- (void)updateRoomWithDict:(NSDictionary *)roomDict withAccount:(TalkAccount *)activeAccount withTimestamp:(NSInteger)timestamp withRealm:(RLMRealm *)realm
+- (BOOL)updateRoomWithDict:(NSDictionary *)roomDict withAccount:(TalkAccount *)activeAccount withTimestamp:(NSInteger)timestamp withRealm:(RLMRealm *)realm
 {
+    BOOL roomContainsNewMessages = NO;
+    
     NCRoom *room = [NCRoom roomWithDictionary:roomDict andAccountId:activeAccount.accountId];
     NSDictionary *messageDict = [roomDict objectForKey:@"lastMessage"];
     NCChatMessage *lastMessage = [NCChatMessage messageWithDictionary:messageDict andAccountId:activeAccount.accountId];
@@ -667,6 +666,10 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     
     NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
     if (managedRoom) {
+        if (room.lastActivity > managedRoom.lastActivity) {
+            roomContainsNewMessages = YES;
+        }
+        
         [NCRoom updateRoom:managedRoom withRoom:room];
     } else if (room) {
         [realm addObject:room];
@@ -679,6 +682,8 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
         NCChatController *chatController = [[NCChatController alloc] initForRoom:room];
         [chatController storeMessages:@[messageDict] withRealm:realm];
     }
+    
+    return roomContainsNewMessages;
 }
 
 - (void)updateRoomLocal:(NCRoom *)room

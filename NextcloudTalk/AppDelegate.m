@@ -34,6 +34,10 @@
 
 #import <UserNotifications/UserNotifications.h>
 
+#import <BackgroundTasks/BGTaskScheduler.h>
+#import <BackgroundTasks/BGTaskRequest.h>
+#import <BackgroundTasks/BGTask.h>
+
 #import "NCAudioController.h"
 #import "NCAppBranding.h"
 #import "NCDatabaseManager.h"
@@ -96,6 +100,8 @@
 
     // When we include VLCKit we need to manually call this because otherwise, device rotation might not work
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
+    [self registerBackgroundFetchTask];
     
     return YES;
 }
