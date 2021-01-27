@@ -1661,12 +1661,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     dispatch_async(dispatch_get_main_queue(), ^{
         self.replyMessageView = (ReplyMessageView *)self.typingIndicatorProxyView;
         [self.replyMessageView presentReplyViewWithMessage:message];
-        
-        // Make sure we're really at the bottom after showing the replyMessageView
-        [self.tableView slk_scrollToBottomAnimated:NO];
-    }
-                     completion:nil];
+        [self presentKeyboard:YES];
 
+        // Make sure we're really at the bottom after showing the replyMessageView
+        if (isAtBottom) {
+            [self.tableView slk_scrollToBottomAnimated:NO];
+        }
+    });
 }
 
 - (void)didPressReplyPrivately:(NCChatMessage *)message {
