@@ -1693,7 +1693,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 }
 
 - (void)didPressDelete:(NCChatMessage *)message {
-    [self removePermanentlyTemporaryMessage:message];
+    if (message.sendingFailed) {
+        [self removePermanentlyTemporaryMessage:message];
+    } else {
+        [[NCAPIController sharedInstance] deleteChatMessageInRoom:self->_room.token withMessageId:message.messageId forAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NCChatMessage *message, NSError *error) {
+            NSLog(@"Deleted message: %@", message);
+        }];
+    }
 }
 
 - (void)didPressOpenInNextcloud:(NCChatMessage *)message {
