@@ -2778,11 +2778,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         if (message.messageId > 0 && message.messageId <= _room.lastCommonReadMessage) {
             [reloadCells addObject:visibleIndexPath];
         }
-    }
-    
-    [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:reloadCells withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+        
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:reloadCells withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    });
 }
 
 - (void)didReceiveDeletedMessage:(NSNotification *)notification
