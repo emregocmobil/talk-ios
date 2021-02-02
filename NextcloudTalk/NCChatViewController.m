@@ -1696,8 +1696,14 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (message.sendingFailed) {
         [self removePermanentlyTemporaryMessage:message];
     } else {
-        [[NCAPIController sharedInstance] deleteChatMessageInRoom:self->_room.token withMessageId:message.messageId forAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NCChatMessage *message, NSError *error) {
-            NSLog(@"Deleted message: %@", message);
+        TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+        [[NCAPIController sharedInstance] deleteChatMessageInRoom:self->_room.token withMessageId:message.messageId forAccount:activeAccount withCompletionBlock:^(NSDictionary *messageDict, NSError *error) {
+            if (!error && messageDict) {
+                NCChatMessage *deleteMessage = [NCChatMessage messageWithDictionary:[messageDict objectForKey:@"parent"] andAccountId:activeAccount.accountId];
+                if (deleteMessage) {
+                    [self updateMessageWithReferenceId:deleteMessage.referenceId withMessage:deleteMessage];
+                }
+            }
         }];
     }
 }
@@ -2777,6 +2783,19 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.tableView beginUpdates];
     [self.tableView reloadRowsAtIndexPaths:reloadCells withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
+}
+
+- (void)didReceiveDeletedMessage:(NSNotification *)notification
+{
+    if (notification.object != _chatController) {
+        return;
+    }
+    
+    NCChatMessage *message = [notification.userInfo objectForKey:@"deleteMessage"];
+    NCChatMessage *deleteMessage = message.parent;
+    if (deleteMessage) {
+        [self updateMessageWithReferenceId:deleteMessage.referenceId withMessage:deleteMessage];
+    }
 }
 
 #pragma mark - Lobby functions
