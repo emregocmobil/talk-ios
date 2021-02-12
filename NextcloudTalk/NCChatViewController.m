@@ -1660,7 +1660,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     // Use dispatch here to have a smooth animation with native contextmenu
     dispatch_async(dispatch_get_main_queue(), ^{
         self.replyMessageView = (ReplyMessageView *)self.typingIndicatorProxyView;
-        [self.replyMessageView presentReplyViewWithMessage:message];
+        [self.replyMessageView presentReplyViewWithMessage:message withUserId:activeAccount.userId];
         [self presentKeyboard:YES];
 
         // Make sure we're really at the bottom after showing the replyMessageView
