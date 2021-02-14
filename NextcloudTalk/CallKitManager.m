@@ -46,6 +46,9 @@ NSString * const CallKitManagerDidFailRequestingCallTransaction = @"CallKitManag
 NSTimeInterval const kCallKitManagerMaxRingingTimeSeconds       = 45.0;
 NSTimeInterval const kCallKitManagerCheckCallStateEverySeconds  = 5.0;
 
+NSTimeInterval const kCallKitManagerMaxRingingTimeSeconds       = 45.0;
+NSTimeInterval const kCallKitManagerCheckCallStateEverySeconds  = 3.0;
+
 @interface CallKitManager () <CXProviderDelegate>
 
 @property (nonatomic, strong) CXProvider *provider;
