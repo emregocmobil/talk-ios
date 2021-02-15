@@ -257,6 +257,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.textView layoutSubviews];
     self.textView.layer.cornerRadius = self.textView.frame.size.height / 2;
     
+    // Make sure we update the textView frame
+    [self.textView layoutSubviews];
+    self.textView.layer.cornerRadius = self.textView.frame.size.height / 2;
+    
     [self.textInputbar.editorTitle setTextColor:[UIColor darkGrayColor]];
     [self.textInputbar.editorLeftButton setTintColor:[UIColor systemBlueColor]];
     [self.textInputbar.editorRightButton setTintColor:[UIColor systemBlueColor]];
@@ -2325,6 +2329,8 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
+    
+    [self updateToolbar:YES];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -2338,6 +2344,8 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
+    
+    [self updateToolbar:YES];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -2349,6 +2357,8 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
+    
+    [self updateToolbar:YES];
 }
 
 #pragma mark - UITextViewDelegate Methods
