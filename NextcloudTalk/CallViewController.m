@@ -1640,6 +1640,21 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [self updateParticipantCell:participantCell withPeerConnection:peerConnection];
 }
 
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CallParticipantViewCell *participantCell = (CallParticipantViewCell *)cell;
+    NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
+    
+    [participantCell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
+    [participantCell setUserAvatar:[_callController getUserIdFromSessionId:peerConnection.peerId]];
+    [participantCell setDisplayName:peerConnection.peerName];
+    [participantCell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
+    [participantCell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
+    [participantCell setVideoDisabled: (_isAudioOnly) ? YES : peerConnection.isRemoteVideoDisabled];
+    [participantCell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+    [participantCell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+}
+
 #pragma mark - Call Controller delegate
 
 - (void)callControllerDidJoinCall:(NCCallController *)callController
