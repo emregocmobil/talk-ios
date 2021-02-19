@@ -2328,6 +2328,7 @@ typedef enum FileAction {
             } else {
                 cell.accessoryView = nil;
             }
+            [cell.accessoryView setTintColor:[NCAppBranding placeholderColor]];
             
             cell.layoutMargins = UIEdgeInsetsMake(0, 72, 0, 0);
             
