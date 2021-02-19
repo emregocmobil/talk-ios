@@ -33,6 +33,14 @@
 typedef void (^GetVideoEnabledStateCompletionBlock)(BOOL isEnabled);
 typedef void (^GetAudioEnabledStateCompletionBlock)(BOOL isEnabled);
 
+typedef enum CallFlag {
+    CallFlagDisconnected = 0,
+    CallFlagInCall = 1,
+    CallFlagWithAudio = 2,
+    CallFlagWithVideo = 4,
+    CallFlagWithPhone = 8
+} CallFlag;
+
 @protocol NCCallControllerDelegate<NSObject>
 
 - (void)callControllerDidJoinCall:(NCCallController *)callController;
