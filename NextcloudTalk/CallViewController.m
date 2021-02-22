@@ -553,7 +553,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
             }
         }
     }
-
     [self pushToTalkEnd];
 }
 
