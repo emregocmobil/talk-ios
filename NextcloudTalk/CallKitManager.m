@@ -392,6 +392,16 @@ NSTimeInterval const kCallKitManagerCheckCallStateEverySeconds  = 3.0;
                 [self endCallWithUUID:call.uuid];
                 return;
             }
+            if (participant.inCall) {
+                isAnyoneInCall = YES;
+            }
+        }
+        
+        if (!isAnyoneInCall) {
+            // No one is in the call, we can hang up and show missed call notification
+            [self presentMissedCallNotificationForCall:call];
+            [self endCallWithUUID:call.uuid];
+            return;
         }
         
         // Reschedule next check
