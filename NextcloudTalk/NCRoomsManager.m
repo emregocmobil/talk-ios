@@ -697,6 +697,34 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }];
 }
 
+- (void)updateLastMessage:(NCChatMessage *)message withNoUnreadMessages:(BOOL)noUnreadMessages forRoom:(NCRoom *)room
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm transactionWithBlock:^{
+        NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
+        if (managedRoom) {
+            managedRoom.lastMessageId = message.internalId;
+            managedRoom.lastActivity = message.timestamp;
+            
+            if (noUnreadMessages) {
+                managedRoom.unreadMention = NO;
+                managedRoom.unreadMessages = 0;
+            }
+        }
+    }];
+}
+
+- (void)updateLastCommonReadMessage:(NSInteger)messageId forRoom:(NCRoom *)room
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm transactionWithBlock:^{
+        NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
+        if (managedRoom && messageId > managedRoom.lastCommonReadMessage) {
+            managedRoom.lastCommonReadMessage = messageId;
+        }
+    }];
+}
+
 #pragma mark - Chat
 
 - (void)startChatInRoom:(NCRoom *)room
