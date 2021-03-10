@@ -77,6 +77,7 @@ pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
 pod 'MBProgressHUD', '~> 1.2.0'
 pod 'TOCropViewController', '~> 2.6.0'
+pod 'libPhoneNumber-iOS'
 end
 
 target "NotificationServiceExtension" do
@@ -95,6 +96,7 @@ pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
 pod 'MBProgressHUD', '~> 1.2.0'
 pod 'TOCropViewController', '~> 2.6.0'
+pod 'libPhoneNumber-iOS'
 end
 
 target "ShareExtension" do
@@ -113,6 +115,7 @@ pod 'Toast', '~> 4.0.0'
 pod "PulsingHalo"
 pod 'MBProgressHUD', '~> 1.2.0'
 pod 'TOCropViewController', '~> 2.6.0'
+pod 'libPhoneNumber-iOS'
 end
 
 pre_install do |installer|
