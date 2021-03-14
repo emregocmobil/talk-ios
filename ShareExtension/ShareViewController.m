@@ -167,6 +167,31 @@
         }
     }
     
+    if (self.extensionContext && self.extensionContext.intent && [self.extensionContext.intent isKindOfClass:[INSendMessageIntent class]]) {
+        INSendMessageIntent *intent = (INSendMessageIntent *)self.extensionContext.intent;
+
+        NSPredicate *query = [NSPredicate predicateWithFormat:@"internalId = %@", intent.conversationIdentifier];
+        NCRoom *managedRoom = [NCRoom objectsInRealm:_realm withPredicate:query].firstObject;
+
+        if (managedRoom) {
+            NCRoom *room = [[NCRoom alloc] initWithValue:managedRoom];
+            NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", room.accountId];
+            TalkAccount *managedAccount = [TalkAccount objectsInRealm:_realm withPredicate:query].firstObject;
+
+            if (managedAccount) {
+                TalkAccount *intentAccount = [[TalkAccount alloc] initWithValue:managedAccount];
+                [self setupShareViewForAccount:intentAccount];
+                ShareConfirmationViewController *shareConfirmationVC = [[ShareConfirmationViewController alloc] initWithRoom:room account:intentAccount serverCapabilities:_serverCapabilities];
+                shareConfirmationVC.delegate = self;
+                shareConfirmationVC.isModal = YES;
+                [self setSharedItemToShareConfirmationViewController:shareConfirmationVC];
+                [self.navigationController pushViewController:shareConfirmationVC animated:YES];
+
+                return;
+            }
+        }
+    }
+    
     [self setupShareViewForAccount:nil];
     
     // Configure communication lib
