@@ -39,7 +39,6 @@
 #import "NCUserDefaults.h"
 #import "NCUtils.h"
 #import "MBProgressHUD.h"
-#import "NCNavigationController.h"
 
 
 @interface ShareConfirmationViewController () <NKCommonDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, QLPreviewControllerDataSource, QLPreviewControllerDelegate, ShareItemControllerDelegate, TOCropViewControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>

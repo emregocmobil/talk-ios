@@ -737,7 +737,6 @@ NSString * const NCChatControllerDidReceiveCallEndedMessageNotification         
         } else {
             [[NCIntentController sharedInstance] donateSendMessageIntentForRoom:self->_room];
         }
-
         [[NSNotificationCenter defaultCenter] postNotificationName:NCChatControllerDidSendChatMessageNotification
                                                             object:self
                                                           userInfo:userInfo];
