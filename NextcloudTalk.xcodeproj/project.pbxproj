@@ -1731,6 +1731,7 @@
 				1F59446625B8EDF5002AD65F /* Localizable.strings in Resources */,
 				2CB6ACEE2641954700D3D641 /* MapViewController.xib in Resources */,
 				2C62AFB624C1A449007E460A /* Share.storyboard in Resources */,
+				2CF9CC0126025F65002246EF /* TextInputTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1985,6 +1986,7 @@
 				2C5BFBFE2891C3DF00E75118 /* PollResultsDetailsViewController.swift in Sources */,
 				2CA1CCA41F025F64002FE6A2 /* RoomsTableViewController.m in Sources */,
 				2CB3041A2264775E0053078A /* SLKTextInput+Implementation.m in Sources */,
+				2CF9CBFC26025F64002246EF /* TextInputTableViewCell.m in Sources */,
 				2C90E5D31EE80C870093D85A /* AuthenticationViewController.m in Sources */,
 				2C604BD9211988A700D34DCD /* SystemMessageTableViewCell.m in Sources */,
 				2CA1CCD01F1E1779002FE6A2 /* SearchTableViewController.m in Sources */,
