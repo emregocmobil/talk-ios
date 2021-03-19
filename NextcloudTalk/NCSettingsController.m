@@ -83,6 +83,14 @@ NSString * const kUserProfileScopeLocal         = @"v2-local";
 NSString * const kUserProfileScopeFederated     = @"v2-federated";
 NSString * const kUserProfileScopePublished     = @"v2-published";
 
+NSString * const kUserProfileUserId         = @"id";
+NSString * const kUserProfileDisplayName    = @"displayname";
+NSString * const kUserProfileEmail          = @"email";
+NSString * const kUserProfilePhone          = @"phone";
+NSString * const kUserProfileAddress        = @"address";
+NSString * const kUserProfileWebsite        = @"website";
+NSString * const kUserProfileTwitter        = @"twitter";
+
 NSInteger const kDefaultChatMaxLength           = 1000;
 
 NSString * const kPreferredFileSorting          = @"preferredFileSorting";
