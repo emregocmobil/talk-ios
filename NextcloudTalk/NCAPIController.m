@@ -2276,6 +2276,32 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     return task;
 }
 
+- (NSURLSessionDataTask *)setUserProfileImage:(UIImage *)image forAccount:(TalkAccount *)account withCompletionBlock:(SetUserProfileFieldCompletionBlock)block
+{
+    NSString *URLString = [NSString stringWithFormat:@"%@/ocs/v2.php/apps/spreed/temp-user-avatar", account.server];
+    NSData *imageData= UIImageJPEGRepresentation(image, 0.7);
+    
+    NCAPISessionManager *apiSessionManager = [_apiSessionManagers objectForKey:account.accountId];
+    NSURLSessionDataTask *task = [apiSessionManager POST:URLString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:imageData name:@"files[]" fileName:@"avatar.jpg" mimeType:@"image/jpeg"];
+    } progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        if (block) {
+            block(nil, 0);
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        if (block) {
+            NSInteger statusCode = 0;
+            if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+                statusCode = httpResponse.statusCode;
+            }
+            block(error, statusCode);
+        }
+    }];
+    
+    return task;
+}
+
 - (void)saveProfileImageForAccount:(TalkAccount *)account
 {
     [self getAndStoreProfileImageForAccount:account withStyle:UIUserInterfaceStyleLight];
