@@ -50,6 +50,11 @@ extern NSString * const kUserProfileAddress;
 extern NSString * const kUserProfileWebsite;
 extern NSString * const kUserProfileTwitter;
 
+extern NSString * const kUserProfileScopePrivate;
+extern NSString * const kUserProfileScopeLocal;
+extern NSString * const kUserProfileScopeFederated;
+extern NSString * const kUserProfileScopePublished;
+
 extern NSInteger const kDefaultChatMaxLength;
 
 typedef void (^UpdatedProfileCompletionBlock)(NSError *error);
