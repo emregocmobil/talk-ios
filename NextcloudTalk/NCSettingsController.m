@@ -83,13 +83,20 @@ NSString * const kUserProfileScopeLocal         = @"v2-local";
 NSString * const kUserProfileScopeFederated     = @"v2-federated";
 NSString * const kUserProfileScopePublished     = @"v2-published";
 
-NSString * const kUserProfileUserId         = @"id";
-NSString * const kUserProfileDisplayName    = @"displayname";
-NSString * const kUserProfileEmail          = @"email";
-NSString * const kUserProfilePhone          = @"phone";
-NSString * const kUserProfileAddress        = @"address";
-NSString * const kUserProfileWebsite        = @"website";
-NSString * const kUserProfileTwitter        = @"twitter";
+NSString * const kUserProfileUserId             = @"id";
+NSString * const kUserProfileDisplayName        = @"displayname";
+NSString * const kUserProfileDisplayNameScope   = @"displaynameScope";
+NSString * const kUserProfileEmail              = @"email";
+NSString * const kUserProfileEmailScope         = @"emailScope";
+NSString * const kUserProfilePhone              = @"phone";
+NSString * const kUserProfilePhoneScope         = @"phoneScope";
+NSString * const kUserProfileAddress            = @"address";
+NSString * const kUserProfileAddressScope       = @"addressScope";
+NSString * const kUserProfileWebsite            = @"website";
+NSString * const kUserProfileWebsiteScope       = @"websiteScope";
+NSString * const kUserProfileTwitter            = @"twitter";
+NSString * const kUserProfileTwitterScope       = @"twitterScope";
+NSString * const kUserProfileAvatarScope        = @"avatarScope";
 
 NSInteger const kDefaultChatMaxLength           = 1000;
 
