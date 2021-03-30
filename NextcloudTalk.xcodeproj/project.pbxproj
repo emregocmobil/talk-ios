@@ -1731,6 +1731,7 @@
 				1F59446625B8EDF5002AD65F /* Localizable.strings in Resources */,
 				2CB6ACEE2641954700D3D641 /* MapViewController.xib in Resources */,
 				2C62AFB624C1A449007E460A /* Share.storyboard in Resources */,
+				2C36A041261342FF0026F04A /* AvatarHeaderView.xib in Resources */,
 				2CF9CC0126025F65002246EF /* TextInputTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
