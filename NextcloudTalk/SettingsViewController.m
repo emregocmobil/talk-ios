@@ -506,7 +506,7 @@ typedef enum AboutSection {
             [[NCContactsManager sharedInstance] searchInServerForAddressBookContacts:YES];
         }
     } else {
-        [[NCContactsManager sharedInstance] removeAllStoredContacts];
+        [[NCContactsManager sharedInstance] removeStoredContacts];
     }
     
     // Reload to update configuration section footer
