@@ -60,6 +60,7 @@ typedef enum LockSection {
 typedef enum ConfigurationSectionOption {
     kConfigurationSectionOptionVideo = 0,
     kConfigurationSectionOptionBrowser,
+    kConfigurationSectionOptionReadStatus,
     kConfigurationSectionOptionContactsSync
 } ConfigurationSectionOption;
 
@@ -74,6 +75,7 @@ typedef enum AboutSection {
 @interface SettingsViewController () <UITextFieldDelegate>
 {
     NCUserStatus *_activeUserStatus;
+    UISwitch *_readStatusSwitch;
     UISwitch *_contactSyncSwitch;
     UIAlertAction *_setPhoneAction;
     NBPhoneNumberUtil *_phoneUtil;
@@ -99,6 +101,9 @@ typedef enum AboutSection {
     
     _contactSyncSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     [_contactSyncSwitch addTarget: self action: @selector(contactSyncValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    _readStatusSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [_readStatusSwitch addTarget: self action: @selector(readStatusValueChanged:) forControlEvents:UIControlEventValueChanged];
     
     if (@available(iOS 13.0, *)) {
         UIColor *themeColor = [NCAppBranding themeColor];
@@ -185,6 +190,10 @@ typedef enum AboutSection {
     // Open links in
     if ([NCSettingsController sharedInstance].supportedBrowsers.count > 1) {
         [options addObject:[NSNumber numberWithInt:kConfigurationSectionOptionBrowser]];
+    }
+    // Read status privacy setting
+    if ([[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityChatReadStatus]) {
+        [options addObject:[NSNumber numberWithInt:kConfigurationSectionOptionReadStatus]];
     }
     // Contacts sync
     if ([[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityPhonebookSearch]) {
@@ -513,6 +522,37 @@ typedef enum AboutSection {
     [self.tableView reloadData];
 }
 
+- (void)readStatusValueChanged:(id)sender
+{
+    _readStatusSwitch.enabled = NO;
+    [[NCAPIController sharedInstance] setReadStatusPrivacySettingEnabled:!_readStatusSwitch.on forAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NSError *error) {
+        if (!error) {
+            [[NCSettingsController sharedInstance] getCapabilitiesWithCompletionBlock:^(NSError *error) {
+                if (!error) {
+                    self->_readStatusSwitch.enabled = YES;
+                    [self.tableView reloadData];
+                } else {
+                    [self showReadStatusModificationError];
+                }
+            }];
+        } else {
+            [self showReadStatusModificationError];
+        }
+    }];
+}
+
+- (void)showReadStatusModificationError
+{
+    _readStatusSwitch.enabled = YES;
+    UIAlertController *errorDialog =
+    [UIAlertController alertControllerWithTitle:NSLocalizedString(@"An error occured changing read status setting", nil)
+                                        message:nil
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+    [errorDialog addAction:okAction];
+    [self presentViewController:errorDialog animated:YES completion:nil];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -641,6 +681,7 @@ typedef enum AboutSection {
     UITableViewCell *cell = nil;
     static NSString *videoConfigurationCellIdentifier = @"VideoConfigurationCellIdentifier";
     static NSString *browserConfigurationCellIdentifier = @"BrowserConfigurationCellIdentifier";
+    static NSString *readStatusCellIdentifier = @"ReadStatusCellIdentifier";
     static NSString *contactsSyncCellIdentifier = @"ContactsSyncCellIdentifier";
     static NSString *privacyCellIdentifier = @"PrivacyCellIdentifier";
     static NSString *sourceCodeCellIdentifier = @"SourceCodeCellIdentifier";
@@ -736,6 +777,23 @@ typedef enum AboutSection {
                         [cell.imageView setImage:[UIImage imageNamed:@"browser-settings"]];
                     }
                     cell.detailTextLabel.text = [[NCSettingsController sharedInstance] defaultBrowser];
+                }
+                    break;
+                case kConfigurationSectionOptionReadStatus:
+                {
+                    cell = [self.tableView dequeueReusableCellWithIdentifier:readStatusCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:readStatusCellIdentifier];
+                        cell.textLabel.text = NSLocalizedString(@"Read status", nil);
+                        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                        cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                        [cell.imageView setImage:[[UIImage imageNamed:@"check-all"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                        cell.imageView.tintColor = [UIColor colorWithRed:0.43 green:0.43 blue:0.45 alpha:1];
+                    }
+                    cell.accessoryView = _readStatusSwitch;
+                    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+                    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+                    _readStatusSwitch.on = !serverCapabilities.readStatusPrivacy;
                 }
                     break;
                 case kConfigurationSectionOptionContactsSync:
@@ -880,6 +938,7 @@ typedef enum AboutSection {
                     [self presentBrowserSelector];
                 }
                     break;
+                case kConfigurationSectionOptionReadStatus:
                 case kConfigurationSectionOptionContactsSync:
                     break;
             }
