@@ -27,6 +27,7 @@
 #import "CCCertificate.h"
 #import "NCAPISessionManager.h"
 #import "NCAppBranding.h"
+#import "NCConnectionController.h"
 #import "NCDatabaseManager.h"
 #import "NCAvatarSessionManager.h"
 #import "NCImageSessionManager.h"
@@ -1869,6 +1870,8 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             block(nil);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSInteger statusCode = [self getResponseStatusCode:task.response];
+        [self checkResponseStatusCode:statusCode forAccount:account];
         if (block) {
             block(error);
         }
@@ -2311,12 +2314,9 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             block(nil, 0);
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSInteger statusCode = [self getResponseStatusCode:task.response];
+        [self checkResponseStatusCode:statusCode forAccount:account];
         if (block) {
-            NSInteger statusCode = 0;
-            if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-                statusCode = httpResponse.statusCode;
-            }
             block(error, statusCode);
         }
     }];
@@ -2334,12 +2334,9 @@ NSInteger const kReceivedChatMessagesLimit = 100;
             block(nil, 0);
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSInteger statusCode = [self getResponseStatusCode:task.response];
+        [self checkResponseStatusCode:statusCode forAccount:account];
         if (block) {
-            NSInteger statusCode = 0;
-            if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-                statusCode = httpResponse.statusCode;
-            }
             block(error, statusCode);
         }
     }];
