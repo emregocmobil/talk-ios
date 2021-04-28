@@ -1724,6 +1724,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C3195BC24C599130066F221 /* PlaceholderView.xib in Resources */,
+				2CB6ACC126385A3800D3D641 /* ShareLocationViewController.xib in Resources */,
 				2C1ABD8825769E7D00AEDFB6 /* ShareConfirmationCollectionViewCell.xib in Resources */,
 				2C7A245E24FE7B5300921A21 /* ShareConfirmationViewController.xib in Resources */,
 				2C3195C324C5E2100066F221 /* ShareTableViewCell.xib in Resources */,
