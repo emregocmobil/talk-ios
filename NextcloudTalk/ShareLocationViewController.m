@@ -309,6 +309,29 @@ typedef enum ShareLocationSection {
     [self searchForPlacesWithString:_searchController.searchBar.text];
 }
 
+- (void)searchForPlacesWithString:(NSString *)searchString
+{
+    if (@available(iOS 13.0, *)) {
+        MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] initWithNaturalLanguageQuery:searchString];
+        MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+        [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
+            if (response) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self->_searchedPlaces = response.mapItems;
+                    [self->_resultTableViewController.tableView reloadData];
+                });
+            }
+        }];
+    }
+}
+
+#pragma mark - Search controller
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    [self searchForPlacesWithString:_searchController.searchBar.text];
+}
+
 #pragma mark - UITableView delegate and data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
