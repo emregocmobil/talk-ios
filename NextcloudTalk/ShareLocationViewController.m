@@ -27,6 +27,7 @@
 #import "GeoLocationRichObject.h"
 #import "NCAPIController.h"
 #import "NCAppBranding.h"
+#import "NCAPIController.h"
 #import "NCUtils.h"
 
 typedef enum ShareLocationSection {

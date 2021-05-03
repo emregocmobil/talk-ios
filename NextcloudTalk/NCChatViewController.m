@@ -2211,6 +2211,20 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self disableProximitySensor];
 }
 
+#pragma mark - ShareLocationViewController Delegate
+
+-(void)shareLocationViewController:(ShareLocationViewController *)viewController didSelectLocationWithLatitude:(double)latitude longitude:(double)longitude andName:(NSString *)name
+{
+    GeoLocationRichObject *richObject = [GeoLocationRichObject geoLocationRichObjectWithLatitude:latitude longitude:longitude name:name];
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [[NCAPIController sharedInstance] shareRichObject:richObject.richObjectDictionary inRoom:_room.token forAccount:activeAccount withCompletionBlock:^(NSError *error) {
+        if (error) {
+            NSLog(@"Error sharing rich object: %@", error);
+        }
+    }];
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - Gesture recognizer
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
