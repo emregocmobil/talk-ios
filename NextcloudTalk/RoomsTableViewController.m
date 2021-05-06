@@ -253,6 +253,13 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     [self stopRefreshRoomsTimer];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self stopRefreshRoomsTimer];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
