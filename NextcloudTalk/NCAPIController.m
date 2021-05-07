@@ -147,6 +147,9 @@ NSInteger const kReceivedChatMessagesLimit = 100;
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityConversationV4 forAccountId:account.accountId]) {
         conversationAPIVersion = APIv4;
     }
+    if ([[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityConversationV4 forAccountId:account.accountId]) {
+        conversationAPIVersion = @"/apps/spreed/api/v4";
+    }
     
     return conversationAPIVersion;
 }
