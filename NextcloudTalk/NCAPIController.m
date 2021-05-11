@@ -148,7 +148,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
         conversationAPIVersion = APIv4;
     }
     if ([[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityConversationV4 forAccountId:account.accountId]) {
-        conversationAPIVersion = @"/apps/spreed/api/v4";
+        conversationAPIVersion = kNCSpreedAPIV4;
     }
     
     return conversationAPIVersion;
@@ -1863,7 +1863,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
 
 - (NSURLSessionDataTask *)setReadStatusPrivacySettingEnabled:(BOOL)enabled forAccount:(TalkAccount *)account withCompletionBlock:(SetReadStatusPrivacySettingCompletionBlock)block
 {
-    NSString *URLString = [self getRequestURLForAccount:account withEndpoint:[NSString stringWithFormat:@"settings/user"]];
+    NSString *URLString = [self getRequestURLForEndpoint:@"settings/user" withAPIVersion:kNCSpreedAPIV1 forAccount:account];
     NSDictionary *parameters = @{@"key" : @"read_status_privacy",
                                  @"value" : @(enabled)};
     
