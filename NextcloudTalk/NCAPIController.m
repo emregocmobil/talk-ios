@@ -148,7 +148,7 @@ NSInteger const kReceivedChatMessagesLimit = 100;
         conversationAPIVersion = APIv4;
     }
     if ([[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityConversationV4 forAccountId:account.accountId]) {
-        conversationAPIVersion = kNCSpreedAPIV4;
+        conversationAPIVersion = APIv4;
     }
     
     return conversationAPIVersion;
