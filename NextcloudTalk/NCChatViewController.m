@@ -2329,8 +2329,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
-    
-    [self updateToolbar:YES];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -2344,8 +2342,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
-    
-    [self updateToolbar:YES];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -2357,8 +2353,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [self updateToolbar:YES];
     }
-    
-    [self updateToolbar:YES];
 }
 
 #pragma mark - UITextViewDelegate Methods
