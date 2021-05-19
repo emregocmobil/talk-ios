@@ -83,6 +83,9 @@
 #define k_send_message_button_tag   99
 #define k_voice_record_button_tag   98
 
+#define k_send_message_button_tag   99
+#define k_voice_record_button_tag   98
+
 typedef enum NCChatMessageAction {
     kNCChatMessageActionReply = 1,
     kNCChatMessageActionForward,
@@ -1223,6 +1226,20 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
     // If in offline mode, we don't want to show the voice button
     if (!_offlineMode && !canPress && !_presentedInCall && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityVoiceMessage]) {
+        [self showVoiceMessageRecordButton];
+        return YES;
+    }
+    
+    [self showSendMessageButton];
+    
+    return canPress;
+}
+
+- (BOOL)canPressRightButton
+{
+    BOOL canPress = [super canPressRightButton];
+    
+    if (!canPress && [[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityVoiceMessage]) {
         [self showVoiceMessageRecordButton];
         return YES;
     }
