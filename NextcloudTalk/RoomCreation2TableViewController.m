@@ -26,6 +26,7 @@
 
 #import "ContactsTableViewCell.h"
 #import "NCAPIController.h"
+#import "NCDatabaseManager.h"
 #import "NCAppBranding.h"
 #import "NCDatabaseManager.h"
 #import "NCUser.h"

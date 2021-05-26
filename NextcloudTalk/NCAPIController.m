@@ -27,7 +27,6 @@
 #import "CCCertificate.h"
 #import "NCAPISessionManager.h"
 #import "NCAppBranding.h"
-#import "NCConnectionController.h"
 #import "NCDatabaseManager.h"
 #import "NCAvatarSessionManager.h"
 #import "NCImageSessionManager.h"

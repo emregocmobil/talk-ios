@@ -40,7 +40,6 @@
 #import "NCUtils.h"
 #import "MBProgressHUD.h"
 #import "NCNavigationController.h"
-#import "NCUserInterfaceController.h"
 
 
 @interface ShareConfirmationViewController () <NKCommonDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, QLPreviewControllerDataSource, QLPreviewControllerDelegate, ShareItemControllerDelegate, TOCropViewControllerDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, UINavigationControllerDelegate>
@@ -496,7 +495,7 @@
                                handler:nil];
     
     [alert addAction:okButton];
-    [[NCUserInterfaceController sharedInstance] presentAlertViewController:alert];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)presentCamera

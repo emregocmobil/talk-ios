@@ -1724,7 +1724,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C3195BC24C599130066F221 /* PlaceholderView.xib in Resources */,
-				2CB6ACC126385A3800D3D641 /* ShareLocationViewController.xib in Resources */,
 				2C1ABD8825769E7D00AEDFB6 /* ShareConfirmationCollectionViewCell.xib in Resources */,
 				2C7A245E24FE7B5300921A21 /* ShareConfirmationViewController.xib in Resources */,
 				2C3195C324C5E2100066F221 /* ShareTableViewCell.xib in Resources */,
@@ -1732,8 +1731,6 @@
 				1F59446625B8EDF5002AD65F /* Localizable.strings in Resources */,
 				2CB6ACEE2641954700D3D641 /* MapViewController.xib in Resources */,
 				2C62AFB624C1A449007E460A /* Share.storyboard in Resources */,
-				2C36A041261342FF0026F04A /* AvatarHeaderView.xib in Resources */,
-				2CF9CC0126025F65002246EF /* TextInputTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1917,7 +1914,6 @@
 				1F61C767285E35A6004D74D8 /* DiagnosticsTableViewController.swift in Sources */,
 				2CD5F3242142781A006B71BF /* NCExternalSignalingController.m in Sources */,
 				2C0574851EDD9E8E00D9E7F2 /* AppDelegate.m in Sources */,
-				2C1ABDA125769F8400AEDFB6 /* ShareItemController.m in Sources */,
 				2C4987BD21E640E20060AC27 /* CallKitManager.m in Sources */,
 				2C4446F3265D51A600DF1DBC /* NCPushNotificationsUtils.m in Sources */,
 				2C1ABDE5257F883400AEDFB6 /* ABContact.m in Sources */,

@@ -22,7 +22,6 @@
  */
 
 #import "NCUserDefaults.h"
-
 #import "NCKeyChainController.h"
 
 @implementation NCUserDefaults

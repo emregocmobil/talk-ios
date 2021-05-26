@@ -53,6 +53,7 @@
 #import "RoomSearchTableViewController.h"
 #import "RoomTableViewCell.h"
 #import "UIBarButtonItem+Badge.h"
+#import "NotificationCenterNotifications.h"
 
 typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 

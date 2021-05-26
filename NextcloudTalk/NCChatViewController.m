@@ -1174,9 +1174,18 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)sendChatMessage:(NSString *)message withParentMessage:(NCChatMessage *)parentMessage messageParameters:(NSString *)messageParameters silently:(BOOL)silently
 {
     // Create temporary message
+<<<<<<< HEAD
     NCChatMessage *temporaryMessage = [self createTemporaryMessage:message replyToMessage:parentMessage withMessageParameters:messageParameters silently:silently];
 
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityChatReferenceId]) {
+=======
+    NSString *referenceId = nil;
+    NCChatMessage *replyToMessage = (_replyMessageView.isVisible && fromInputField) ? _replyMessageView.message : nil;
+    
+    if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityChatReferenceId]) {
+        NCChatMessage *temporaryMessage = [self createTemporaryMessage:message replyToMessage:replyToMessage];
+        referenceId = temporaryMessage.referenceId;
+>>>>>>> 0e258c3d (Clean up project targets and classes refactoring to be able to build the project with XCode 12.5.)
         [self appendTemporaryMessage:temporaryMessage];
     }
 
@@ -1239,7 +1248,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 {
     BOOL canPress = [super canPressRightButton];
     
-    if (!canPress && [[NCSettingsController sharedInstance] serverHasTalkCapability:kCapabilityVoiceMessage]) {
+    if (!canPress && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityVoiceMessage]) {
         [self showVoiceMessageRecordButton];
         return YES;
     }
@@ -1326,9 +1335,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         [optionsActionSheet addAction:cameraAction];
     }
     [optionsActionSheet addAction:photoLibraryAction];
+<<<<<<< HEAD
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityTalkPolls] && _room.type != kNCRoomTypeOneToOne) {
         [optionsActionSheet addAction:pollAction];
     }
+=======
+>>>>>>> 0e258c3d (Clean up project targets and classes refactoring to be able to build the project with XCode 12.5.)
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityLocationSharing]) {
         [optionsActionSheet addAction:shareLocationAction];
     }

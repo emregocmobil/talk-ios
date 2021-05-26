@@ -149,16 +149,18 @@ static NSString *const nextcloudScheme = @"nextcloud:";
 
 + (void)openFileInNextcloudAppOrBrowser:(NSString *)path withFileLink:(NSString *)link
 {
+#ifndef APP_EXTENSION
     if (path && link) {
         NSURL *url = [NSURL URLWithString:link];
         if ([NCUtils isNextcloudAppInstalled]) {
             [NCUtils openFileInNextcloudApp:path withFileLink:link];
-        } else if ([[NCSettingsController sharedInstance].defaultBrowser isEqualToString:@"Firefox"] && [[OpenInFirefoxControllerObjC sharedInstance] isFirefoxInstalled]) {
+        } else if ([[NCUserDefaults defaultBrowser] isEqualToString:@"Firefox"] && [[OpenInFirefoxControllerObjC sharedInstance] isFirefoxInstalled]) {
             [[OpenInFirefoxControllerObjC sharedInstance] openInFirefox:url];
         } else {
             [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         }
     }
+#endif
 }
 
 + (NSDate *)dateFromDateAtomFormat:(NSString *)dateAtomFormatString
