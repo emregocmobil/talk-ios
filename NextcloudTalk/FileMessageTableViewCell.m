@@ -28,10 +28,10 @@
 #import "UIImageView+Letters.h"
 
 #import "NCAPIController.h"
-#import "NCDatabaseManager.h"
-#import "NCSettingsController.h"
-#import "NCChatFileController.h"
 #import "NCAppBranding.h"
+#import "NCChatFileController.h"
+#import "NCDatabaseManager.h"
+#import "NCUtils.h"
 
 #import "NCAPIController.h"
 #import "NCAppBranding.h"

@@ -25,7 +25,12 @@
 #import "SLKUIConstants.h"
 #import "UIImageView+AFNetworking.h"
 #import "UIImageView+Letters.h"
+
+#import "NCAPIController.h"
 #import "NCAppBranding.h"
+#import "NCDatabaseManager.h"
+#import "NCUtils.h"
+#import "QuotedMessageView.h"
 
 #import "NextcloudTalk-Swift.h"
 

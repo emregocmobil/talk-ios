@@ -23,8 +23,6 @@
 #import "GroupedChatMessageTableViewCell.h"
 
 #import "MaterialActivityIndicator.h"
-#import "NCDatabaseManager.h"
-#import "NCSettingsController.h"
 #import "SLKUIConstants.h"
 #import "AFImageDownloader.h"
 #import "UIImageView+AFNetworking.h"

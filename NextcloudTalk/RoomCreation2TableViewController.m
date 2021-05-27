@@ -32,6 +32,13 @@
 #import "NCUser.h"
 #import "RoomNameTableViewCell.h"
 
+#import "ContactsTableViewCell.h"
+#import "NCAPIController.h"
+#import "NCAppBranding.h"
+#import "NCDatabaseManager.h"
+#import "NCUser.h"
+#import "RoomNameTableViewCell.h"
+
 typedef enum CreationSection {
     kCreationSectionName = 0,
     kCreationSectionParticipantsOrPassword,
