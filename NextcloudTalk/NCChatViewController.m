@@ -310,6 +310,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     self.voiceMessageLongPressGesture.delegate = self;
     [self.rightButton addGestureRecognizer:self.voiceMessageLongPressGesture];
     
+    // Add long press gesture recognizer for voice message recording button
+    self.voiceMessageLongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressInVoiceMessageRecordButton:)];
+    self.voiceMessageLongPressGesture.delegate = self;
+    [self.rightButton addGestureRecognizer:self.voiceMessageLongPressGesture];
+    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[ChatMessageTableViewCell class] forCellReuseIdentifier:ChatMessageCellIdentifier];
     [self.tableView registerClass:[ChatMessageTableViewCell class] forCellReuseIdentifier:ReplyMessageCellIdentifier];
@@ -2244,6 +2249,41 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         }
     }];
     [viewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Voice messages recording
+
+- (void)setupAudioRecorder
+{
+    // Set the audio file
+    NSArray *pathComponents = [NSArray arrayWithObjects:
+                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                               @"voice-message-recording.m4a",
+                               nil];
+    NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+
+    // Setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+
+    // Define the recorder setting
+    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithFloat:44100.0] forKey:AVSampleRateKey];
+    [recordSetting setValue:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
+
+    // Initiate and prepare the recorder
+    _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:nil];
+    _recorder.delegate = self;
+    _recorder.meteringEnabled = YES;
+    [_recorder prepareToRecord];
+}
+
+#pragma mark - AVAudioRecorderDelegate
+
+- (void) audioRecorderDidFinishRecording:(AVAudioRecorder *)avrecorder successfully:(BOOL)flag{
+    NSLog(@"audioRecorderDidFinishRecording");
 }
 
 #pragma mark - Gesture recognizer
