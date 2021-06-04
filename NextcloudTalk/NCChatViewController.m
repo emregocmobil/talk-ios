@@ -2253,6 +2253,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 #pragma mark - Voice messages recording
 
+- (void)showVoiceMessageRecordHint
+{
+    [self.view makeToast:NSLocalizedString(@"Tap and hold to record a voice message, release the button to send it.", nil) duration:3 position:CSToastPositionBottom];
+}
+
 - (void)setupAudioRecorder
 {
     // Set the audio file
