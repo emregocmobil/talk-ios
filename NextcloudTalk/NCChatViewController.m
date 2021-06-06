@@ -2258,6 +2258,51 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.view makeToast:NSLocalizedString(@"Tap and hold to record a voice message, release the button to send it.", nil) duration:3 position:CSToastPositionBottom];
 }
 
+- (void)showVoiceMessageRecordingView
+{
+    _voiceMessageRecordingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 250, self.textInputbar.frame.size.height)];
+    _voiceMessageRecordingView.backgroundColor = [UIColor whiteColor];
+    if (@available(iOS 13.0, *)) {
+        _voiceMessageRecordingView.backgroundColor = [UIColor systemBackgroundColor];
+    }
+    _voiceMessageRecordingView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+    _recordingTimerLabel = [[MZTimerLabel alloc] initWithFrame:CGRectMake(30, 0, 150, _voiceMessageRecordingView.frame.size.height)];
+    [_recordingTimerLabel setTimerType:MZTimerLabelTypeStopWatch];
+    [_recordingTimerLabel setTimeFormat:@"mm:ss"];
+    [_recordingTimerLabel start];
+    
+    UIImageView *blinkingMicView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 12, 26, 26)];
+    [blinkingMicView setImage:[[UIImage imageNamed:@"audio"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    [blinkingMicView setTintColor:[UIColor systemRedColor]];
+    [blinkingMicView setContentMode:UIViewContentModeScaleAspectFit];
+    [UIImageView animateWithDuration:0.5
+                               delay:0
+                             options:(UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse)
+                          animations:^{blinkingMicView.alpha = 0;}
+                          completion:nil];
+    
+    [_voiceMessageRecordingView addSubview:blinkingMicView];
+    [_voiceMessageRecordingView addSubview:_recordingTimerLabel];
+    
+    [self.view addSubview:_voiceMessageRecordingView];
+    [self.view bringSubviewToFront:_voiceMessageRecordingView];
+    
+    NSDictionary *views = @{@"voiceMessageRecordingView": _voiceMessageRecordingView,
+                            @"textInputbar": self.textInputbar};
+    NSDictionary *metrics = @{@"buttonWidth": @(self.rightButton.frame.size.width),
+                              @"height" : @(self.textInputbar.frame.size.height)};
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=0)-[voiceMessageRecordingView(height)]-|" options:0 metrics:metrics views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[voiceMessageRecordingView(>=0)]-(buttonWidth)-|" options:0 metrics:metrics views:views]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
+                                                             toItem:_voiceMessageRecordingView attribute:NSLayoutAttributeCenterX multiplier:1.f constant:0.f]];
+}
+
+- (void)hideVoiceMessageRecordingView
+{
+    _voiceMessageRecordingView.hidden = YES;
+}
+
 - (void)setupAudioRecorder
 {
     // Set the audio file
