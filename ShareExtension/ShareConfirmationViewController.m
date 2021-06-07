@@ -694,58 +694,21 @@
                 dispatch_group_leave(self->_uploadGroup);
             }];
         } else if (errorCode == 404) {
-            [self checkAttachmentFolderAndUploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
+            [[NCAPIController sharedInstance] checkOrCreateAttachmentFolderForAccount:self->_account withCompletionBlock:^(BOOL created, NSInteger errorCode) {
+                if (created) {
+                    [self uploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
+                } else {
+                    self->_uploadFailed = YES;
+                    [self->_uploadErrors addObject:errorDescription];
+                    dispatch_group_leave(self->_uploadGroup);
+                }
+            }];
         } else {
             self->_uploadFailed = YES;
             [self->_uploadErrors addObject:errorDescription];
             dispatch_group_leave(self->_uploadGroup);
         }
     }];
-}
-
-#pragma mark - Utils
-
-- (NSString *)serverFilePathForFileName:(NSString *)fileName
-{
-    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
-    return [NSString stringWithFormat:@"%@/%@", attachmentsFolder, fileName];
-}
-
-- (NSString *)attachmentFolderServerURL
-{
-    NSString *attachmentsFolder = _serverCapabilities.attachmentsFolder ? _serverCapabilities.attachmentsFolder : @"";
-    return [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, attachmentsFolder];
-}
-
-- (NSString *)serverFileURLForFilePath:(NSString *)filePath
-{
-    return [NSString stringWithFormat:@"%@/%@%@", _account.server, _serverCapabilities.webDAVRoot, filePath];
-}
-
-- (NSString *)alternativeNameForFileName:(NSString *)fileName original:(BOOL)isOriginal
-{
-    NSString *extension = [fileName pathExtension];
-    NSString *nameWithoutExtension = [fileName stringByDeletingPathExtension];
-    NSString *alternativeName = nameWithoutExtension;
-    NSString *newSuffix = @" (1)";
-    
-    if (!isOriginal) {
-        // Check if the name ends with ` (n)`
-        NSError *error = nil;
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@" \\((\\d+)\\)$" options:NSRegularExpressionCaseInsensitive error:&error];
-        NSTextCheckingResult *match = [regex firstMatchInString:nameWithoutExtension options:0 range:NSMakeRange(0, nameWithoutExtension.length)];
-        if ([match numberOfRanges] > 1) {
-            NSRange suffixRange = [match rangeAtIndex: 0];
-            NSInteger suffixNumber = [[nameWithoutExtension substringWithRange:[match rangeAtIndex: 1]] intValue];
-            newSuffix = [NSString stringWithFormat:@" (%ld)", suffixNumber + 1];
-            alternativeName = [nameWithoutExtension stringByReplacingCharactersInRange:suffixRange withString:@""];
-        }
-    }
-    
-    alternativeName = [alternativeName stringByAppendingString:newSuffix];
-    alternativeName = [alternativeName stringByAppendingPathExtension:extension];
-    
-    return alternativeName;
 }
 
 #pragma mark - User Interface
