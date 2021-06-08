@@ -2330,6 +2330,46 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [_recorder prepareToRecord];
 }
 
+- (void)checkPermissionAndRecordVoiceMessage
+{
+    NSString *mediaType = AVMediaTypeAudio;
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    
+    if(authStatus == AVAuthorizationStatusAuthorized) {
+        [self startRecordingVoiceMessage];
+        return;
+    } else if(authStatus == AVAuthorizationStatusNotDetermined){
+        [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
+            NSLog(@"Microphone permission granted: %@", granted ? @"YES" : @"NO");
+        }];
+        return;
+    }
+    
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:NSLocalizedString(@"Could not access microphone", nil)
+                                 message:NSLocalizedString(@"Microphone access is not allowed. Check your settings.", nil)
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"OK", nil)
+                               style:UIAlertActionStyleDefault
+                               handler:nil];
+    
+    [alert addAction:okButton];
+    [[NCUserInterfaceController sharedInstance] presentAlertViewController:alert];
+}
+
+- (void)startRecordingVoiceMessage
+{
+    [self setupAudioRecorder];
+    [self showVoiceMessageRecordingView];
+    if (!_recorder.recording) {
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setActive:YES error:nil];
+        [_recorder record];
+    }
+}
+
 - (void)shareVoiceMessage
 {
     NSString *audioFileName = [NSString stringWithFormat:@"audio-record-%.f.mp3", [[NSDate date] timeIntervalSince1970] * 1000];
