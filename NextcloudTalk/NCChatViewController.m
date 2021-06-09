@@ -1244,7 +1244,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 {
     BOOL canPress = [super canPressRightButton];
     
-    if (!canPress && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilitySystemMessages]) {
+    if (!canPress && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityVoiceMessage]) {
         [self showVoiceMessageRecordButton];
         return YES;
     }
