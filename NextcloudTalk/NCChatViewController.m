@@ -2402,11 +2402,75 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 #pragma mark - AVAudioRecorderDelegate
 
-- (void) audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
+- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
 {
     if (flag && recorder == _recorder && !_recordCancelled) {
         [self shareVoiceMessage];
     }
+}
+
+#pragma mark - Voice Messages Player
+
+- (void)setupVoiceMessagePlayerWithAudioFileStatus:(NCChatFileStatus *)fileStatus
+{
+    NSData *data = [NSData dataWithContentsOfFile:fileStatus.fileLocalPath];
+    NSError *error;
+    _voiceMessagesPlayer = [[AVAudioPlayer alloc] initWithData:data error:&error];
+    if (!error) {
+        _playerAudioFileStatus = fileStatus;
+        [self playVoiceMessagePlayer];
+    } else {
+        NSLog(@"Error: %@", error);
+    }
+}
+
+- (void)playVoiceMessagePlayer
+{
+    [self startVoiceMessagePlayerTimer];
+    [_voiceMessagesPlayer play];
+}
+
+- (void)pauseVoiceMessagePlayer
+{
+    [self stopVoiceMessagePlayerTimer];
+    [_voiceMessagesPlayer pause];
+    [self checkVisibleCellAudioPlayers];
+}
+
+- (void)checkVisibleCellAudioPlayers
+{
+    for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+        NSDate *sectionDate = [_dateSections objectAtIndex:indexPath.section];
+        NCChatMessage *message = [[_messages objectForKey:sectionDate] objectAtIndex:indexPath.row];
+        if ([message.messageType isEqualToString:kMessageTypeVoiceMessage]) {
+            VoiceMessageTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if (message.file && [message.file.parameterId isEqualToString:_playerAudioFileStatus.fileId] && [message.file.path isEqualToString:_playerAudioFileStatus.filePath]) {
+                [cell setPlayerProgress:_voiceMessagesPlayer.currentTime/_voiceMessagesPlayer.duration isPlaying:_voiceMessagesPlayer.isPlaying];
+                continue;
+            }
+            [cell resetPlayer];
+        }
+    }
+}
+
+- (void)startVoiceMessagePlayerTimer
+{
+    [self stopVoiceMessagePlayerTimer];
+    _playerProgressTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(checkVisibleCellAudioPlayers) userInfo:nil repeats:YES];
+}
+
+- (void)stopVoiceMessagePlayerTimer
+{
+    [_playerProgressTimer invalidate];
+    _playerProgressTimer = nil;
+}
+
+#pragma mark - AVAudioPlayerDelegate
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    [self stopVoiceMessagePlayerTimer];
+    [self checkVisibleCellAudioPlayers];
 }
 
 #pragma mark - Gesture recognizer
@@ -3878,6 +3942,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         return height += kVoiceMessageCellPlayerHeight + 10; // right(10)
     }
     
+    // Voice message should be before message.file check since it contains a file
+    if ([message.messageType isEqualToString:kMessageTypeVoiceMessage]) {
+        height -= CGRectGetHeight(bodyBounds);
+        return height += kVoiceMessageCellPlayerHeight;
+    }
+    
     if (message.file) {
         height += message.file.previewImageHeight == 0 ? kFileMessageCellFileMaxPreviewHeight + 10 : message.file.previewImageHeight + 10; // right(10)
         
@@ -3898,7 +3968,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
     
     if (message.geoLocation) {
-        height += kLocationMessageCellPreviewHeight + 15;
+        return height += kLocationMessageCellPreviewHeight + 15;
     }
     
     return height;
