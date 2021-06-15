@@ -111,6 +111,13 @@
     
     [self.contentView addSubview:self.reactionsView];
     
+    _durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kChatCellStatusViewHeight, kChatCellStatusViewHeight)];
+    _durationLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _durationLabel.font = [UIFont systemFontOfSize:12];
+    _durationLabel.adjustsFontSizeToFitWidth = YES;
+    _durationLabel.minimumScaleFactor = 0.5;
+    [self.contentView addSubview:_durationLabel];
+    
     NSDictionary *views = @{@"avatarView": self.avatarView,
                             @"statusView": self.statusView,
                             @"fileStatusView": self.fileStatusView,
@@ -150,6 +157,7 @@
         self.vGroupedConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-left-[audioPlayerView(buttonHeight)]-right-[bodyTextView(>=0@999)]-0-[reactionsView(0)]-left-|" options:0 metrics:metrics views:views];
         [self.contentView addConstraints:self.vGroupedConstraints];
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-statusTopPadding-[statusView(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-statusTopPadding-[durationLabel(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];
     }
     
     [_audioPlayerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[playButton(buttonHeight)]-[progressView(progressWidth)]-[fileStatusView(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];

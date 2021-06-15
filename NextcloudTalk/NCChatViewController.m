@@ -2419,6 +2419,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     NSData *data = [NSData dataWithContentsOfFile:fileStatus.fileLocalPath];
     NSError *error;
     _voiceMessagesPlayer = [[AVAudioPlayer alloc] initWithData:data error:&error];
+    _voiceMessagesPlayer.delegate = self;
     if (!error) {
         _playerAudioFileStatus = fileStatus;
         [self playVoiceMessagePlayer];
@@ -2448,7 +2449,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         if ([message.messageType isEqualToString:kMessageTypeVoiceMessage]) {
             VoiceMessageTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             if (message.file && [message.file.parameterId isEqualToString:_playerAudioFileStatus.fileId] && [message.file.path isEqualToString:_playerAudioFileStatus.filePath]) {
-                [cell setPlayerProgress:_voiceMessagesPlayer.currentTime/_voiceMessagesPlayer.duration isPlaying:_voiceMessagesPlayer.isPlaying];
+                [cell setPlayerProgress:_voiceMessagesPlayer.currentTime isPlaying:_voiceMessagesPlayer.isPlaying maximumValue:_voiceMessagesPlayer.duration];
                 continue;
             }
             [cell resetPlayer];
