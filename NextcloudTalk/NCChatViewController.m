@@ -462,7 +462,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    [super viewWillDisappear:animated];<
     
     [self savePendingMessage];
     [self saveLastReadMessage];
@@ -2439,6 +2439,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self stopVoiceMessagePlayerTimer];
     [_voiceMessagesPlayer pause];
     [self checkVisibleCellAudioPlayers];
+}
+
+- (void)stopVoiceMessagePlayer
+{
+    [self stopVoiceMessagePlayerTimer];
+    [_voiceMessagesPlayer stop];
 }
 
 - (void)checkVisibleCellAudioPlayers
