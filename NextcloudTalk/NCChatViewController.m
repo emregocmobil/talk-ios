@@ -2251,6 +2251,46 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - CNContactPickerViewController Delegate
+
+- (void)contactPicker:(CNContactPickerViewController *)picker didSelectContact:(CNContact *)contact
+{
+    [self shareContact:contact];
+}
+
+#pragma mark - Contact sharing
+
+- (void)shareContact:(CNContact *)contact
+{
+    NSError* error = nil;
+    NSData* vCardData = [CNContactVCardSerialization dataWithContacts:@[contact] error:&error];
+    NSString* vcString = [[NSString alloc] initWithData:vCardData encoding:NSUTF8StringEncoding];
+    
+    if (contact.imageData) {
+        NSString* base64Image = [contact.imageData base64EncodedStringWithOptions:0];
+        NSString* vcardImageString = [[@"PHOTO;TYPE=JPEG;ENCODING=BASE64:" stringByAppendingString:base64Image] stringByAppendingString:@"\n"];
+        vcString = [vcString stringByReplacingOccurrencesOfString:@"END:VCARD" withString:[vcardImageString stringByAppendingString:@"END:VCARD"]];
+    }
+    
+    vCardData = [vcString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *folderPath = [paths objectAtIndex:0];
+    NSString *filePath = [folderPath stringByAppendingPathComponent:@"contact.vcf"];
+    [vcString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    NSURL *url = [NSURL fileURLWithPath:filePath];
+    
+    NSString *contactFileName = [NSString stringWithFormat:@"%@.vcf", contact.identifier];
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [[NCAPIController sharedInstance] uniqueNameForFileUploadWithName:contactFileName originalName:YES forAccount:activeAccount withCompletionBlock:^(NSString *fileServerURL, NSString *fileServerPath, NSInteger errorCode, NSString *errorDescription) {
+        if (fileServerURL && fileServerPath) {
+            [self uploadFileAtPath:url.path withFileServerURL:fileServerURL andFileServerPath:fileServerPath withMetaData:nil];
+        } else {
+            NSLog(@"Could not find unique name for voice message file.");
+        }
+    }];
+}
+
 #pragma mark - Voice messages recording
 
 - (void)showVoiceMessageRecordHint
@@ -2364,14 +2404,15 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
     [[NCAPIController sharedInstance] uniqueNameForFileUploadWithName:audioFileName originalName:YES forAccount:activeAccount withCompletionBlock:^(NSString *fileServerURL, NSString *fileServerPath, NSInteger errorCode, NSString *errorDescription) {
         if (fileServerURL && fileServerPath) {
-            [self uploadAudioFileAtPath:_recorder.url.path withFileServerURL:fileServerURL andFileServerPath:fileServerPath];
+            NSDictionary *talkMetaData = @{@"messageType" : @"voice-message"};
+            [self uploadFileAtPath:_recorder.url.path withFileServerURL:fileServerURL andFileServerPath:fileServerPath withMetaData:talkMetaData];
         } else {
             NSLog(@"Could not find unique name for voice message file.");
         }
     }];
 }
 
-- (void)uploadAudioFileAtPath:(NSString *)localPath withFileServerURL:(NSString *)fileServerURL andFileServerPath:(NSString *)fileServerPath
+- (void)uploadFileAtPath:(NSString *)localPath withFileServerURL:(NSString *)fileServerURL andFileServerPath:(NSString *)fileServerPath withMetaData:(NSDictionary *)talkMetaData
 {
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
     [[NCAPIController sharedInstance] setupNCCommunicationForAccount:activeAccount];
@@ -2383,7 +2424,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         NSLog(@"Upload completed with error code: %ld", (long)errorCode);
 
         if (errorCode == 0) {
-            NSDictionary *talkMetaData = @{@"messageType" : @"voice-message"};
             [[NCAPIController sharedInstance] shareFileOrFolderForAccount:activeAccount atPath:fileServerPath toRoom:self->_room.token talkMetaData:talkMetaData withCompletionBlock:^(NSError *error) {
                 if (error) {
                     NSLog(@"Failed to share voice message");
@@ -2392,7 +2432,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         } else if (errorCode == 404 || errorCode == 409) {
             [[NCAPIController sharedInstance] checkOrCreateAttachmentFolderForAccount:activeAccount withCompletionBlock:^(BOOL created, NSInteger errorCode) {
                 if (created) {
-                    [self uploadAudioFileAtPath:localPath withFileServerURL:fileServerURL andFileServerPath:fileServerPath];
+                    [self uploadFileAtPath:localPath withFileServerURL:fileServerURL andFileServerPath:fileServerPath withMetaData:talkMetaData];
                 } else {
                     NSLog(@"Failed to check or create attachment folder");
                 }
