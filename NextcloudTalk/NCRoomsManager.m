@@ -697,6 +697,17 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }];
 }
 
+- (void)updateLastReadMessage:(NSInteger)lastReadMessage forRoom:(NCRoom *)room
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm transactionWithBlock:^{
+        NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
+        if (managedRoom) {
+            managedRoom.lastReadMessage = lastReadMessage;
+        }
+    }];
+}
+
 - (void)updateLastMessage:(NCChatMessage *)message withNoUnreadMessages:(BOOL)noUnreadMessages forRoom:(NCRoom *)room
 {
     RLMRealm *realm = [RLMRealm defaultRealm];
