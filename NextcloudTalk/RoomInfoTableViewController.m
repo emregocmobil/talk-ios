@@ -2439,6 +2439,9 @@ typedef enum FileAction {
                 case kNotificationActionChatNotifications:
                     [self presentNotificationLevelSelector];
                     break;
+                case kPublicActionResendInvitations:
+                    [self resendInvitations];
+                    break;
                 default:
                     break;
             }
