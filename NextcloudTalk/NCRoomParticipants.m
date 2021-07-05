@@ -160,6 +160,11 @@ NSString * const NCAttendeeTypeEmail    = @"emails";
         NSString *botString = NSLocalizedString(@"bot", nil);
         detailedNameString = [NSString stringWithFormat:@"%@ (%@)", detailedNameString, botString];
     }
+    // Bridge bot label
+    if (self.isBridgeBotUser) {
+        NSString *botString = NSLocalizedString(@"bot", nil);
+        displayNameString = [NSString stringWithFormat:@"%@ (%@)", displayNameString, botString];
+    }
     // Guest label
     if (self.isGuest) {
         NSString *guestString = NSLocalizedString(@"guest", nil);
