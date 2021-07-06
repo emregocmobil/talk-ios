@@ -220,6 +220,9 @@ typedef enum FileAction {
     _callNotificationSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     [_callNotificationSwitch addTarget: self action: @selector(callNotificationValueChanged:) forControlEvents:UIControlEventValueChanged];
     
+    _sipSwtich = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [_sipSwtich addTarget: self action: @selector(sipValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
     _lobbyDatePicker = [[UIDatePicker alloc] init];
     _lobbyDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
     _lobbyDatePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
