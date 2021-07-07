@@ -1692,6 +1692,9 @@ typedef enum FileAction {
         case kRoomInfoSectionSIP:
             return NSLocalizedString(@"SIP dial-in", nil);
             break;
+        case kRoomInfoSectionSIP:
+            return NSLocalizedString(@"SIP dial-in", nil);
+            break;
         default:
             break;
     }
@@ -2273,6 +2276,57 @@ typedef enum FileAction {
             }
         }
             break;
+        case kRoomInfoSectionSIP:
+        {
+            TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+            NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigutations] objectForKey:activeAccount.accountId];
+            switch (indexPath.row) {
+                case kSIPActionPhoneNumber:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sipPhoneCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:sipPhoneCellIdentifier];
+                    }
+                    
+                    cell.textLabel.text = NSLocalizedString(@"Phone number", nil);
+                    cell.detailTextLabel.text = [activeAccountSignalingConfig objectForKey:@"sipDialinInfo"];
+                    cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    
+                    return cell;
+                }
+                    break;
+                case kSIPActionMeetingId:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sipMeetingIDCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:sipMeetingIDCellIdentifier];
+                    }
+                    
+                    cell.textLabel.text = NSLocalizedString(@"Meeting ID", nil);
+                    cell.detailTextLabel.text = _room.token;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    
+                    return cell;
+                }
+                    break;
+                case kSIPActionPIN:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sipUserPINCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:sipUserPINCellIdentifier];
+                    }
+                    
+                    cell.textLabel.text = NSLocalizedString(@"Your PIN", nil);
+                    cell.detailTextLabel.text = _room.attendeePin;
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    
+                    return cell;
+                }
+                    break;
+            }
+        }
+            break;
         case kRoomInfoSectionParticipants:
         {
             NCRoomParticipant *participant = [_roomParticipants objectAtIndex:indexPath.row];
@@ -2481,6 +2535,8 @@ typedef enum FileAction {
                     break;
             }
         }
+            break;
+        case kRoomInfoSectionSIP:
             break;
         case kRoomInfoSectionParticipants:
         {
