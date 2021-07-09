@@ -2502,6 +2502,8 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)enableProximitySensor
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sensorStateChange:)
+                                                 name:UIDeviceProximityStateDidChangeNotification object:nil];
     [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
 }
 
@@ -2511,6 +2513,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         // Only disable monitoring if proximity sensor state is not active.
         // If not proximity sensor state is cached as active and next time we enable monitoring
         // sensorStateChange won't be trigger until proximity sensor state changes to inactive.
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceProximityStateDidChangeNotification object:nil];
         [[UIDevice currentDevice] setProximityMonitoringEnabled:NO];
     }
 }
