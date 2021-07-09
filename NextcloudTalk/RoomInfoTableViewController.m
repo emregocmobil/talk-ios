@@ -2278,19 +2278,16 @@ typedef enum FileAction {
             break;
         case kRoomInfoSectionSIP:
         {
-            TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-            NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigutations] objectForKey:activeAccount.accountId];
             switch (indexPath.row) {
-                case kSIPActionPhoneNumber:
+                case kSIPActionSIPInfo:
                 {
-                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:sipPhoneCellIdentifier];
+                    RoomDescriptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kRoomDescriptionCellIdentifier];
                     if (!cell) {
-                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:sipPhoneCellIdentifier];
+                        cell = [[RoomDescriptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kRoomDescriptionCellIdentifier];
                     }
-                    
-                    cell.textLabel.text = NSLocalizedString(@"Phone number", nil);
-                    cell.detailTextLabel.text = [activeAccountSignalingConfig objectForKey:@"sipDialinInfo"];
-                    cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
+                    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+                    NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigutations] objectForKey:activeAccount.accountId];
+                    cell.textView.text = [activeAccountSignalingConfig objectForKey:@"sipDialinInfo"];
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     
                     return cell;
