@@ -475,6 +475,10 @@ typedef enum FileAction {
 - (NSArray *)getRoomDestructiveActions
 {
     NSMutableArray *actions = [[NSMutableArray alloc] init];
+    // Clear history
+    if (_room.canModerate && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityClearHistory]) {
+        [actions addObject:[NSNumber numberWithInt:kDestructiveActionClearHistory]];
+    }
     // Leave room
     if (_room.isLeavable) {
         [actions addObject:[NSNumber numberWithInt:kDestructiveActionLeave]];
@@ -626,6 +630,15 @@ typedef enum FileAction {
     UIAlertAction *confirmAction = nil;
     
     switch (action) {
+        case kDestructiveActionClearHistory:
+        {
+            title = NSLocalizedString(@"Clear chat history", nil);
+            message = NSLocalizedString(@"Do you really want to clear chat history?", nil);
+            confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Clear", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [self clearHistory];
+            }];
+        }
+            break;
         case kDestructiveActionLeave:
         {
             title = NSLocalizedString(@"Leave conversation", nil);
@@ -2393,6 +2406,21 @@ typedef enum FileAction {
             NSArray *actions = [self getRoomDestructiveActions];
             DestructiveAction action = [[actions objectAtIndex:indexPath.row] intValue];
             switch (action) {
+                case kDestructiveActionClearHistory:
+                {
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:clearHistoryCellIdentifier];
+                    if (!cell) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:clearHistoryCellIdentifier];
+                    }
+                    
+                    cell.textLabel.text = NSLocalizedString(@"Clear history", nil);
+                    cell.textLabel.textColor = [UIColor systemRedColor];
+                    [cell.imageView setImage:[[UIImage imageNamed:@"delete-action"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                    [cell.imageView setTintColor:[UIColor systemRedColor]];
+                    
+                    return cell;
+                }
+                    break;
                 case kDestructiveActionLeave:
                 {
                     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:leaveRoomCellIdentifier];
