@@ -3192,6 +3192,21 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
+- (void)didReceiveHistoryCleared:(NSNotification *)notification
+{
+    if (notification.object != _chatController) {
+        return;
+    }
+    
+    NCChatMessage *message = [notification.userInfo objectForKey:@"historyCleared"];
+    if ([_chatController hasOlderStoredMessagesThanMessageId:message.messageId]) {
+        [self cleanChat];
+        [_chatController clearHistoryAndResetChatController];
+        _hasRequestedInitialHistory = YES;
+        [_chatController getInitialChatHistory];
+    }
+}
+
 #pragma mark - Lobby functions
 
 - (void)startObservingRoomLobbyFlag
