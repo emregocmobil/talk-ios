@@ -4228,6 +4228,17 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         
         [actions addObject:forwardAction];
     }
+    
+    // Forward option (only normal messages for now)
+    if (!message.file && !_offlineMode) {
+        UIImage *forwardImage = [[UIImage imageNamed:@"forward"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIAction *forwardAction = [UIAction actionWithTitle:NSLocalizedString(@"Forward", nil) image:forwardImage identifier:nil handler:^(UIAction *action){
+            
+            [self didPressForward:message];
+        }];
+        
+        [actions addObject:forwardAction];
+    }
 
     // Re-send option
     if ((message.sendingFailed || message.isOfflineMessage) && hasChatPermission) {
