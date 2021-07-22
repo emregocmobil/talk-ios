@@ -412,7 +412,6 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
     NSString *notificationString = [userInfo objectForKey:@"pushNotification"];
     NSString *notificationAccountId = [userInfo objectForKey:@"accountId"];
     NCPushNotification *pushNotification = [NCPushNotification pushNotificationFromDecryptedString:notificationString withAccountId:notificationAccountId];
-
     // Handle notification response
     if (pushNotification) {
         if ([response isKindOfClass:[UNTextInputNotificationResponse class]]) {
