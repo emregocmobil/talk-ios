@@ -1839,11 +1839,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)shareViewControllerDidCancel:(ShareViewController *)viewController
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    if (viewController.forwardingMessage) {
-        // Show error
-    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (viewController.forwardingMessage) {
+            [self.view makeToast:NSLocalizedString(@"Failed to forward message", nil) duration:1.5 position:CSToastPositionCenter];
+        }
+    }];
 }
 
 #pragma mark - ShareConfirmationViewController Delegate
