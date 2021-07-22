@@ -1125,6 +1125,14 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     [self startChatWithRoomToken:token];
 }
 
+- (void)joinChatOfForwardedMessage:(NSNotification *)notification
+{
+    NSString *accountId = [notification.userInfo objectForKey:@"accountId"];
+    NSString *token = [notification.userInfo objectForKey:@"token"];
+    [self checkForAccountChange:accountId];
+    [self startChatWithRoomToken:token];
+}
+
 - (void)joinChatWithLocalNotification:(NSNotification *)notification
 {
     NSString *roomToken = [notification.userInfo objectForKey:@"roomToken"];

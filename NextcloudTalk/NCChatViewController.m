@@ -1840,6 +1840,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)shareViewControllerDidCancel:(ShareViewController *)viewController
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (viewController.forwardingMessage) {
+        // Show error
+    }
 }
 
 #pragma mark - ShareConfirmationViewController Delegate
