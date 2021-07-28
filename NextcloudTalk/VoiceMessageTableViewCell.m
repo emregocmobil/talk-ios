@@ -71,6 +71,10 @@
     _audioPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
     [_audioPlayerView setSemanticContentAttribute:UISemanticContentAttributeForceLeftToRight];
     
+    _audioPlayerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    _audioPlayerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [_audioPlayerView setSemanticContentAttribute:UISemanticContentAttributeForceLeftToRight];
+    
     if ([self.reuseIdentifier isEqualToString:VoiceMessageCellIdentifier]) {
         [self.contentView addSubview:_avatarView];
         [self.contentView addSubview:self.titleLabel];
@@ -116,7 +120,7 @@
     _durationLabel.font = [UIFont systemFontOfSize:12];
     _durationLabel.adjustsFontSizeToFitWidth = YES;
     _durationLabel.minimumScaleFactor = 0.5;
-    [self.contentView addSubview:_durationLabel];
+    [_audioPlayerView addSubview:_durationLabel];
     
     NSDictionary *views = @{@"avatarView": self.avatarView,
                             @"statusView": self.statusView,
@@ -157,7 +161,6 @@
         self.vGroupedConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-left-[audioPlayerView(buttonHeight)]-right-[bodyTextView(>=0@999)]-0-[reactionsView(0)]-left-|" options:0 metrics:metrics views:views];
         [self.contentView addConstraints:self.vGroupedConstraints];
         [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-statusTopPadding-[statusView(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-statusTopPadding-[durationLabel(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];
     }
     
     [_audioPlayerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[playButton(buttonHeight)]-[progressView(progressWidth)]-[fileStatusView(statusSize)]-(>=0)-|" options:0 metrics:metrics views:views]];
