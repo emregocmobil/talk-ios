@@ -308,13 +308,11 @@ class UserStatusMessageViewController: UIViewController, UITextFieldDelegate {
                 if day == 1 { return NSLocalizedString("Today", comment: "") }
                 return "\(day) " + NSLocalizedString("days", comment: "")
             }
-
             if hour > 0 {
                 if hour == 1 { return NSLocalizedString("an hour", comment: "") }
                 if hour == 4 { return NSLocalizedString("4 hours", comment: "") }
                 return "\(hour) " + NSLocalizedString("hours", comment: "")
             }
-
             if minute > 0 {
                 if minute >= 25 && minute <= 30 { return NSLocalizedString("30 minutes", comment: "") }
                 if minute > 30 { return NSLocalizedString("an hour", comment: "") }
