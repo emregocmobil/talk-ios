@@ -28,6 +28,11 @@ import NextcloudKit
     func didSetStatusMessage(icon: String?, message: String?, clearAt: NSDate?)
 }
 
+@objc protocol UserStatusMessageViewControllerDelegate {
+    func didClearStatusMessage()
+    func didSetStatusMessage(icon:String?, message:String?, clearAt:NSDate?)
+}
+
 class UserStatusMessageViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var statusEmojiTextField: EmojiTextField!
