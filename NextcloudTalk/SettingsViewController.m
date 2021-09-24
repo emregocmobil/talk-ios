@@ -696,7 +696,7 @@ typedef enum AboutSection {
             cell.accessoryView = nil;
             if (account.unreadBadgeNumber > 0) {
                 RoundedNumberView *badgeView = [[RoundedNumberView alloc] init];
-                badgeView.important = YES;
+                badgeView.highlightType = kHighlightTypeImportant;
                 badgeView.number = account.unreadBadgeNumber;
                 cell.accessoryView = badgeView;
             }

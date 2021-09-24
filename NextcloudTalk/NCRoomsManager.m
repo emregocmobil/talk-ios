@@ -719,6 +719,7 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
             
             if (noUnreadMessages) {
                 managedRoom.unreadMention = NO;
+                managedRoom.unreadMentionDirect = NO;
                 managedRoom.unreadMessages = 0;
             }
         }
