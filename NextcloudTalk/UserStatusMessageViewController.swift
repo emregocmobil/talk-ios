@@ -84,7 +84,6 @@ class UserStatusMessageViewController: UIViewController, UITextFieldDelegate {
         statusTableView.contentInset = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
 
         statusEmojiTextField.delegate = self
-
         statusMessageTextField.placeholder = NSLocalizedString("What is your status?", comment: "")
         statusMessageTextField.returnKeyType = .done
         statusMessageTextField.delegate = self
