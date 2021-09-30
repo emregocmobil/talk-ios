@@ -233,7 +233,6 @@ class UserStatusMessageViewController: UIViewController, UITextFieldDelegate {
         self.clearAtLabel.text = clearAt
         self.checkSetUserStatusButtonState()
     }
-
     func setStatusIconInView(icon: String?) {
         if icon == nil || icon?.isEmpty == true {
             iconSelected = nil
