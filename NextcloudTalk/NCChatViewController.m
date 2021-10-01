@@ -1800,6 +1800,14 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self.view makeToast:NSLocalizedString(@"Message copied", nil) duration:1.5 position:CSToastPositionCenter];
 }
 
+- (void) didPressTranscribeVoiceMessage:(NCChatMessage *) message {
+    NCChatFileController *downloader = [[NCChatFileController alloc] init];
+    downloader.delegate = self;
+    downloader.messageType = kMessageTypeVoiceMessage;
+    downloader.actionType = kActionTypeTranscribeVoiceMessage;
+    [downloader downloadFileFromMessage:message.file];
+}
+
 - (void)didPressDelete:(NCChatMessage *)message {
     if (message.sendingFailed) {
         [self removePermanentlyTemporaryMessage:message];
@@ -2648,6 +2656,19 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (flag && recorder == _recorder && !_recordCancelled) {
         [self shareVoiceMessage];
     }
+}
+
+#pragma mark - Voice Messages Transcribe
+
+- (void) transcribeVoiceMessageWithAudioFileStatus:(NCChatFileStatus *)fileStatus
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *audioFileUrl = [[NSURL alloc] initFileURLWithPath:fileStatus.fileLocalPath];
+        VoiceMessageTranscribeViewController *viewController = [[VoiceMessageTranscribeViewController alloc] initWithAudiofileUrl:audioFileUrl];
+        NCNavigationController *navigationController = [[NCNavigationController alloc] initWithRootViewController:viewController];
+
+        [self presentViewController:navigationController animated:YES completion:nil];
+    });
 }
 
 #pragma mark - Voice Messages Player
