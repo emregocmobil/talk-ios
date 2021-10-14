@@ -223,6 +223,9 @@ typedef enum FileAction {
     _sipSwtich = [[UISwitch alloc] initWithFrame:CGRectZero];
     [_sipSwtich addTarget: self action: @selector(sipValueChanged:) forControlEvents:UIControlEventValueChanged];
     
+    _callNotificationSwtich = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [_callNotificationSwtich addTarget: self action: @selector(callNotificationValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
     _lobbyDatePicker = [[UIDatePicker alloc] init];
     _lobbyDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
     _lobbyDatePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
@@ -540,6 +543,10 @@ typedef enum FileAction {
             
         case kModificationErrorChatNotifications:
             errorDescription = NSLocalizedString(@"Could not change notifications setting", nil);
+            break;
+            
+        case kModificationErrorCallNotifications:
+            errorDescription = NSLocalizedString(@"Could not change call notifications setting", nil);
             break;
             
         case kModificationErrorCallNotifications:
@@ -1526,6 +1533,18 @@ typedef enum FileAction {
     }
 }
 
+#pragma mark - Call notifications switch
+
+- (void)callNotificationValueChanged:(id)sender
+{
+    _callNotificationSwtich.enabled = NO;
+    if (_callNotificationSwtich.on) {
+        [self setCallNotificationEnabled:YES];
+    } else {
+        [self setCallNotificationEnabled:NO];
+    }
+}
+
 #pragma mark - UIGestureRecognizer delegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -2462,6 +2481,8 @@ typedef enum FileAction {
                     break;
                 case kFileActionOpenInFilesApp:
                     [self openRoomFileInFilesApp:indexPath];
+                    break;
+                default:
                     break;
             }
         }
