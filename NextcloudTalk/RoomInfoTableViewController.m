@@ -220,11 +220,11 @@ typedef enum FileAction {
     _callNotificationSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     [_callNotificationSwitch addTarget: self action: @selector(callNotificationValueChanged:) forControlEvents:UIControlEventValueChanged];
     
-    _sipSwtich = [[UISwitch alloc] initWithFrame:CGRectZero];
-    [_sipSwtich addTarget: self action: @selector(sipValueChanged:) forControlEvents:UIControlEventValueChanged];
+    _sipSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [_sipSwitch addTarget: self action: @selector(sipValueChanged:) forControlEvents:UIControlEventValueChanged];
     
-    _callNotificationSwtich = [[UISwitch alloc] initWithFrame:CGRectZero];
-    [_callNotificationSwtich addTarget: self action: @selector(callNotificationValueChanged:) forControlEvents:UIControlEventValueChanged];
+    _callNotificationSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [_callNotificationSwitch addTarget: self action: @selector(callNotificationValueChanged:) forControlEvents:UIControlEventValueChanged];
     
     _lobbyDatePicker = [[UIDatePicker alloc] init];
     _lobbyDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -1537,8 +1537,8 @@ typedef enum FileAction {
 
 - (void)callNotificationValueChanged:(id)sender
 {
-    _callNotificationSwtich.enabled = NO;
-    if (_callNotificationSwtich.on) {
+    _callNotificationSwitch.enabled = NO;
+    if (_callNotificationSwitch.on) {
         [self setCallNotificationEnabled:YES];
     } else {
         [self setCallNotificationEnabled:NO];
