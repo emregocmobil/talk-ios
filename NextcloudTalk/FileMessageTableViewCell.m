@@ -32,6 +32,7 @@
 #import "NCChatFileController.h"
 #import "NCDatabaseManager.h"
 #import "NCUtils.h"
+#import "NCChatViewController.h"
 
 #import "NCAPIController.h"
 #import "NCAppBranding.h"
@@ -122,6 +123,8 @@
     _fileStatusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kChatCellStatusViewHeight, kChatCellStatusViewHeight)];
     _fileStatusView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:_fileStatusView];
+    
+    _previewImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     NSDictionary *views = @{@"avatarView": self.avatarView,
                             @"statusStackView": self.statusStackView,
@@ -438,20 +441,36 @@
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
     [self.avatarView setImageWithURLRequest:[[NCAPIController sharedInstance] createAvatarRequestForUser:message.actorId andSize:96 usingAccount:activeAccount]
                                placeholderImage:nil success:nil failure:nil];
-   
+    
     NSString *imageName = [[NCUtils previewImageForFileMIMEType:message.file.mimetype] stringByAppendingString:@"-chat-preview"];
     UIImage *filePreviewImage = [UIImage imageNamed:imageName];
     __weak FilePreviewImageView *weakPreviewImageView = self.previewImageView;
-    [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId width:120 height:120 usingAccount:activeAccount]
+    [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId withMaxHeight:200 usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-                                         [weakPreviewImageView setImage:image];
-                                         //TODO: How to adjust for dark mode?
-                                         weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
-                                         if (@available(iOS 13.0, *)) {
-                                             weakPreviewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
-                                         }
-                                         weakPreviewImageView.layer.borderWidth = 1.0f;
-                                     } failure:nil];
+        
+                                        //[weakPreviewImageView setImage:image];
+                
+                                                 //TODO: How to adjust for dark mode?
+                                                 weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
+                                                 if (@available(iOS 13.0, *)) {
+                                                     weakPreviewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
+                                                 }
+                                            weakPreviewImageView.layer.borderWidth = 1.0f;
+                    
+                                        if (self.delegate) {
+                                            [self.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
+                                        }
+                                            CGFloat width = [UIScreen mainScreen].bounds.size.width;
+        
+                                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                self.vPreviewSize[3].constant = image.size.height + 40;
+                                                self.hPreviewSize[3].constant = image.size.width + 30;
+                                                self.hGroupedPreviewSize[1].constant = image.size.width + 50;
+                                                self.vGroupedPreviewSize[1].constant = image.size.height + 78 ;
+                                                
+                                                [weakPreviewImageView setImage:image];
+                                                });
+                                             } failure:nil];
     
     if (message.sendingFailed) {
         UIImageView *errorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
