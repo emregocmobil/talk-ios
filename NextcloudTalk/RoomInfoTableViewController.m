@@ -61,8 +61,7 @@ typedef enum RoomInfoSection {
     kRoomInfoSectionWebinar,
     kRoomInfoSectionSIP,
     kRoomInfoSectionParticipants,
-    kRoomInfoSectionDestructive,
-    kRoomInfoSectionFile
+    kRoomInfoSectionDestructive
 } RoomInfoSection;
 
 typedef enum NotificationAction {
@@ -2055,7 +2054,6 @@ typedef enum FileAction {
                     return cell;
                 }
                     break;
-
                 case kGuestActionResendInvitations:
                 {
                     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:resendInvitationsCellIdentifier];
@@ -2514,7 +2512,10 @@ typedef enum FileAction {
                 case kNotificationActionChatNotifications:
                     [self presentNotificationLevelSelector];
                     break;
-                case kPublicActionResendInvitations:
+                case kGuestActionShareLink:
+                    [self shareRoomLinkFromIndexPath:indexPath];
+                    break;
+                case kGuestActionResendInvitations:
                     [self resendInvitations];
                     break;
                 default:
