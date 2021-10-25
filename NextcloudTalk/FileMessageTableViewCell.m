@@ -439,6 +439,7 @@
     self.titleLabel.text = message.actorDisplayName;
     self.bodyTextView.attributedText = message.parsedMessage;
     self.messageId = message.messageId;
+    self.message = message;
     
     NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:message.timestamp];
     self.dateLabel.text = [NCUtils getTimeFromDate:date];
@@ -585,6 +586,26 @@
     
     [_activityIndicator startAnimating];
     [self.fileStatusView addSubview:_activityIndicator];
+}
+
+#pragma mark - Gesture recognizers
+
+- (void)avatarTapped:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (self.delegate && self.message) {
+        [self.delegate cellWantsToDisplayOptionsForMessageActor:self.message];
+    }
+}
+
+- (void)previewTapped:(UITapGestureRecognizer *)recognizer
+{
+    if (!self.fileParameter || !self.fileParameter.path || !self.fileParameter.link) {
+        return;
+    }
+    
+    if (self.delegate) {
+        [self.delegate cellWantsToDownloadFile:self.fileParameter];
+    }
 }
 
 

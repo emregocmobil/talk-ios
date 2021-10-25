@@ -1761,6 +1761,11 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
+- (void)presentOptionsForMessageActor:(NCChatMessage *)message
+{
+    
+}
+
 #pragma mark - UIImagePickerController Delegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -3993,7 +3998,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     } else {
         ChatMessageTableViewCell *normalCell = (ChatMessageTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:ChatMessageCellIdentifier];
         normalCell.delegate = self;
-
         [normalCell setupForMessage:message withLastCommonReadMessage:_room.lastCommonReadMessage];
         
         return normalCell;
@@ -4518,6 +4522,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)cellDidSelectedReaction:(NCChatReaction *)reaction forMessage:(NCChatMessage *)message
 {
     [self addOrRemoveReaction:reaction inChatMessage:message];
+}
+
+- (void)cellWantsToDisplayOptionsForMessageActor:(NCChatMessage *)message {
+    NSIndexPath *indexPath = [self indexPathForMessage:message];
+    if (indexPath) {
+        [self presentOptionsForMessageActor:message];
+    }
 }
 
 #pragma mark - NCChatFileControllerDelegate
