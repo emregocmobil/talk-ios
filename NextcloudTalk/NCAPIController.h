@@ -236,6 +236,9 @@ extern NSInteger const kReceivedChatMessagesLimit;
 // User actions
 - (NSURLSessionDataTask *)getUserActionsForUser:(NSString *)userId usingAccount:(TalkAccount *)account withCompletionBlock:(GetUserActionsCompletionBlock)block;
 
+// User actions
+- (NSURLSessionDataTask *)getUserActionsForUser:(NSString *)userId usingAccount:(TalkAccount *)account withCompletionBlock:(GetUserActionsCompletionBlock)block;
+
 // File previews
 - (NSURLRequest *)createPreviewRequestForFile:(NSString *)fileId width:(NSInteger)width height:(NSInteger)height usingAccount:(TalkAccount *)account;
 - (NSURLRequest *)createPreviewRequestForFile:(NSString *)fileId withMaxHeight:(NSInteger) height usingAccount:(TalkAccount *)account;
