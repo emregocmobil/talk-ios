@@ -4011,10 +4011,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         CGFloat width = CGRectGetWidth(tableView.frame) - kChatCellAvatarHeight;
         width -= tableView.safeAreaInsets.left + tableView.safeAreaInsets.right;
         
-        if(message.file) {
-            return message.file.image_height + 120;
-        }
-        
         return [self getCellHeightForMessage:message withWidth:width];
     }
     else {

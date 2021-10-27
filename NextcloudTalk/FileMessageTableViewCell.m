@@ -448,25 +448,22 @@
     [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId withMaxHeight:200 usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         
-                                        //[weakPreviewImageView setImage:image];
-                
                                                  //TODO: How to adjust for dark mode?
                                                  weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
                                                  if (@available(iOS 13.0, *)) {
                                                      weakPreviewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
                                                  }
-                                           // weakPreviewImageView.layer.borderWidth = 1.0f;
+                                        weakPreviewImageView.layer.borderWidth = 1.0f;
                     
                                         if (self.delegate) {
                                             [self.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
                                         }
-                                            CGFloat width = [UIScreen mainScreen].bounds.size.width;
         
-                                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                self.vPreviewSize[3].constant = image.size.height + 40;
-                                                self.hPreviewSize[3].constant = (image.size.width > 230) ? 230 : image.size.width + 30;
-                                                self.hPreviewSize[3].constant = (image.size.width > 230) ? 230 : image.size.width + 30;
-                                                self.vGroupedPreviewSize[1].constant = image.size.height + 78 ;
+                                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                self.vPreviewSize[3].constant = image.size.height ;
+                                                self.hPreviewSize[3].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width ;
+                                                self.hGroupedPreviewSize[1].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width;
+                                                self.vGroupedPreviewSize[1].constant = image.size.height ;
                                                 
                                                 [weakPreviewImageView setImage:image];
                                                 });
