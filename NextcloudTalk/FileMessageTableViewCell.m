@@ -444,30 +444,30 @@
     
     NSString *imageName = [[NCUtils previewImageForFileMIMEType:message.file.mimetype] stringByAppendingString:@"-chat-preview"];
     UIImage *filePreviewImage = [UIImage imageNamed:imageName];
-    __weak FilePreviewImageView *weakPreviewImageView = self.previewImageView;
+    __weak typeof(self) weakSelf = self;
     [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId withMaxHeight:200 usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         
                                                  //TODO: How to adjust for dark mode?
-                                                 weakPreviewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
+                                                weakSelf.previewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
                                                  if (@available(iOS 13.0, *)) {
-                                                     weakPreviewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
+                                                     weakSelf.previewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
                                                  }
-                                        weakPreviewImageView.layer.borderWidth = 1.0f;
+                                        weakSelf.previewImageView.layer.borderWidth = 1.0f;
                     
-                                        if (self.delegate) {
-                                            [self.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
+                                        if (weakSelf.delegate) {
+                                            [weakSelf.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
                                         }
         
-                                                dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                self.vPreviewSize[3].constant = image.size.height ;
-                                                self.hPreviewSize[3].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width ;
-                                                self.hGroupedPreviewSize[1].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width;
-                                                self.vGroupedPreviewSize[1].constant = image.size.height ;
+                                        dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                weakSelf.vPreviewSize[3].constant = image.size.height ;
+                                                weakSelf.hPreviewSize[3].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width ;
+                                                weakSelf.hGroupedPreviewSize[1].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width;
+                                                weakSelf.vGroupedPreviewSize[1].constant = image.size.height ;
                                                 
-                                                [weakPreviewImageView setImage:image];
-                                                });
-                                             } failure:nil];
+                                                [weakSelf.previewImageView setImage:image];
+                                           });
+                                        } failure:nil];
     
     if (message.sendingFailed) {
         UIImageView *errorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
