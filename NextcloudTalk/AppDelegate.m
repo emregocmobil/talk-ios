@@ -203,6 +203,21 @@
     _lockedInterfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
 }
 
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    NSString *scheme = urlComponents.scheme;
+    if ([scheme isEqualToString:@"nextcloudtalk"]) {
+        NSString *action = urlComponents.host;
+        if ([action isEqualToString:@"open-conversation"]) {
+            [[NCUserInterfaceController sharedInstance] presentChatForURL:urlComponents];
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
 {
     if (_shouldLockInterfaceOrientation) {
