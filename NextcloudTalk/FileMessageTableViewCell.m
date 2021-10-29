@@ -453,30 +453,27 @@
     [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId withMaxHeight:200 usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         
-                                                 //TODO: How to adjust for dark mode?
-                                                weakSelf.previewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
-                                                 if (@available(iOS 13.0, *)) {
-                                                     weakSelf.previewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
-                                                 }
-                                        weakSelf.previewImageView.layer.borderWidth = 1.0f;
+                                       //TODO: How to adjust for dark mode?
+                                       weakSelf.previewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
+                                       if (@available(iOS 13.0, *)) {
+                                           weakSelf.previewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
+                                       }
+                                       weakSelf.previewImageView.layer.borderWidth = 1.0f;
                     
-        
-                                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                weakSelf.vPreviewSize[3].constant = image.size.height ;
-                                                weakSelf.hPreviewSize[3].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width ;
-                                                weakSelf.hGroupedPreviewSize[1].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width;
-                                                weakSelf.vGroupedPreviewSize[1].constant = image.size.height ;
-                                                
-                                                [weakSelf.previewImageView setImage:image];
+                                       dispatch_async(dispatch_get_main_queue(), ^(void){
+                                           weakSelf.vPreviewSize[3].constant = image.size.height ;
+                                           weakSelf.hPreviewSize[3].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width ;
+                                           weakSelf.hGroupedPreviewSize[1].constant = (image.size.width > maxPreviewImageWidth) ? maxPreviewImageWidth : image.size.width;
+                                           weakSelf.vGroupedPreviewSize[1].constant = image.size.height ;
+                                           [weakSelf.previewImageView setImage:image];
+                                           [weakSelf setNeedsLayout];
+                                           [weakSelf layoutIfNeeded];
                                             
-                                                [weakSelf setNeedsLayout];
-                                                [weakSelf layoutIfNeeded];
-                                            
-                                            if (weakSelf.delegate) {
-                                                [weakSelf.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
-                                            }
-                                           });
-                                        } failure:nil];
+                                           if (weakSelf.delegate) {
+                                               [weakSelf.delegate cellHasDownloadedPreviewImage:image fromMessage:message];
+                                           }
+                                       });
+    } failure:nil];
     
     if (message.sendingFailed) {
         UIImageView *errorView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];

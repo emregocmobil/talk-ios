@@ -4089,7 +4089,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         height -= CGRectGetHeight(bodyBounds);
         return height += kVoiceMessageCellPlayerHeight;
     }
-        
+    
     if (message.file) {
         height += message.file.previewImageHeight == 0 ? kFileMessageCellFileMaxPreviewHeight + 10 : message.file.previewImageHeight + 10; // right(10)
         
