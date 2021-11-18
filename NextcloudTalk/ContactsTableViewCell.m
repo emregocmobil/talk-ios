@@ -107,15 +107,10 @@ CGFloat const kContactsTableCellTitleFontSize = 17.0f;
     }
 }
 
-- (void)setUserStatusIcon:(NSString *)userStatusIcon {
-    self.userStatusIconLabel.text = userStatusIcon;
-    [self.userStatusIconLabel setHidden:NO];
-    [self.userStatusImageView setHidden:YES];
-}
-
-- (void)setUSerStatusMessage:(NSString *)userStatusMessage {
-    if (![userStatusMessage isEqual:@""]) {
-        self.userStatusMessageLabel.text = userStatusMessage;
+- (void)setUSerStatusMessage:(NSString *)userStatusMessage withIcon:(NSString*)userStatusIcon {
+    if (![userStatusMessage isEqualToString:@""] || ![userStatusIcon isEqualToString:@""]) {
+        NSString *statusMessage = [NSString stringWithFormat:@"%@%@", userStatusIcon, userStatusMessage];
+        self.userStatusMessageLabel.text = statusMessage;
         self.userStatusMessageLabel.hidden = NO;
     }
     else {

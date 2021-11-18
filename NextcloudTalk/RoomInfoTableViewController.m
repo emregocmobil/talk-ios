@@ -2391,17 +2391,24 @@ typedef enum FileAction {
                     [cell setUserStatusMessage: NSLocalizedString(@"Away", nil) withIcon:nil];
                 }
             }
-            
-            //Show User Status
-            if (![participant.status isEqual:@"dnd"] && [participant.statusIcon length] != 0) {
-                [cell setUserStatusIcon:participant.statusIcon];
+
+            //Show user status and status message
+            if ([participant.status isEqualToString: kUserStatusDND] && [participant.statusMessage isEqualToString:@""]) {
+                [cell setUserStatus:participant.status];
+                [cell setUSerStatusMessage:NSLocalizedString(@"Do not disturb", nil)withIcon:participant.statusIcon];
+            }
+            else if ([participant.status isEqualToString:kUserStatusAway] && [participant.statusMessage isEqualToString:@""]) {
+                [cell setUserStatus:participant.status];
+                [cell setUSerStatusMessage: NSLocalizedString(@"Away", nil)withIcon:participant.statusIcon];
+            }
+            else if (([participant.status isEqual: kUserStatusDND] && ![participant.statusMessage isEqualToString:@""]) || ([participant.status isEqualToString: kUserStatusAway] && ![participant.statusMessage isEqual:@""])){
+                [cell setUserStatus:participant.status];
+                [cell setUSerStatusMessage:participant.statusMessage withIcon:participant.statusIcon];
             }
             else {
                 [cell setUserStatus:participant.status];
+                [cell setUSerStatusMessage:participant.statusMessage withIcon:participant.statusIcon];
             }
-            
-            //Show User Status Message
-            [cell setUSerStatusMessage:participant.statusMessage];
             
             // Call status
             if (participant.callIconImageName) {

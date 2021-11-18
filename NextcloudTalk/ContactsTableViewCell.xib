@@ -70,7 +70,6 @@
             <connections>
                 <outlet property="contactImage" destination="5eI-x8-VQH" id="9Dl-Ae-9dw"/>
                 <outlet property="labelTitle" destination="nOA-bG-zXZ" id="0dX-jq-5N3"/>
-                <outlet property="userStatusIconLabel" destination="jWy-l7-vlJ" id="Fjv-rr-Mkw"/>
                 <outlet property="userStatusImageView" destination="vfg-pq-jRm" id="mS5-WO-e7h"/>
                 <outlet property="userStatusMessageLabel" destination="27H-pY-tFT" id="kAG-y7-hW7"/>
             </connections>
