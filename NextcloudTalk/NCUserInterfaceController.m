@@ -229,6 +229,23 @@
     }
 }
 
+- (void)presentAccountNotConfiguredAlertForUser:(NSString *)user inServer:(NSString *)server
+{
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:NSLocalizedString(@"Account not configured", nil)
+                                 message:[NSString stringWithFormat:NSLocalizedString(@"There is no account for user %@ in server %@ configured in this app.", nil), user, server]
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* okButton = [UIAlertAction
+                               actionWithTitle:NSLocalizedString(@"OK", nil)
+                               style:UIAlertActionStyleDefault
+                               handler:nil];
+    
+    [alert addAction:okButton];
+    
+    [_mainNavigationController presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)logOutCurrentUser
 {
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
