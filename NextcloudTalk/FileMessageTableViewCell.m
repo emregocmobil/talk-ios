@@ -490,9 +490,6 @@
     
     self.fileParameter = message.file;
     
-    if (message.file.contactName) {
-        self.bodyTextView.text = message.file.contactName;
-    }
     if (message.file.contactPhotoImage) {
         [self.previewImageView setImage:message.file.contactPhotoImage];
     }
