@@ -4176,7 +4176,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
     
     if (message.geoLocation) {
-        return height += kLocationMessageCellPreviewHeight + 15;
+        return height += kLocationMessageCellPreviewHeight + 10; // right(10)
     }
     
     return height;
