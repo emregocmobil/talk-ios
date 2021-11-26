@@ -1818,7 +1818,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
                 // Presentation on iPads
                 optionsActionSheet.popoverPresentationController.sourceView = self.tableView;
                 CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
-                CGFloat avatarSize = kChatMessageCellAvatarHeight + 10;
+                CGFloat avatarSize = kChatCellAvatarHeight + 10;
                 CGRect avatarRect = CGRectMake(cellRect.origin.x, cellRect.origin.y, avatarSize, avatarSize);
                 optionsActionSheet.popoverPresentationController.sourceRect = avatarRect;
                 
