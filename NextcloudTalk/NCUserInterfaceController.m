@@ -246,6 +246,16 @@
     [_mainNavigationController presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)presentServerMaintenanceModeWarning:(NSNotification *)notification
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    NSString *accountId = [notification.userInfo objectForKey:@"accountId"];
+    
+    if (accountId && [activeAccount.accountId isEqualToString:accountId]) {
+        [JDStatusBarNotification showWithStatus:@"Server is currently in maintenance mode" dismissAfter:4.0f styleName:JDStatusBarStyleError];
+    }
+}
+
 - (void)logOutCurrentUser
 {
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
