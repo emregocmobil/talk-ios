@@ -508,7 +508,6 @@ static NSString * const kNCVideoTrackKind = @"video";
         if (!peerConnectionWrapper.isMCUPublisherPeer) {
             [self.delegate callController:self peerLeft:peerConnectionWrapper];
         }
-
         peerConnectionWrapper.delegate = nil;
         [peerConnectionWrapper close];
     }
