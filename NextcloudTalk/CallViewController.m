@@ -1654,6 +1654,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [participantCell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
     [participantCell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
     [participantCell setVideoDisabled: (_isAudioOnly) ? YES : peerConnection.isRemoteVideoDisabled];
+    [participantCell setShowOriginalSize:peerConnection.showRemoteVideoInOriginalSize];
     [participantCell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
     [participantCell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
 }
