@@ -1600,13 +1600,11 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
 - (void)updateParticipantCell:(CallParticipantViewCell *)cell withPeerConnection:(NCPeerConnection *)peerConnection
 {
     BOOL isVideoDisabled = peerConnection.isRemoteVideoDisabled;
-
     if (_isAudioOnly || peerConnection.remoteStream == nil) {
         isVideoDisabled = YES;
     }
     
     [cell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
-
     [cell setDisplayName:peerConnection.peerName];
     [cell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
     [cell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
@@ -1648,15 +1646,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     CallParticipantViewCell *participantCell = (CallParticipantViewCell *)cell;
     NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
     
-    [participantCell setVideoView:[_videoRenderersDict objectForKey:peerConnection.peerId]];
-    [participantCell setUserAvatar:[_callController getUserIdFromSessionId:peerConnection.peerId]];
-    [participantCell setDisplayName:peerConnection.peerName];
-    [participantCell setAudioDisabled:peerConnection.isRemoteAudioDisabled];
-    [participantCell setScreenShared:[_screenRenderersDict objectForKey:peerConnection.peerId]];
-    [participantCell setVideoDisabled: (_isAudioOnly) ? YES : peerConnection.isRemoteVideoDisabled];
-    [participantCell setShowOriginalSize:peerConnection.showRemoteVideoInOriginalSize];
-    [participantCell.peerNameLabel setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
-    [participantCell.buttonsContainerView setAlpha:_isDetailedViewVisible ? 1.0 : 0.0];
+    [self updateParticipantCell:participantCell withPeerConnection:peerConnection];
 }
 
 #pragma mark - Call Controller delegate
