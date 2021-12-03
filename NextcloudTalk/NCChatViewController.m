@@ -663,6 +663,27 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
+#pragma mark - Connection Controller notifications
+
+- (void)connectionStateHasChanged:(NSNotification *)notification
+{
+    ConnectionState connectionState = [[notification.userInfo objectForKey:@"connectionState"] intValue];
+    switch (connectionState) {
+        case kConnectionStateConnected:
+            if (_offlineMode) {
+                _offlineMode = NO;
+                _startReceivingMessagesAfterJoin = YES;
+                
+                [self removeOfflineFooterView];
+                [[NCRoomsManager sharedInstance] joinRoom:_room.token];
+            }
+            break;
+            
+        default:
+            break;
+    }
+}
+
 #pragma mark - Configuration
 
 - (void)setTitleView
@@ -866,6 +887,24 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (isAtBottom) {
         [self.tableView slk_scrollToBottomAnimated:YES];
     }
+    
+    if (isAtBottom) {
+        [self.tableView slk_scrollToBottomAnimated:YES];
+    }
+}
+
+- (void)removeOfflineFooterView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.tableView.tableFooterView) {
+            [self.tableView.tableFooterView removeFromSuperview];
+            self.tableView.tableFooterView = nil;
+            
+            // Scrolling after removing the tableFooterView won't scroll all the way to the bottom
+            // therefore just keep the current position
+            //[self.tableView slk_scrollToBottomAnimated:YES];
+        }
+    });
 }
 
 - (void)removeOfflineFooterView
