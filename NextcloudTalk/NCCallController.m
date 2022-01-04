@@ -1181,6 +1181,20 @@ static NSString * const kNCVideoTrackKind = @"video";
     }
 }
 
+- (BOOL)userHasStreams:(NSString *)sessionId
+{
+    for (NSMutableDictionary *user in _usersInRoom) {
+        NSString *userSession = [user objectForKey:@"sessionId"];
+        if ([userSession isEqualToString:sessionId]) {
+            NSInteger userCallFlags = [[user objectForKey:@"inCall"] integerValue];
+            NSInteger requiredFlags = CallFlagWithAudio | CallFlagWithVideo;
+            return (userCallFlags & requiredFlags) != 0;
+        }
+    }
+    
+    return NO;
+}
+
 - (NSMutableArray *)getInCallSessionsFromUsersInRoom:(NSArray *)users
 {
     NSMutableArray *sessions = [[NSMutableArray alloc] init];
