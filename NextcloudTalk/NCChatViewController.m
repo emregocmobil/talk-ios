@@ -2951,6 +2951,18 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self disableRoomControls];
 }
 
+#pragma mark - CallKit Manager notifications
+
+- (void)didFailRequestingCallTransaction:(NSNotification *)notification
+{
+    NSString *roomToken = [notification.userInfo objectForKey:@"roomToken"];
+    if (![roomToken isEqualToString:_room.token]) {
+        return;
+    }
+    
+    [self configureActionItems];
+}
+
 #pragma mark - Chat Controller notifications
 
 - (void)didReceiveInitialChatHistory:(NSNotification *)notification
