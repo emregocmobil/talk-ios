@@ -226,6 +226,37 @@
     }
 }
 
+- (void)setStatusForDataChannelMessageType:(NSString *)type withPayload:(id)payload
+{
+    if ([type isEqualToString:@"nickChanged"]) {
+        NSString *nick = @"";
+        if ([payload isKindOfClass:[NSString class]]) {
+            nick = payload;
+        } else if ([payload isKindOfClass:[NSDictionary class]]) {
+            nick = [payload objectForKey:@"name"];
+        }
+        _peerName = nick;
+        [self.delegate peerConnection:self didReceivePeerNick:nick];
+    } else {
+        // Check remote audio/video status
+        if ([type isEqualToString:@"audioOn"]) {
+            _isRemoteAudioDisabled = NO;
+        } else if ([type isEqualToString:@"audioOff"]) {
+            _isRemoteAudioDisabled = YES;
+        } else if ([type isEqualToString:@"videoOn"]) {
+            _isRemoteVideoDisabled = NO;
+        } else if ([type isEqualToString:@"videoOff"]) {
+            _isRemoteVideoDisabled = YES;
+        } else if ([type isEqualToString:@"speaking"]) {
+            _isPeerSpeaking = YES;
+        } else if ([type isEqualToString:@"stoppedSpeaking"]) {
+            _isPeerSpeaking = NO;
+        }
+        
+        [self.delegate peerConnection:self didReceiveStatusDataChannelMessage:type];
+    }
+}
+
 - (void)close
 {
     [[WebRTCCommon shared] assertQueue];
