@@ -155,12 +155,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         if NCSettingsController.sharedInstance().supportedBrowsers.count > 1 {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionBrowser.rawValue)
         }
-
         // Read status privacy setting
         if NCDatabaseManager.sharedInstance().serverHasTalkCapability(kCapabilityChatReadStatus) {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionReadStatus.rawValue)
         }
-
         // Contacts sync
         if NCDatabaseManager.sharedInstance().serverHasTalkCapability(kCapabilityPhonebookSearch) {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionContactsSync.rawValue)
