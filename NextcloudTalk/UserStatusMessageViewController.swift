@@ -30,7 +30,7 @@ import NextcloudKit
 
 @objc protocol UserStatusMessageViewControllerDelegate {
     func didClearStatusMessage()
-    func didSetStatusMessage(icon:String?, message:String?, clearAt:NSDate?)
+    func didSetStatusMessage(icon: String?, message: String?, clearAt: NSDate?)
 }
 
 class UserStatusMessageViewController: UIViewController, UITextFieldDelegate {
