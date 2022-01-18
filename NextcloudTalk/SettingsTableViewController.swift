@@ -580,7 +580,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         let sections = getSettingsSections()
         let settingsSection = sections[section]
-
         if settingsSection == SettingsSection.kSettingsSectionAbout.rawValue {
             let appName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)!
 
