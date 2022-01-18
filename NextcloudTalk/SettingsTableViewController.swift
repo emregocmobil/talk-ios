@@ -121,7 +121,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
 
         // Active user sections
         sections.append(SettingsSection.kSettingsSectionUser.rawValue)
-
         // User Status section
         let activeAccount: TalkAccount = NCDatabaseManager.sharedInstance().activeAccount()
         let serverCapabilities = NCDatabaseManager.sharedInstance().serverCapabilities(forAccountId: activeAccount.accountId)
