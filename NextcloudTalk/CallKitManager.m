@@ -404,6 +404,19 @@ NSTimeInterval const kCallKitManagerCheckCallStateEverySeconds  = 3.0;
             return;
         }
         
+        NSInteger callAPIVersion = [[NCAPIController sharedInstance] callAPIVersionForAccount:account];
+        for (NSMutableDictionary *user in peers) {
+            NSString *userId = [user objectForKey:@"userId"];
+            if (callAPIVersion >= APIv3) {
+                userId = [user objectForKey:@"actorId"];
+            }
+            if ([account.userId isEqualToString:userId]) {
+                // Account is already in a call (answered the call on a different device) -> no need to keep ringing
+                [self endCallWithUUID:call.uuid];
+                return;
+            }
+        }
+        
         // Reschedule next check
         NSTimer *callStateTimer = [NSTimer scheduledTimerWithTimeInterval:kCallKitManagerCheckCallStateEverySeconds target:self selector:@selector(checkCallStateForCall:) userInfo:call repeats:NO];
         [weakSelf.callStateTimers setObject:callStateTimer forKey:call.uuid];
