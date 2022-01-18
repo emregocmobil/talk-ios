@@ -409,8 +409,9 @@ NSTimeInterval const kCallKitManagerCheckCallStateEverySeconds  = 3.0;
             NSString *userId = [user objectForKey:@"userId"];
             if (callAPIVersion >= APIv3) {
                 userId = [user objectForKey:@"actorId"];
+                isUserActorType = [[user objectForKey:@"actorType"] isEqualToString:@"users"];
             }
-            if ([account.userId isEqualToString:userId]) {
+            if ([account.userId isEqualToString:userId] && isUserActorType) {
                 // Account is already in a call (answered the call on a different device) -> no need to keep ringing
                 [self endCallWithUUID:call.uuid];
                 return;
