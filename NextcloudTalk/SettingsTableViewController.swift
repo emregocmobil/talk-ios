@@ -423,11 +423,9 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
                 self.checkUserPhoneNumber()
                 NCContactsManager.sharedInstance().searchInServer(forAddressBookContacts: true)
             }
-        } else {
-            NCContactsManager.sharedInstance().removeStoredContacts()
+            // Reload to update configuration section footer
+            self.tableView.reloadData()
         }
-        // Reload to update configuration section footer
-        self.tableView.reloadData()
     }
 
     @objc func readStatusValueChanged(_ sender: Any?) {
@@ -441,9 +439,9 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
                     } else {
                         self.showReadStatusModificationError()
                     }
+                } else {
+                    self.showReadStatusModificationError()
                 }
-            } else {
-                self.showReadStatusModificationError()
             }
         }
     }
@@ -610,6 +608,32 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             if activeAccount.phone.isEmpty {
                 let missingPhoneString = NSLocalizedString("Missing phone number information", comment: "")
                 return "⚠ " + missingPhoneString
+            }
+        }
+        if let activeUserStatus = activeUserStatus {
+            if settingsSection == SettingsSection.kSettingsSectionUserStatus.rawValue && activeUserStatus.status == kUserStatusDND {
+                return NSLocalizedString("All notifications are muted", comment: "")
+            }
+        }
+        if let contactSyncSwitch = contactSyncSwitch {
+            if settingsSection == SettingsSection.kSettingsSectionConfiguration.rawValue && contactSyncSwitch.isOn {
+                if NCContactsManager.sharedInstance().isContactAccessDetermined() && NCContactsManager.sharedInstance().isContactAccessAuthorized() {
+                    return NSLocalizedString("Contact access has been denied", comment: "")
+                }
+                if NCDatabaseManager.sharedInstance().activeAccount().lastContactSync > 0 {
+                    let lastUpdate = Date(timeIntervalSince1970: TimeInterval(NCDatabaseManager.sharedInstance().activeAccount().lastContactSync))
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateStyle = .medium
+                    dateFormatter.timeStyle = .short
+                    return NSLocalizedString("Last sync: ", comment: "") + dateFormatter.string(from: lastUpdate)
+                }
+            }
+            if settingsSection == SettingsSection.kSettingsSectionUser.rawValue && contactSyncSwitch.isOn {
+                let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
+                if activeAccount.phone.isEmpty {
+                    let missingPhoneString = NSLocalizedString("Missing phone number information", comment: "")
+                    return "⚠ " + missingPhoneString
+                }
             }
         }
         return nil
