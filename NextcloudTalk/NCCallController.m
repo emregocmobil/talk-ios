@@ -409,6 +409,11 @@ static NSString * const kNCVideoTrackKind = @"video";
     }];
 }
 
+- (void)switchCamera
+{
+    [_localVideoCaptureController switchCamera];
+}
+
 - (void)enableVideo:(BOOL)enable
 {
     [[WebRTCCommon shared] dispatch:^{

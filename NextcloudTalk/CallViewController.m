@@ -1247,7 +1247,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
         [_localVideoView.captureSession stopRunning];
         _localVideoView.captureSession = nil;
         [_localVideoView setHidden:YES];
-
         dispatch_async(dispatch_get_main_queue(), ^{
             for (NCPeerConnection *peerConnection in self->_peersInCall) {
                 // Video renderers
