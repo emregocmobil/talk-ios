@@ -1210,6 +1210,7 @@ static NSString * const kNCVideoTrackKind = @"video";
             NSInteger changedPermissions = userPermissions ^ _userPermissions;
             if ((changedPermissions & NCPermissionCanPublishAudio) || (changedPermissions & NCPermissionCanPublishVideo)) {
                 _userPermissions = userPermissions;
+                [self.delegate callController:self userPermissionsChanged:_userPermissions];
                 [self createLocalMedia];
                 [self forceReconnect];
             }
