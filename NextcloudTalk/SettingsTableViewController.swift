@@ -613,7 +613,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
             }
         }
         if let activeUserStatus = activeUserStatus {
-            if settingsSection == SettingsSection.kSettingsSectionUserStatus.rawValue && activeUserStatus.status == kUserStatusDND {
+            if settingsSection == SettingsSection.kSettingsSectionUserStatus.rawValue, activeUserStatus.status == kUserStatusDND {
                 return NSLocalizedString("All notifications are muted", comment: "")
             }
         }
@@ -638,7 +638,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         return nil
     }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
         let sections = getSettingsSections()
@@ -662,7 +661,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         return cell
     }
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sections = getSettingsSections()
         let settingsSection = sections[indexPath.section]
