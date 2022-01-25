@@ -579,6 +579,12 @@ static NSString * const kNCVideoTrackKind = @"video";
     }
 }
 
+- (void)cleanAllPeerConnectionsForSessionId:(NSString *)sessionId
+{
+    [self cleanPeerConnectionForSessionId:sessionId ofType:kRoomTypeVideo];
+    [self cleanPeerConnectionForSessionId:sessionId ofType:kRoomTypeScreen];
+}
+
 #pragma mark - Microphone audio level
 
 - (void)startMonitoringMicrophoneAudioLevel
