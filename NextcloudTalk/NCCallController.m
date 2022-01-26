@@ -583,6 +583,18 @@ static NSString * const kNCVideoTrackKind = @"video";
 {
     [self cleanPeerConnectionForSessionId:sessionId ofType:kRoomTypeVideo];
     [self cleanPeerConnectionForSessionId:sessionId ofType:kRoomTypeScreen];
+    
+    // Invalidate possible request timers
+    NSString *peerVideoKey = [sessionId stringByAppendingString:kRoomTypeVideo];
+    NSTimer *pendingVideoRequestTimer = [_pendingOffersDict objectForKey:peerVideoKey];
+    if (pendingVideoRequestTimer) {
+        [pendingVideoRequestTimer invalidate];
+    }
+    NSString *peerScreenKey = [sessionId stringByAppendingString:kRoomTypeVideo];
+    NSTimer *pendingScreenRequestTimer = [_pendingOffersDict objectForKey:peerScreenKey];
+    if (pendingScreenRequestTimer) {
+        [pendingScreenRequestTimer invalidate];
+    }
 }
 
 #pragma mark - Microphone audio level
