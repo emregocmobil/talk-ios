@@ -118,7 +118,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
 
     func getSettingsSections() -> [Int] {
         var sections = [Int]()
-
         // Active user sections
         sections.append(SettingsSection.kSettingsSectionUser.rawValue)
         // User Status section
@@ -638,6 +637,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         return nil
     }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = UITableViewCell()
         let sections = getSettingsSections()
@@ -661,6 +661,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         }
         return cell
     }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sections = getSettingsSections()
         let settingsSection = sections[indexPath.section]
@@ -720,8 +721,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+
 extension SettingsTableViewController {
+
     // Cell configuration for every section
+
     func userSettingsCell(for indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: kUserSettingsCellIdentifier, for: indexPath) as? UserSettingsTableViewCell else { return UITableViewCell() }
         let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
