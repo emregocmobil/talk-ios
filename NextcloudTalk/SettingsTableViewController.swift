@@ -768,22 +768,19 @@ extension SettingsTableViewController {
             }
         }
         if let account = account {
-            cell?.accountNameLabel.text = account.userDisplayName
+            cell.accountNameLabel.text = account.userDisplayName
             let accountServer = account.server.replacingOccurrences(of: "https://", with: "")
-            cell?.accountServerLabel.text = accountServer
-            cell?.accountImageView.image = NCAPIController.sharedInstance().userProfileImage(for: account, with: CGSize(width: 90, height: 90))
-            cell?.accessoryView = nil
+            cell.accountServerLabel.text = accountServer
+            cell.accountImageView.image = NCAPIController.sharedInstance().userProfileImage(for: account, with: CGSize(width: 90, height: 90))
+            cell.accessoryView = nil
             if account.unreadBadgeNumber > 0 {
                 let badgeView = RoundedNumberView()
                 badgeView.highlightType = kHighlightTypeImportant
                 badgeView.number = account.unreadBadgeNumber
-                cell?.accessoryView = badgeView
+                cell.accessoryView = badgeView
             }
         }
-        if let cell = cell {
-            return cell
-        }
-        return UITableViewCell()
+        return cell
     }
     func sectionConfigurationCell(for indexPath: IndexPath) -> UITableViewCell {
         let videoConfigurationCellIdentifier = "VideoConfigurationCellIdentifier"
