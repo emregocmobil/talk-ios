@@ -625,7 +625,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
                 dateFormatter.timeStyle = .short
-                return NSLocalizedString("Last sync: ", comment: "") + dateFormatter.string(from: lastUpdate)
+                return NSLocalizedString("Last sync", comment: "") + ": " + dateFormatter.string(from: lastUpdate)
             }
         }
         if settingsSection == SettingsSection.kSettingsSectionUser.rawValue && contactSyncSwitch.isOn {
