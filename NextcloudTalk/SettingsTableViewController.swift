@@ -256,7 +256,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
 
     func presentUserStatusOptions() {
         if let activeUserStatus = activeUserStatus {
-            let viewController = StatusUserTableViewController(userStatus: activeUserStatus)
+            let viewController = UserStatusTableViewController(userStatus: activeUserStatus)
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
