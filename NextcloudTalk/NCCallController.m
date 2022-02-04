@@ -147,7 +147,6 @@ static NSString * const kNCVideoTrackKind = @"video";
 - (NSInteger)joinCallFlags
 {
     NSInteger flags = CallFlagInCall;
-    BOOL serverSupportsPermissions = [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityPublishingPermissions forAccountId:_account.accountId];
     
     if ((_userPermissions & NCPermissionCanPublishAudio) != 0 || !_serverSupportsConversationPermissions) {
         flags += CallFlagWithAudio;
