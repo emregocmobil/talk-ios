@@ -116,7 +116,6 @@
         [self.queuedRemoteCandidates addObject:candidate];
     } else {
         NSLog(@"Adding a remote ICE candidate.");
-
         [self.peerConnection addIceCandidate:candidate completionHandler:^(NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Error while adding a remote ICE candidate.");
