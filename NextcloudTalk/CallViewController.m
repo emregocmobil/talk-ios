@@ -264,7 +264,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     if (_voiceChatModeAtStart) {
         _userDisabledSpeaker = YES;
     }
-
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
     // 'conversation-permissions' capability was not added in Talk 13 release, so we check for 'direct-mention-flag' capability
     // as a workaround.
