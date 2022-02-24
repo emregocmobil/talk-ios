@@ -937,6 +937,17 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     });
 }
 
+- (void)adjustSpeakerButton
+{
+    AVAudioSession *audioSession = [NCAudioController sharedInstance].rtcAudioSession.session;
+    AVAudioSessionPortDescription *currentOutput = audioSession.currentRoute.outputs[0];
+    if ([currentOutput.portType isEqualToString:AVAudioSessionPortBuiltInSpeaker]) {
+        [self setSpeakerButtonActive:YES showInfoToast:NO];
+    } else {
+        [self setSpeakerButtonActive:NO showInfoToast:NO];
+    }
+}
+
 - (void)setDetailedViewTimer
 {
     [self invalidateDetailedViewTimer];

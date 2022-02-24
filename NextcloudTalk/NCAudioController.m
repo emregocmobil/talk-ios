@@ -169,7 +169,6 @@ NSString * const AudioSessionDidChangeRoutingInformationNotification   = @"Audio
 
     [_rtcAudioSession audioSessionDidActivate:audioSession];
     _rtcAudioSession.isAudioEnabled = YES;
-
     [[NSNotificationCenter defaultCenter] postNotificationName:AudioSessionWasActivatedByProviderNotification
                                                         object:self
                                                       userInfo:nil];
