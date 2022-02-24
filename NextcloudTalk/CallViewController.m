@@ -946,6 +946,13 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     } else {
         [self setSpeakerButtonActive:NO showInfoToast:NO];
     }
+    
+    // Show AirPlay button if there are more audio routes available
+    if (audioSession.availableInputs.count > 1) {
+        [self setSpeakerButtonWithAirplayButton];
+    } else {
+        [_airplayView removeFromSuperview];
+    }
 }
 
 - (void)setDetailedViewTimer
@@ -1231,6 +1238,15 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
         self.speakerButton.accessibilityValue = NSLocalizedString(@"AirPlay button", nil);
         self.speakerButton.accessibilityHint = NSLocalizedString(@"Double tap to select different audio routes", nil);
         [self.speakerButton addSubview:self->_airplayView];
+    });
+}
+
+- (void)setSpeakerButtonWithAirplayButton
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self->_speakerButton setImage:nil forState:UIControlStateNormal];
+        self->_speakerButton.accessibilityValue = NSLocalizedString(@"Airplay button", nil);
+        [self.speakerButton addSubview:_airplayView];
     });
 }
 
