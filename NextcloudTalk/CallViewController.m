@@ -1244,9 +1244,10 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
 - (void)setSpeakerButtonWithAirplayButton
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self->_speakerButton setImage:nil forState:UIControlStateNormal];
-        self->_speakerButton.accessibilityValue = NSLocalizedString(@"Airplay button", nil);
-        [self.speakerButton addSubview:_airplayView];
+        [self.speakerButton setImage:nil forState:UIControlStateNormal];
+        self.speakerButton.accessibilityValue = NSLocalizedString(@"AirPlay button", nil);
+        self.speakerButton.accessibilityHint = NSLocalizedString(@"Double tap to select different audio routes", nil);
+        [self.speakerButton addSubview:self->_airplayView];
     });
 }
 
