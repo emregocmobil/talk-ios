@@ -1082,6 +1082,17 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     return nil;
 }
 
+- (NCRoom *)roomForIndexPath:(NSIndexPath *)indexPath
+{
+    if (_searchController.active && _resultTableViewController.hasResults) {
+        return [_resultTableViewController roomForIndexPath:indexPath];
+    } else if (indexPath.row < _rooms.count) {
+        return [_rooms objectAtIndex:indexPath.row];
+    }
+    
+    return nil;
+}
+
 - (void)showLeaveRoomLastModeratorErrorForRoom:(NCRoom *)room
 {
     UIAlertController *leaveRoomFailedDialog =
