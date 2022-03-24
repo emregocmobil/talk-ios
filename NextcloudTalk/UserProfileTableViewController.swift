@@ -269,19 +269,19 @@ extension UserProfileTableViewController {
         textInputCell.textField.delegate = self
 
         if let text = text {
-            textInputCell?.textField.text = text
+            textInputCell.textField.text = text
         }
         if let tag = tag {
-            textInputCell?.textField.tag = tag
+            textInputCell.textField.tag = tag
         }
         if let interactionEnabled = interactionEnabled {
-            textInputCell?.textField.isUserInteractionEnabled = interactionEnabled
+            textInputCell.textField.isUserInteractionEnabled = interactionEnabled
         }
         if let keyBoardType = keyBoardType {
-            textInputCell?.textField.keyboardType = keyBoardType
+            textInputCell.textField.keyboardType = keyBoardType
         }
         if let placeHolder = placeHolder {
-            textInputCell?.textField.placeholder = placeHolder
+            textInputCell.textField.placeholder = placeHolder
         }
 
         return textInputCell
