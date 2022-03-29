@@ -1768,7 +1768,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         NCChatMessage *deletingMessage = [message copy];
         deletingMessage.message = NSLocalizedString(@"Deleting message", nil);
         deletingMessage.isDeleting = YES;
-        [self updateMessageWithReferenceId:deletingMessage.referenceId withMessage:deletingMessage];
+        [self updateMessageWithMessageId:deletingMessage.messageId withMessage:deletingMessage];
         // Delete message
         TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
         [[NCAPIController sharedInstance] deleteChatMessageInRoom:self->_room.token withMessageId:message.messageId forAccount:activeAccount withCompletionBlock:^(NSDictionary *messageDict, NSError *error, NSInteger statusCode) {
@@ -1780,7 +1780,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
                 }
                 NCChatMessage *deleteMessage = [NCChatMessage messageWithDictionary:[messageDict objectForKey:@"parent"] andAccountId:activeAccount.accountId];
                 if (deleteMessage) {
-                    [self updateMessageWithReferenceId:deleteMessage.referenceId withMessage:deleteMessage];
+                    [self updateMessageWithMessageId:deleteMessage.messageId withMessage:deleteMessage];
                 }
             } else if (error) {
                 if (statusCode == 400) {
@@ -1791,7 +1791,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
                     [self.view makeToast:NSLocalizedString(@"An error occurred while deleting the message", nil) duration:5 position:CSToastPositionCenter];
                 }
                 // Set back original message on failure
-                [self updateMessageWithReferenceId:message.referenceId withMessage:message];
+                [self updateMessageWithMessageId:message.messageId withMessage:message];
             }
         }];
     }
@@ -3324,7 +3324,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     NCChatMessage *message = [notification.userInfo objectForKey:@"deleteMessage"];
     NCChatMessage *deleteMessage = message.parent;
     if (deleteMessage) {
-        [self updateMessageWithReferenceId:deleteMessage.referenceId withMessage:deleteMessage];
+        [self updateMessageWithMessageId:deleteMessage.messageId withMessage:deleteMessage];
     }
 }
 
