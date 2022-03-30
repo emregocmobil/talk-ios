@@ -3321,7 +3321,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         return;
     }
     
-    NCChatMessage *message = [notification.userInfo objectForKey:@"deleteMessage"];
+    NCChatMessage *message = [notification.userInfo objectForKey:@"updateMessage"];
     NCChatMessage *deleteMessage = message.parent;
     if (deleteMessage) {
         [self updateMessageWithMessageId:deleteMessage.messageId withMessage:deleteMessage];
