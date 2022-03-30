@@ -59,6 +59,9 @@ NSString * const kSharedItemTypeRecording   = @"recording";
 
 @end
 
+@implementation NCChatReaction
+@end
+
 @implementation NCChatMessage
 
 + (instancetype)messageWithDictionary:(NSDictionary *)messageDict
