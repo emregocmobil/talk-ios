@@ -1305,6 +1305,9 @@
 				2CA52AC92670D02800619610 /* VoiceMessageRecordingView.h */,
 				2CA52ACA2670D02800619610 /* VoiceMessageRecordingView.m */,
 				2CA52ACC2670D07900619610 /* VoiceMessageRecordingView.xib */,
+				2CC32E8C27F4540E00BB8C39 /* ReactionsView.swift */,
+				2CC32E9027F45AE000BB8C39 /* ReactionsViewCell.swift */,
+				2CC32E9127F45AE000BB8C39 /* ReactionsViewCell.xib */,
 			);
 			name = "Chat views";
 			sourceTree = "<group>";

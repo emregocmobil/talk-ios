@@ -26,8 +26,11 @@
 #import "UIImageView+AFNetworking.h"
 #import "UIImageView+Letters.h"
 
+#import "NextcloudTalk-Swift.h"
+
 #import "NCAPIController.h"
 #import "NCAppBranding.h"
+#import "NCChatMessage.h"
 #import "NCDatabaseManager.h"
 #import "NCUtils.h"
 #import "QuotedMessageView.h"
@@ -397,6 +400,13 @@
                 [self.referenceView updateFor:referenceData and:url];
             }
         }];
+    }
+    
+    const NSArray *reactions = message.reactionsArray;
+    [self.reactionsView updateReactionsWithReactions:reactions];
+    if (reactions.count > 0) {
+        _vConstraint1[5].constant = 40;
+        _vConstraint2[5].constant = 40;
     }
 }
 

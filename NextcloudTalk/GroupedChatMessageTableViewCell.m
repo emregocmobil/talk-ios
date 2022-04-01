@@ -147,6 +147,11 @@
             }
         }];
     }
+    const NSArray *reactions = message.reactionsArray;
+    [self.reactionsView updateReactionsWithReactions:reactions];
+    if (reactions.count > 0) {
+        _vConstraint[3].constant = 40;
+    }
 }
 
 - (void)setDeliveryState:(ChatMessageDeliveryState)state
