@@ -61,6 +61,15 @@ extension String {
         return str.isSingleEmoji
     }
 
+    public var isSingleEmoji: Bool {
+        if #available(iOS 10.2, *) {
+            let str = self as String
+            return str.isSingleEmoji
+        }
+
+        return false
+    }
+
     public var emojiCount: Int {
         let str = self as String
         return str.emojis.count

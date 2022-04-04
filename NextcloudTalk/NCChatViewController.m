@@ -4364,6 +4364,17 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         [actions addObject:forwardAction];
     }
     
+    // Add reaction option
+    if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityReactions] && !_offlineMode) {
+        UIImage *reactionImage = [[UIImage imageNamed:@"emoji"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIAction *reactionAction = [UIAction actionWithTitle:NSLocalizedString(@"Add reaction", nil) image:reactionImage identifier:nil handler:^(UIAction *action){
+            
+            [self didPressAddReaction:message atIndexPath:indexPath];
+        }];
+        
+        [actions addObject:reactionAction];
+    }
+    
     // Forward option (only normal messages for now)
     if (!message.file && !_offlineMode) {
         UIImage *forwardImage = [[UIImage imageNamed:@"forward"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -4645,6 +4656,16 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (indexPath && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId]) {
         [self presentOptionsForMessageActor:message fromIndexPath:indexPath];
     }
+}
+
+- (void)cellWantsToAddReaction:(NSString *)reaction forMessage:(NCChatMessage *)message
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    [[NCAPIController sharedInstance] addReaction:reaction toMessage:message.messageId inRoom:_room.token forAccount:activeAccount withCompletionBlock:^(NSError *error) {
+        if (error) {
+            [self.view makeToast:NSLocalizedString(@"An error occurred while adding a reaction to message", nil) duration:5 position:CSToastPositionCenter];
+        }
+    }];
 }
 
 #pragma mark - NCChatFileControllerDelegate
