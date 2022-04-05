@@ -124,6 +124,8 @@
     _fileStatusView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:_fileStatusView];
     
+    [self.contentView addSubview:self.reactionsView];
+    
     _previewImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     NSDictionary *views = @{@"avatarView": self.avatarView,
@@ -205,6 +207,9 @@
     self.hPreviewSize[3].constant = kFileMessageCellFilePreviewHeight;
     self.vGroupedPreviewSize[1].constant = kFileMessageCellFilePreviewHeight;
     self.hGroupedPreviewSize[1].constant = kFileMessageCellFilePreviewHeight;
+    
+    self.vPreviewSize[7].constant = 0;
+    self.vGroupedPreviewSize[5].constant = 0;
     
     [self.statusView.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
     [self clearFileStatusView];
@@ -504,6 +509,12 @@
     
     if (message.file.contactPhotoImage) {
         [self.previewImageView setImage:message.file.contactPhotoImage];
+    }
+    
+    [self.reactionsView updateReactionsWithReactions:message.reactionsArray];
+    if (message.reactionsArray.count > 0) {
+        _vPreviewSize[7].constant = 40;
+        _vGroupedPreviewSize[5].constant = 40;
     }
     
     ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
