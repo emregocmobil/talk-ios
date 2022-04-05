@@ -35,6 +35,8 @@ static NSString *GroupedChatMessageCellIdentifier = @"GroupedChatMessageCellIden
 
 @property (nonatomic, weak) id<ChatTableViewCellDelegate> delegate;
 
+@property (nonatomic, weak) id<ChatTableViewCellDelegate> delegate;
+
 @property (nonatomic, strong) MessageBodyTextView *bodyTextView;
 @property (nonatomic, strong) UIView *statusView;
 @property (nonatomic, strong) ReactionsView *reactionsView;
