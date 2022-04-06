@@ -189,6 +189,13 @@
     [self.delegate cellDidSelectedReaction:reaction forMessage:self.message];
 }
 
+#pragma mark - ReactionsView delegate
+
+- (void)didSelectReactionWithReaction:(NSString *)reaction
+{
+    [self.delegate cellDidSelectedReaction:reaction forMessage:self.message];
+}
+
 #pragma mark - Getters
 
 - (MessageBodyTextView *)bodyTextView

@@ -4659,12 +4659,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)cellWantsToAddReaction:(NSString *)reaction forMessage:(NCChatMessage *)message
 {
-    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    [[NCAPIController sharedInstance] addReaction:reaction toMessage:message.messageId inRoom:_room.token forAccount:activeAccount withCompletionBlock:^(NSError *error) {
-        if (error) {
-            [self.view makeToast:NSLocalizedString(@"An error occurred while adding a reaction to message", nil) duration:5 position:CSToastPositionCenter];
-        }
-    }];
+    [self addReaction:reaction toChatMessage:message];
+}
+
+- (void)cellDidSelectedReaction:(NSString *)reaction forMessage:(NCChatMessage *)message
+{
+    [self addOrRemoveReaction:reaction inChatMessage:message];
 }
 
 #pragma mark - NCChatFileControllerDelegate
