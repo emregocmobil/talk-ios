@@ -104,6 +104,10 @@ import UIKit
         return kShareTableCellHeight
     }
 
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return kShareTableCellHeight
+    }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kShareCellIdentifier) as? ShareTableViewCell ??
         ShareTableViewCell(style: .default, reuseIdentifier: kShareCellIdentifier)
