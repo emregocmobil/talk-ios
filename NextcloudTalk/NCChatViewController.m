@@ -3895,6 +3895,9 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)showReactionsSummaryOfMessage:(NCChatMessage *)message
 {
+    // Actuate `Peek` feedback (weak boom)
+    AudioServicesPlaySystemSound(1519);
+    
     UITableViewStyle style = UITableViewStyleGrouped;
     if (@available(iOS 13.0, *)) {
         style = UITableViewStyleInsetGrouped;
@@ -4683,11 +4686,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)cellDidSelectedReaction:(NSString *)reaction forMessage:(NCChatMessage *)message
 {
     [self addOrRemoveReaction:reaction inChatMessage:message];
-}
-
-- (void)cellWantsToDisplayReactionsSummaryForMessage:(NCChatMessage *)message
-{
-    [self showReactionsSummaryOfMessage:message];
 }
 
 #pragma mark - NCChatFileControllerDelegate
