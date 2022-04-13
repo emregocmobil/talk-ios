@@ -3893,6 +3893,8 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }];
 }
 
+
+
 - (void)showReactionsSummaryOfMessage:(NCChatMessage *)message
 {
     // Actuate `Peek` feedback (weak boom)
@@ -4683,7 +4685,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self addReaction:reaction toChatMessage:message];
 }
 
-- (void)cellDidSelectedReaction:(NSString *)reaction forMessage:(NCChatMessage *)message
+- (void)cellDidSelectedReaction:(NCChatReaction *)reaction forMessage:(NCChatMessage *)message
 {
     [self addOrRemoveReaction:reaction inChatMessage:message];
 }
