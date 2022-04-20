@@ -411,8 +411,8 @@
     
     [self.reactionsView updateReactionsWithReactions:message.reactionsArray];
     if (message.reactionsArray.count > 0) {
-        _vConstraint1[5].constant = 40;
-        _vConstraint2[5].constant = 40;
+        if (_vConstraintNormal) {_vConstraintNormal[5].constant = 40;}
+        if (_vConstraintReply) {_vConstraintReply[6].constant = 40;}
     }
 }
 
