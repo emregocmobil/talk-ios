@@ -4397,6 +4397,19 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         [actions addObject:reactionAction];
     }
     
+    // Reply-privately option (only to other users and not in one-to-one)
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    if (isMessageReplyable && _room.type != kNCRoomTypeOneToOne && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId] )
+    {
+        UIImage *replyPrivateImage = [[UIImage imageNamed:@"user"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIAction *replyPrivateAction = [UIAction actionWithTitle:NSLocalizedString(@"Reply privately", nil) image:replyPrivateImage identifier:nil handler:^(UIAction *action){
+            
+            [self didPressReplyPrivately:message];
+        }];
+        
+        [actions addObject:replyPrivateAction];
+    }
+    
     // Forward option (only normal messages for now)
     if (!message.file && !_offlineMode) {
         UIImage *forwardImage = [[UIImage imageNamed:@"forward"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
