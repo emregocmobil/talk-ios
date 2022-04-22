@@ -58,6 +58,10 @@ import UIKit
         reactionsBackgroundView.loadingView.startAnimating()
         self.tableView.backgroundView = reactionsBackgroundView
 
+        reactionsBackgroundView.placeholderView.isHidden = true
+        reactionsBackgroundView.loadingView.startAnimating()
+        self.tableView.backgroundView = reactionsBackgroundView
+
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.cancelButtonPressed))
         self.navigationItem.leftBarButtonItem?.tintColor = NCAppBranding.themeTextColor()
     }
