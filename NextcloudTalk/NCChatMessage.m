@@ -244,6 +244,11 @@ NSString * const kSharedItemTypeRecording   = @"recording";
     return [_messageType isEqualToString:kMessageTypeCommand];
 }
 
+- (BOOL)isDeletedMessage
+{
+    return [_messageType isEqualToString:kMessageTypeCommentDeleted];
+}
+
 - (BOOL)isMessageFromUser:(NSString *)userId
 {
     return [self.actorId isEqualToString:userId] && [self.actorType isEqualToString:@"users"];
