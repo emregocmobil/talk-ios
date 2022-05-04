@@ -2674,7 +2674,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
         NSDate *sectionDate = [_dateSections objectAtIndex:indexPath.section];
         NCChatMessage *message = [[_messages objectForKey:sectionDate] objectAtIndex:indexPath.row];
-        if ([message.messageType isEqualToString:kMessageTypeVoiceMessage]) {
+        if (message.isVoiceMessage) {
             VoiceMessageTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             if (message.file && [message.file.parameterId isEqualToString:_playerAudioFileStatus.fileId] && [message.file.path isEqualToString:_playerAudioFileStatus.filePath]) {
                 [cell setPlayerProgress:_voiceMessagesPlayer.currentTime isPlaying:_voiceMessagesPlayer.isPlaying maximumValue:_voiceMessagesPlayer.duration];
@@ -4226,7 +4226,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
     
     // Voice message should be before message.file check since it contains a file
-    if ([message.messageType isEqualToString:kMessageTypeVoiceMessage]) {
+    if (message.isVoiceMessage) {
         height -= ceil(CGRectGetHeight(bodyBounds));
         return height += kVoiceMessageCellPlayerHeight + 10; // right(10)
     }
