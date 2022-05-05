@@ -49,8 +49,5 @@ typedef enum ChatMessageDeliveryState {
 
 @property (nonatomic, assign) NSInteger messageId;
 @property (nonatomic, strong) NCChatMessage *message;
-@property (nonatomic, strong) EmojiTextField *emojiTextField;
-
-- (void)addReaction:(NSString *)reaction;
 
 @end
