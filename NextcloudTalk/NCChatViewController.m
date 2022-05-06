@@ -663,6 +663,43 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
+#pragma mark - Keyboard notifications
+
+- (void)willShowKeyboard:(NSNotification *)notification
+{
+    UIResponder *currentResponder = [UIResponder slk_currentFirstResponder];
+    // Skips if it's not the emoji text field
+    if (currentResponder && ![currentResponder isKindOfClass:[EmojiTextField class]]) {
+        return;
+    }
+
+    CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    [self updateViewToShowOrHideEmojiKeyboard:keyboardRect.size.height];
+    NSIndexPath *indexPath = [self indexPathForMessage:_reactingMessage];
+    if (indexPath) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        });
+    }
+}
+
+- (void)wllHideHideKeyboard:(NSNotification *)notification
+{
+    UIResponder *currentResponder = [UIResponder slk_currentFirstResponder];
+    // Skips if it's not the emoji text field
+    if (currentResponder && ![currentResponder isKindOfClass:[EmojiTextField class]]) {
+        return;
+    }
+    
+    NSIndexPath *lastVisibleRowIndexPath = [[self.tableView indexPathsForVisibleRows] lastObject];
+    [self updateViewToShowOrHideEmojiKeyboard:0.0];
+    if (lastVisibleRowIndexPath) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView scrollToRowAtIndexPath:lastVisibleRowIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        });
+    }
+}
+
 #pragma mark - Connection Controller notifications
 
 - (void)connectionStateHasChanged:(NSNotification *)notification
