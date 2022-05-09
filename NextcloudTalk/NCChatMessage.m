@@ -254,6 +254,11 @@ NSString * const kSharedItemTypeRecording   = @"recording";
     return [_messageType isEqualToString:kMessageTypeVoiceMessage];
 }
 
+- (BOOL)isCommandMessage
+{
+    return [_messageType isEqualToString:kMessageTypeCommand];
+}
+
 - (BOOL)isMessageFromUser:(NSString *)userId
 {
     return [self.actorId isEqualToString:userId] && [self.actorType isEqualToString:@"users"];
