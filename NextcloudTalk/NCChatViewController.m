@@ -695,11 +695,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         return;
     }
     
-    NSIndexPath *lastVisibleRowIndexPath = [[self.tableView indexPathsForVisibleRows] lastObject];
     [self updateViewToShowOrHideEmojiKeyboard:0.0];
-    if (lastVisibleRowIndexPath) {
+    if (_lastMessageBeforeReaction) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.tableView scrollToRowAtIndexPath:lastVisibleRowIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            [self.tableView scrollToRowAtIndexPath:self->_lastMessageBeforeReaction atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         });
     }
 }
