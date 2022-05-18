@@ -2912,6 +2912,14 @@
 				version = 1.1.1700;
 			};
 		};
+		2CCCD21B2835088F00F076CE /* XCRemoteSwiftPackageReference "OpenSSL" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/OpenSSL";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.1.180;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2939,6 +2947,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1F7AE07629142CA1009F72AD /* XCRemoteSwiftPackageReference "NextcloudKit" */;
 			productName = NextcloudKit;
+		};
+		2CCCD21C2835088F00F076CE /* OpenSSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CCCD21B2835088F00F076CE /* XCRemoteSwiftPackageReference "OpenSSL" */;
+			productName = OpenSSL;
 		};
 		2CCCD21C2835088F00F076CE /* OpenSSL */ = {
 			isa = XCSwiftPackageProductDependency;
