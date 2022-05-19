@@ -1098,6 +1098,12 @@ static NSString * const kNCVideoTrackKind = @"video";
         [self shouldRejoinCall];
     }
     
+    // Detect if user should rejoin call (internal signaling)
+    if (!_userInCall && _shouldRejoinCallUsingInternalSignaling) {
+        _shouldRejoinCallUsingInternalSignaling = NO;
+        [self shouldRejoinCall];
+    }
+    
     if (!previousUserInCall) {
         // Do nothing if app user is stil not in the call
         if (!_userInCall) {
