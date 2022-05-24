@@ -61,6 +61,18 @@
 @end
 
 
+@interface NCPushNotificationKeyPair : NSObject
+
+@property (nonatomic, copy) NSData *publicKey;
+@property (nonatomic, copy) NSData *privateKey;
+
+@end
+
+@implementation NCPushNotificationKeyPair
+
+@end
+
+
 @implementation NCSettingsController
 
 NSString * const kUserProfileUserId             = @"id";
