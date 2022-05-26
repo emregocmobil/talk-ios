@@ -53,8 +53,6 @@
 
 #import "NextcloudTalk-Swift.h"
 
-#import "NextcloudTalk-Swift.h"
-
 @interface AppDelegate ()
 
 @property (nonatomic, strong) NSTimer *keepAliveTimer;
@@ -213,6 +211,15 @@
         NSString *action = urlComponents.host;
         if ([action isEqualToString:@"open-conversation"]) {
             [[NCUserInterfaceController sharedInstance] presentChatForURL:urlComponents];
+            return YES;
+        } else if ([action isEqualToString:@"login"] && multiAccountEnabled) {
+            NSArray *queryItems = urlComponents.queryItems;
+            NSString *server = [NCUtils valueForKey:@"server" fromQueryItems:queryItems];
+            NSString *user = [NCUtils valueForKey:@"user" fromQueryItems:queryItems];
+            
+            if (server) {
+                [[NCUserInterfaceController sharedInstance] presentLoginViewControllerForServerURL:server withUser:user];
+            }
             return YES;
         }
     }

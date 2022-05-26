@@ -44,4 +44,6 @@
 
 - (void)startLoginProcessWithServerURL:(NSString *)serverURL withUser:(NSString *)user;
 
+- (void)startLoginProcessWithServerURL:(NSString *)serverURL withUser:(NSString *)user;
+
 @end
