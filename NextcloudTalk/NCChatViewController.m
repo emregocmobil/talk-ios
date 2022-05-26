@@ -4466,7 +4466,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     
     // Reply-privately option (only to other users and not in one-to-one)
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    if (isMessageReplyable && _room.type != kNCRoomTypeOneToOne && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId] )
+    if ([self isMessageReplyable:message] && _room.type != kNCRoomTypeOneToOne && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId] )
     {
         UIImage *replyPrivateImage = [[UIImage imageNamed:@"user"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *replyPrivateAction = [UIAction actionWithTitle:NSLocalizedString(@"Reply privately", nil) image:replyPrivateImage identifier:nil handler:^(UIAction *action){
