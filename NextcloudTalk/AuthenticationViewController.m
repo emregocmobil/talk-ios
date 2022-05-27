@@ -79,7 +79,6 @@ NSString * const kNCAuthTokenFlowEndpoint               = @"/index.php/login/flo
     [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
         [request setValue:@"true" forHTTPHeaderField:@"OCS-APIRequest"];
-
         self->_webView = [[DebounceWebView alloc] initWithFrame:self.view.frame configuration:configuration];
         NSString *appDisplayName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         NSString *deviceName = [[UIDevice currentDevice] name];
