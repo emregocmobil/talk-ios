@@ -87,7 +87,6 @@ NSString * const kNCAuthTokenFlowEndpoint               = @"/index.php/login/flo
         self->_webView.customUserAgent = [[NSString alloc] initWithCString:[userAgent UTF8String] encoding:NSASCIIStringEncoding];
         self->_webView.navigationDelegate = self;
         self->_webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
         [self->_webView loadRequest:request];
         [self.view addSubview:self->_webView];
 
