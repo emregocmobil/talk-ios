@@ -78,7 +78,6 @@ import QRCodeReader
                     message: NSLocalizedString("Camera access is not allowed. Check your settings.", comment: ""),
                     preferredStyle: .alert
                 )
-
                 alert.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: ""), style: .default, handler: { _ in
                     DispatchQueue.main.async {
                         if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
@@ -94,7 +93,6 @@ import QRCodeReader
                     message: NSLocalizedString("Scanning QR Codes is not supported on this device.", comment: ""),
                     preferredStyle: .alert
                 )
-
                 alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: nil))
             }
 
