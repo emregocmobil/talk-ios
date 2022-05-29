@@ -111,7 +111,6 @@ import QRCodeReader
             if path.starts(with: "/") {
                 path.removeFirst()
             }
-
             if path.contains("user:") && path.contains("password:") && path.contains("server:") {
                 let pathArray = path.components(separatedBy: "&")
                 if pathArray.count == 3 {
@@ -119,14 +118,12 @@ import QRCodeReader
                     let user = pathArray[0].replacingOccurrences(of: "user:", with: "")
                     let password = pathArray[1].replacingOccurrences(of: "password:", with: "")
                     let serverUrl = pathArray[2].replacingOccurrences(of: "server:", with: "")
-
                     (self.delegate as? QRCodeLoginControllerDelegate)?.readLoginDetails(serverUrl: serverUrl, user: user, password: password)
                     return
                 }
             }
         }
     }
-
     public func readerDidCancel(_ reader: QRCodeReaderViewController) {
         reader.stopScanning()
     }
