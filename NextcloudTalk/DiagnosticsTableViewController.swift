@@ -599,13 +599,11 @@ class DiagnosticsTableViewController: UITableViewController {
                         guard let stunServerStringDict = stunServerDict["urls"] as? [String] else {
                             continue
                         }
-
                         stunServers += stunServerStringDict
                     } else {
                         guard let stunServerString = stunServerDict["url"] as? String else {
                             continue
                         }
-
                         stunServers.append(stunServerString)
                     }
                 }
@@ -628,13 +626,11 @@ class DiagnosticsTableViewController: UITableViewController {
                         guard let turnServerStringDict = turnServerDict["urls"] as? [String] else {
                             continue
                         }
-
                         turnServers += turnServerStringDict
                     } else {
                         guard let turnServerString = turnServerDict["url"] as? String else {
                             continue
                         }
-
                         turnServers.append(turnServerString)
                     }
                 }
