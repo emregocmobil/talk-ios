@@ -160,7 +160,6 @@ class DiagnosticsTableViewController: UITableViewController {
             self.checkNotificationAuthorizationStatus()
         }
     }
-
     func checkServerReachability() {
         serverReachable = nil
         serverReachableIndicator.startAnimating()
@@ -174,7 +173,6 @@ class DiagnosticsTableViewController: UITableViewController {
             }
         }
     }
-
     func checkNotificationAuthorizationStatus() {
         notificationSettings = nil
         notificationSettingsIndicator.startAnimating()
@@ -677,7 +675,6 @@ class DiagnosticsTableViewController: UITableViewController {
             return NSLocalizedString("No", comment: "")
         }
     }
-
     func reloadRow(_ row: Int, in section: Int) {
         DispatchQueue.main.async {
             self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)

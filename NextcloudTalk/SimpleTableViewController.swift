@@ -66,7 +66,6 @@ class SimpleTableViewController: UITableViewController {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "SimpleTableViewCell")
         cell.textLabel?.text = options[indexPath.row]
         cell.selectionStyle = .none
-
         return cell
     }
 }
