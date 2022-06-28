@@ -2594,7 +2594,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [[NCAPIController sharedInstance] uniqueNameForFileUploadWithName:audioFileName originalName:YES forAccount:activeAccount withCompletionBlock:^(NSString *fileServerURL, NSString *fileServerPath, NSInteger errorCode, NSString *errorDescription) {
         if (fileServerURL && fileServerPath) {
             NSDictionary *talkMetaData = @{@"messageType" : @"voice-message"};
-            [self uploadFileAtPath:_recorder.url.path withFileServerURL:fileServerURL andFileServerPath:fileServerPath withMetaData:talkMetaData];
+            [self uploadFileAtPath:self->_recorder.url.path withFileServerURL:fileServerURL andFileServerPath:fileServerPath withMetaData:talkMetaData];
         } else {
             NSLog(@"Could not find unique name for voice message file.");
         }
