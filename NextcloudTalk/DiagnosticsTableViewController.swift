@@ -271,7 +271,7 @@ class DiagnosticsTableViewController: UITableViewController {
 
         } else if indexPath.section == DiagnosticsSections.kDiagnosticsSectionTalk.rawValue,
                   indexPath.row == TalkSections.kTalkSectionVersion.rawValue {
-
+            
             presentCapabilitiesDetails()
         }
 
