@@ -25,7 +25,6 @@ import Photos
 import UserNotifications
 
 class DiagnosticsTableViewController: UITableViewController {
-
     enum DiagnosticsSections: Int {
         case kDiagnosticsSectionApp = 0
         case kDiagnosticsSectionAccount
