@@ -25,6 +25,7 @@ import Photos
 import UserNotifications
 
 class DiagnosticsTableViewController: UITableViewController {
+
     enum DiagnosticsSections: Int {
         case kDiagnosticsSectionApp = 0
         case kDiagnosticsSectionAccount
@@ -270,7 +271,7 @@ class DiagnosticsTableViewController: UITableViewController {
 
         } else if indexPath.section == DiagnosticsSections.kDiagnosticsSectionTalk.rawValue,
                   indexPath.row == TalkSections.kTalkSectionVersion.rawValue {
-            
+
             presentCapabilitiesDetails()
         }
 

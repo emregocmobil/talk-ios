@@ -118,10 +118,10 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
 
     func getSettingsSections() -> [Int] {
         var sections = [Int]()
-        
+
         // Active user sections
         sections.append(SettingsSection.kSettingsSectionUser.rawValue)
-        
+
         // User Status section
         let activeAccount: TalkAccount = NCDatabaseManager.sharedInstance().activeAccount()
         let serverCapabilities = NCDatabaseManager.sharedInstance().serverCapabilities(forAccountId: activeAccount.accountId)
@@ -154,12 +154,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         if NCSettingsController.sharedInstance().supportedBrowsers.count > 1 {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionBrowser.rawValue)
         }
-        
+
         // Read status privacy setting
         if NCDatabaseManager.sharedInstance().serverHasTalkCapability(kCapabilityChatReadStatus) {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionReadStatus.rawValue)
         }
-        
+
         // Contacts sync
         if NCDatabaseManager.sharedInstance().serverHasTalkCapability(kCapabilityPhonebookSearch) {
             options.append(ConfigurationSectionOption.kConfigurationSectionOptionContactsSync.rawValue)
@@ -460,13 +460,13 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         errorDialog.addAction(okAction)
         self.present(errorDialog, animated: true, completion: nil)
     }
-    
+
     // MARK: Diagnostics actions
 
     func diagnosticsPressed() {
         let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
         let diagnosticsVC = DiagnosticsTableViewController(withAccount: activeAccount)
-        
+
         self.navigationController?.pushViewController(diagnosticsVC, animated: true)
     }
 
@@ -745,7 +745,7 @@ extension SettingsTableViewController {
         cell.accessoryType = .disclosureIndicator
         return cell
     }
-    
+
     func userStatusCell(for indexPath: IndexPath) -> UITableViewCell {
         let userStatusCellIdentifier = "UserStatusCellIdentifier"
         let cell = UITableViewCell(style: .default, reuseIdentifier: userStatusCellIdentifier)
@@ -763,7 +763,7 @@ extension SettingsTableViewController {
         cell.accessoryType = .disclosureIndicator
         return cell
     }
-    
+
     func userAccountsCell(for indexPath: IndexPath) -> UITableViewCell {
         let inactiveAccounts = NCDatabaseManager.sharedInstance().inactiveAccounts()
         let account = inactiveAccounts[indexPath.row] as? TalkAccount
@@ -796,7 +796,7 @@ extension SettingsTableViewController {
         }
         return cell
     }
-    
+
     func sectionConfigurationCell(for indexPath: IndexPath) -> UITableViewCell {
         let videoConfigurationCellIdentifier = "VideoConfigurationCellIdentifier"
         let browserConfigurationCellIdentifier = "BrowserConfigurationCellIdentifier"
