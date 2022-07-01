@@ -611,7 +611,6 @@ class DiagnosticsTableViewController: UITableViewController {
                     cell.detailTextLabel?.text = stunServers.joined(separator: "\n")
                 }
             }
-
         case AllSignalingSections.kSignalingSectionTurnServers.rawValue:
             cell.textLabel?.text = NSLocalizedString("TURN servers", comment: "")
             cell.detailTextLabel?.text = NSLocalizedString("Unavailable", comment: "")
