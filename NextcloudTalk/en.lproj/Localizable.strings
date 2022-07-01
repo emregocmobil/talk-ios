@@ -121,6 +121,9 @@
 /* No comment provided by engineer. */
 "Allow guests" = "Allow guests";
 
+/* '{Microphone, Camera, ...} access is allowed' */
+"Allowed" = "Allowed";
+
 /* No comment provided by engineer. */
 "Allow to dial-in without a pin" = "Allow to dial-in without a pin";
 
@@ -678,6 +681,9 @@
 
 /* No comment provided by engineer. */
 "Enable" = "Enable";
+
+/* External signaling used */
+"External" = "External";
 
 /* No comment provided by engineer. */
 "End call" = "End call";
@@ -1391,6 +1397,12 @@
 "Switching to another conversation …" = "Switching to another conversation …";
 
 /* No comment provided by engineer. */
+"STUN servers" = "STUN servers";
+
+/* No comment provided by engineer. */
+"Subscribed to push server?" = "Subscribed to push server?";
+
+/* No comment provided by engineer. */
 "Sync contacts" = "Sync contacts";
 
 /* No comment provided by engineer. */
@@ -1440,6 +1452,9 @@
 
 /* TRANSLATORS transcript of a voice-message */
 "Transcript" = "Transcript";
+
+/* No comment provided by engineer. */
+"TURN servers" = "TURN servers";
 
 /* No comment provided by engineer. */
 "TURN servers" = "TURN servers";
@@ -1521,6 +1536,9 @@
 
 /* No comment provided by engineer. */
 "Waiting for others to join call …" = "Waiting for others to join call …";
+
+/* No comment provided by engineer. */
+"WebDAV root" = "WebDAV root";
 
 /* No comment provided by engineer. */
 "Website" = "Website";
