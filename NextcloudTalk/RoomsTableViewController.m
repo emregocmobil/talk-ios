@@ -512,6 +512,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     NSString *searchString = _searchController.searchBar.text;
     TalkAccount *account = [[NCDatabaseManager sharedInstance] activeAccount];
     // Search for listable rooms
+    _resultTableViewController.listableRooms = @[];
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityListableRooms]) {
         _resultTableViewController.listableRooms = @[];
         [[NCAPIController sharedInstance] getListableRoomsForAccount:account withSearchTerm:searchString andCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
