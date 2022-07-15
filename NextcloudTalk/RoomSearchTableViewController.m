@@ -95,6 +95,12 @@ typedef enum RoomSearchSection {
     [self reloadAndCheckSearchingIndicator];
 }
 
+- (void)setSearchingMessages:(BOOL)searchingMessages
+{
+    _searchingMessages = searchingMessages;
+    [self reloadAndCheckSeachingIndicator];
+}
+
 
 #pragma mark - User Interface
 

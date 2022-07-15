@@ -475,6 +475,9 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
+    // Cancel previous call to search listable rooms and messages
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(searchListableRoomsAndMessages) object:nil];
+    
     NSString *searchString = _searchController.searchBar.text;
     // Do not search for the same term twice (e.g. when the searchbar retrieves back the focus)
     if ([_searchString isEqualToString:searchString]) {return;}
@@ -512,7 +515,6 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     NSString *searchString = _searchController.searchBar.text;
     TalkAccount *account = [[NCDatabaseManager sharedInstance] activeAccount];
     // Search for listable rooms
-    _resultTableViewController.listableRooms = @[];
     if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityListableRooms]) {
         _resultTableViewController.listableRooms = @[];
         [[NCAPIController sharedInstance] getListableRoomsForAccount:account withSearchTerm:searchString andCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
