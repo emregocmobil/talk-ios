@@ -98,7 +98,7 @@ typedef enum RoomSearchSection {
 - (void)setSearchingMessages:(BOOL)searchingMessages
 {
     _searchingMessages = searchingMessages;
-    [self reloadAndCheckSeachingIndicator];
+    [self reloadAndCheckSearchingIndicator];
 }
 
 
