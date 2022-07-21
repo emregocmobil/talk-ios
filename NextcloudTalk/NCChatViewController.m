@@ -4330,6 +4330,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         return height += kLocationMessageCellPreviewHeight + 10; // right(10)
     }
     
+    if (message.poll) {
+        return height += 14; // 2*titlePadding(7)
+    }
+    
     return height;
 }
 
