@@ -4179,7 +4179,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (message.geoLocation) {
         NSString *locationCellIdentifier = (message.isGroupMessage) ? GroupedLocationMessageCellIdentifier : LocationMessageCellIdentifier;
         LocationMessageTableViewCell *locationCell = (LocationMessageTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:locationCellIdentifier];
-        locationCell.delegate = self;
+        locationCell.delegatse = self;
         
         [locationCell setupForMessage:message withLastCommonReadMessage:_room.lastCommonReadMessage];
 
