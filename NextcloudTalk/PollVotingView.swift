@@ -363,6 +363,7 @@ import UIKit
                 }
                 cell = resultCell ?? PollResultTableViewCell()
             }
+            cell.accessoryView = checkboxImageView
         default:
             break
         }
