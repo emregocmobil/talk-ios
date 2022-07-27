@@ -1312,6 +1312,8 @@
 				2C5BFBEE288A947800E75118 /* PollVotingView.swift */,
 				2C5BFBF528902E0300E75118 /* PollFooterView.swift */,
 				2C5BFBF728902E3700E75118 /* PollFooterView.xib */,
+				2C5BFBF92891598900E75118 /* PollResultTableViewCell.swift */,
+				2C5BFBFA2891598900E75118 /* PollResultTableViewCell.xib */,
 			);
 			name = "Chat views";
 			sourceTree = "<group>";
