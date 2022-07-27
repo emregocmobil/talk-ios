@@ -182,57 +182,34 @@ import UIKit
     }
 
     func pollFooterView() -> UIView {
-        if poll.question != nil {
-            let buttonsContainerView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 60))
-            voteButton = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 40))
-            voteButton.setTitle(NSLocalizedString("Vote", comment: ""), for: .normal)
-            voteButton.addTarget(self, action: #selector(voteButtonPressed), for: .touchUpInside)
-            voteButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-            voteButton.backgroundColor = NCAppBranding.themeColor()
-            voteButton.setTitleColor(NCAppBranding.themeTextColor(), for: .normal)
-            voteButton.setTitleColor(NCAppBranding.themeTextColor().withAlphaComponent(0.5), for: .disabled)
-            voteButton.layer.cornerRadius = 20.0
-            voteButton.layer.masksToBounds = true
-            voteButton.sizeToFit()
-            let voteButtonFrame = voteButton.frame
-            buttonsContainerView.addSubview(voteButton)
-            // Add constraints
-            voteButton.translatesAutoresizingMaskIntoConstraints = false
-            let horizontalConstraint = NSLayoutConstraint(item: voteButton,
-                                                          attribute: NSLayoutConstraint.Attribute.centerX,
-                                                          relatedBy: NSLayoutConstraint.Relation.equal,
-                                                          toItem: buttonsContainerView,
-                                                          attribute: NSLayoutConstraint.Attribute.centerX,
-                                                          multiplier: 1,
-                                                          constant: 0)
-            let verticalConstraint = NSLayoutConstraint(item: voteButton,
-                                                        attribute: NSLayoutConstraint.Attribute.centerY,
-                                                        relatedBy: NSLayoutConstraint.Relation.equal,
-                                                        toItem: buttonsContainerView,
-                                                        attribute: NSLayoutConstraint.Attribute.centerY,
-                                                        multiplier: 1,
-                                                        constant: 0)
-            let widthConstraint = NSLayoutConstraint(item: voteButton,
-                                                     attribute: NSLayoutConstraint.Attribute.width,
-                                                     relatedBy: NSLayoutConstraint.Relation.equal,
-                                                     toItem: nil,
-                                                     attribute: NSLayoutConstraint.Attribute.notAnAttribute,
-                                                     multiplier: 1,
-                                                     constant: voteButtonFrame.width + 40)
-            let heightConstraint = NSLayoutConstraint(item: voteButton,
-                                                      attribute: NSLayoutConstraint.Attribute.height,
-                                                      relatedBy: NSLayoutConstraint.Relation.equal,
-                                                      toItem: nil,
-                                                      attribute: NSLayoutConstraint.Attribute.notAnAttribute,
-                                                      multiplier: 1,
-                                                      constant: 40)
-            buttonsContainerView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-            return buttonsContainerView
+        var footerRect = CGRect(x: 0, y: 0, width: 0, height: 120)
+        footerView.secondaryButton.isHidden = true
+        if isPollOpen {
+            if userVoted && !editingVote {
+                footerView.primaryButton.setTitle(NSLocalizedString("Edit vote", comment: ""), for: .normal)
+                footerView.setPrimaryButtonAction(target: self, selector: #selector(editVoteButtonPressed))
+            } else {
+                footerView.primaryButton.setTitle(NSLocalizedString("Vote", comment: ""), for: .normal)
+                footerView.setPrimaryButtonAction(target: self, selector: #selector(voteButtonPressed))
+            }
+            if isOwnPoll {
+                footerView.secondaryButton.setTitle(NSLocalizedString("End poll", comment: ""), for: .normal)
+                footerView.secondaryButton.isHidden = false
+            }
+            if editingVote {
+                footerView.secondaryButton.setTitle(NSLocalizedString("Dismiss", comment: ""), for: .normal)
+                footerView.secondaryButton.isHidden = false
+                footerView.secondaryButton.addTarget(self, action: #selector(dismissButtonPressed), for: .touchUpInside)
+            }
+        } else {
+            footerRect.size.height = 0
         }
-        return UIView()
+        footerView.frame = footerRect
+        return footerView
     }
 
     func voteButtonPressed() {
+        guard let poll = poll else {return}
         NCAPIController.sharedInstance().voteOnPoll(withId: poll.pollId, inRoom: room, withOptions: userSelectedOptions,
         for: NCDatabaseManager.sharedInstance().activeAccount()) { responsePoll, error, _ in
             if let responsePoll = responsePoll, error == nil {
@@ -241,13 +218,24 @@ import UIKit
         }
     }
 
+    func editVoteButtonPressed() {
+        self.editingVote = true
+        self.setupPollView()
+    }
+
+    func dismissButtonPressed() {
+        self.editingVote = false
+        self.userSelectedOptions = []
+        self.setupPollView()
+    }
+
     func setVoteButtonState() {
-        if userSelectedOptions.isEmpty {
-            voteButton.backgroundColor = NCAppBranding.themeColor().withAlphaComponent(0.5)
-            voteButton.isEnabled = false
+        if userSelectedOptions.isEmpty && isPollOpen && (!userVoted || editingVote) {
+            footerView.primaryButton.backgroundColor = NCAppBranding.themeColor().withAlphaComponent(0.5)
+            footerView.primaryButton.isEnabled = false
         } else {
-            voteButton.backgroundColor = NCAppBranding.themeColor()
-            voteButton.isEnabled = true
+            footerView.primaryButton.backgroundColor = NCAppBranding.themeColor()
+            footerView.primaryButton.isEnabled = true
         }
     }
 
@@ -363,7 +351,6 @@ import UIKit
                 }
                 cell = resultCell ?? PollResultTableViewCell()
             }
-            cell.accessoryView = checkboxImageView
         default:
             break
         }
@@ -372,10 +359,12 @@ import UIKit
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section != PollSection.kPollSectionOptions.rawValue {
+        if indexPath.section != PollSection.kPollSectionOptions.rawValue || showPollResults {
             tableView.deselectRow(at: indexPath, animated: true)
             return
         }
+
+        guard let poll = poll else {return}
 
         if let index = userSelectedOptions.firstIndex(of: indexPath.row), poll.maxVotes != 1 {
             userSelectedOptions.remove(at: index)
