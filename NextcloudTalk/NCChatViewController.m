@@ -4331,7 +4331,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
     
     if (message.poll) {
-        return height += 14; // 2*titlePadding(7)
+        return height += 20; // 2*right(10)
     }
     
     return height;
