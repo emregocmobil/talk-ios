@@ -368,7 +368,9 @@ import UIKit
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        if indexPath.section != PollSection.kPollSectionOptions.rawValue {return}
+        if indexPath.section != PollSection.kPollSectionOptions.rawValue || showIntermediateResults {
+            return
+        }
 
         guard let poll = poll else {return}
 
