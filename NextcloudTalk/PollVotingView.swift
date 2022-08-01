@@ -199,11 +199,12 @@ import UIKit
             if isOwnPoll {
                 footerView.secondaryButton.setTitle(NSLocalizedString("End poll", comment: ""), for: .normal)
                 footerView.secondaryButton.isHidden = false
+                footerView.setSecondaryButtonAction(target: self, selector: #selector(endPollButtonPressed))
             }
             if editingVote {
                 footerView.secondaryButton.setTitle(NSLocalizedString("Dismiss", comment: ""), for: .normal)
                 footerView.secondaryButton.isHidden = false
-                footerView.secondaryButton.addTarget(self, action: #selector(dismissButtonPressed), for: .touchUpInside)
+                footerView.setSecondaryButtonAction(target: self, selector: #selector(dismissButtonPressed))
             }
         } else {
             footerRect.size.height = 0
@@ -233,6 +234,10 @@ import UIKit
     func dismissButtonPressed() {
         self.editingVote = false
         self.setupPollView()
+    }
+
+    func endPollButtonPressed() {
+        self.showClosePollConfirmationDialog()
     }
 
     func setVoteButtonState() {
