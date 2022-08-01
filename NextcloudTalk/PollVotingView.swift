@@ -232,12 +232,12 @@ import UIKit
 
     func dismissButtonPressed() {
         self.editingVote = false
-        self.userSelectedOptions = []
         self.setupPollView()
     }
 
     func setVoteButtonState() {
-        if userSelectedOptions.isEmpty && isPollOpen && (!userVoted || editingVote) {
+        if (userSelectedOptions.isEmpty || userSelectedOptions.sorted() == userVotedOptions.sorted()) &&
+            isPollOpen && (!userVoted || editingVote) {
             footerView.primaryButton.backgroundColor = NCAppBranding.themeColor().withAlphaComponent(0.5)
             footerView.primaryButton.isEnabled = false
         } else {
