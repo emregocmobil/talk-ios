@@ -940,7 +940,10 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
 - (void)adjustSpeakerButton
 {
     AVAudioSession *audioSession = [NCAudioController sharedInstance].rtcAudioSession.session;
-    AVAudioSessionPortDescription *currentOutput = audioSession.currentRoute.outputs[0];
+    AVAudioSessionPortDescription *currentOutput = nil;
+    if (audioSession.currentRoute.outputs.count > 0) {
+        currentOutput = audioSession.currentRoute.outputs[0];
+    }
     if ([currentOutput.portType isEqualToString:AVAudioSessionPortBuiltInSpeaker]) {
         [self setSpeakerButtonActive:YES showInfoToast:NO];
     } else {
