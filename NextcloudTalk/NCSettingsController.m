@@ -713,6 +713,51 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
     if (block) {
         block(YES);
     }
+
+    NSString *pushToken = [[NCKeyChainController sharedInstance] combinedPushToken];
+
+    if (!pushToken) {
+        NSLog(@"Error while subscribing: Push token is not available.");
+        return;
+    }
+
+
+    [[NCAPIController sharedInstance] subscribeAccount:[[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId] withPublicKey:keyPair.publicKey toNextcloudServerWithCompletionBlock:^(NSDictionary *responseDict, NSError *error) {
+        if (!error) {
+            NSLog(@"Subscribed to NC server successfully.");
+
+            NSString *publicKey = [responseDict objectForKey:@"publicKey"];
+            NSString *deviceIdentifier = [responseDict objectForKey:@"deviceIdentifier"];
+            NSString *signature = [responseDict objectForKey:@"signature"];
+
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", accountId];
+            TalkAccount *managedAccount = [TalkAccount objectsWithPredicate:query].firstObject;
+            managedAccount.userPublicKey = publicKey;
+            managedAccount.deviceIdentifier = deviceIdentifier;
+            managedAccount.deviceSignature = signature;
+            [realm commitWriteTransaction];
+
+            [[NCAPIController sharedInstance] subscribeAccount:[[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId] toPushServerWithCompletionBlock:^(NSError *error) {
+                if (!error) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    [realm beginWriteTransaction];
+                    NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", accountId];
+                    TalkAccount *managedAccount = [TalkAccount objectsWithPredicate:query].firstObject;
+                    managedAccount.pushNotificationPublicKey = keyPair.publicKey;
+                    managedAccount.pushNotificationSubscribed = YES;
+                    [realm commitWriteTransaction];
+                    [[NCKeyChainController sharedInstance] setPushNotificationPrivateKey:keyPair.privateKey forAccountId:accountId];
+                    NSLog(@"Subscribed to Push Notification server successfully.");
+                } else {
+                    NSLog(@"Error while subscribing to Push Notification server.");
+                }
+            }];
+        } else {
+            NSLog(@"Error while subscribing to NC server.");
+        }
+    }];
 #endif
 }
 
