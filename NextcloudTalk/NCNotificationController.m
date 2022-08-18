@@ -388,7 +388,7 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
     });
 }
 
-- (void)checkForNewNotificationsWithCompletionBlock:(CheckForNewNotificationsWithCompletionBlock)block
+- (void)checkForNewNotificationsWithCompletionBlock:(CheckForNewNotificationsCompletionBlock)block
 {
     dispatch_group_t notificationsGroup = dispatch_group_create();
 
