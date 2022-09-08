@@ -78,6 +78,8 @@ import UIKit
 
         self.tableView.isEditing = true
 
+        self.tableView.isEditing = true
+
         // Set footer buttons
         self.tableView.tableFooterView = pollFooterView()
 
