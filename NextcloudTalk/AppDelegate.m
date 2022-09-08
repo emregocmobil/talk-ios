@@ -53,6 +53,8 @@
 
 #import "NextcloudTalk-Swift.h"
 
+#import "NextcloudTalk-Swift.h"
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) NSTimer *keepAliveTimer;
