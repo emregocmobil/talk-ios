@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isVideoFileType:(NSString *)fileMIMEType;
 
 + (BOOL)isNextcloudAppInstalled;
++ (BOOL)isBetaVersion;
 + (void)openFileInNextcloudApp:(NSString *)path withFileLink:(NSString *)link;
 + (void)openFileInNextcloudAppOrBrowser:(NSString *)path withFileLink:(NSString *)link;
 + (void)openLinkInBrowser:(NSString *)link;
