@@ -149,10 +149,9 @@ class DiagnosticsTableViewController: UITableViewController {
         self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: cellIdentifierSubtitle)
         self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: cellIdentifierSubtitleAccessory)
 
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "defaultCellIdentifier")
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "appOpenSettingsCellIdentifier")
-        self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: "subtitleCellIdentifier")
-        self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: "subtitleAccessoryCellIdentifier")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifierOpenAppSettings)
+        self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: cellIdentifierSubtitle)
+        self.tableView.register(SubtitleTableViewCell.self, forCellReuseIdentifier: cellIdentifierSubtitleAccessory)
 
         runChecks()
     }
