@@ -30,6 +30,8 @@
 
 #import "NextcloudTalk-Swift.h"
 
+#import "NextcloudTalk-Swift.h"
+
 static NSTimeInterval kInitialReconnectInterval = 1;
 static NSTimeInterval kMaxReconnectInterval     = 16;
 static NSTimeInterval kWebSocketTimeoutInterval = 15;
