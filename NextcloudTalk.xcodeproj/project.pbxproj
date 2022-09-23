@@ -2453,7 +2453,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2501,7 +2501,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nextcloud.Talk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2588,7 +2588,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/UICKeyChainStore\"",
 					"\"${PODS_ROOT}/Realm/core\"",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = tr.goc.gov.kirlangic.Talk.ShareExtension;
@@ -2681,7 +2681,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/UICKeyChainStore\"",
 					"\"${PODS_ROOT}/Realm/core\"",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = tr.goc.gov.kirlangic.Talk.ShareExtension;
 				PRODUCT_NAME = ShareExtension;
@@ -2756,7 +2756,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = tr.goc.gov.kirlangic.Talk.NotificationServiceExtension;
@@ -2832,7 +2832,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/openssl",
 				);
-				MARKETING_VERSION = 14.99.2;
+				MARKETING_VERSION = 14.99.3;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = tr.goc.gov.kirlangic.Talk.NotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
