@@ -503,6 +503,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self->_imagePicker = [[UIImagePickerController alloc] init];
         self->_imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        self->_imagePicker.cameraFlashMode = [NCUserDefaults preferredCameraFlashMode];
         self->_imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:self->_imagePicker.sourceType];
         self->_imagePicker.delegate = self;
         [self presentViewController:self->_imagePicker animated:YES completion:nil];
@@ -851,6 +852,7 @@
 {
     NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
     if ([mediaType isEqualToString:@"public.image"]) {
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
         
@@ -870,7 +872,16 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
+    [self saveImagePickerSettings:picker];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)saveImagePickerSettings:(UIImagePickerController *)picker
+{
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera &&
+        picker.cameraCaptureMode == UIImagePickerControllerCameraCaptureModePhoto) {
+        [NCUserDefaults setPreferredCameraFlashMode:picker.cameraFlashMode];
+    }
 }
 
 #pragma mark - UIDocumentPickerViewController Delegate
