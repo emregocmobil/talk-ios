@@ -342,7 +342,6 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
             }
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
-            TalkAccount *managedActiveAccount = [TalkAccount objectsWhere:(@"active = true")].firstObject;
             managedActiveAccount.userId = [userProfile objectForKey:kUserProfileUserId];
             // "display-name" is returned by /cloud/user endpoint
             // change to kUserProfileDisplayName ("displayName") when using /cloud/users/{userId} endpoint
@@ -746,7 +745,7 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
                     NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@", accountId];
                     TalkAccount *managedAccount = [TalkAccount objectsWithPredicate:query].firstObject;
                     managedAccount.pushNotificationPublicKey = keyPair.publicKey;
-                    managedAccount.pushNotificationSubscribed = YES;
+                    managedAccount.lastPushSubscription = [[NSDate date] timeIntervalSince1970];
                     [realm commitWriteTransaction];
                     [[NCKeyChainController sharedInstance] setPushNotificationPrivateKey:keyPair.privateKey forAccountId:accountId];
                     NSLog(@"Subscribed to Push Notification server successfully.");
