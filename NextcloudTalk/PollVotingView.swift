@@ -330,7 +330,6 @@ import UIKit
             cell.textLabel?.sizeToFit()
             cell.imageView?.image = UIImage(named: "poll")?.withRenderingMode(.alwaysTemplate)
             cell.imageView?.tintColor = UIColor.label
-
         case PollSection.kPollSectionOptions.rawValue:
             if !showPollResults || showIntermediateResults {
                 cell = UITableViewCell(style: .value1, reuseIdentifier: pollOptionCellIdentifier)

@@ -460,10 +460,7 @@
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         
                                        //TODO: How to adjust for dark mode?
-                                       weakSelf.previewImageView.layer.borderColor = [[UIColor colorWithWhite:0.9 alpha:1.0] CGColor];
-                                       if (@available(iOS 13.0, *)) {
-                                           weakSelf.previewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
-                                       }
+                                       weakSelf.previewImageView.layer.borderColor = [[UIColor secondarySystemFillColor] CGColor];
                                        weakSelf.previewImageView.layer.borderWidth = 1.0f;
                     
                                        dispatch_async(dispatch_get_main_queue(), ^(void){

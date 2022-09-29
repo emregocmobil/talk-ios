@@ -67,17 +67,6 @@ typedef enum ShareLocationSection {
     self.navigationController.navigationBar.barTintColor = [NCAppBranding themeColor];
     self.navigationController.navigationBar.translucent = NO;
     
-    if (@available(iOS 13.0, *)) {
-        UIColor *themeColor = [NCAppBranding themeColor];
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = themeColor;
-        appearance.titleTextAttributes = @{NSForegroundColorAttributeName:[NCAppBranding themeTextColor]};
-        self.navigationItem.standardAppearance = appearance;
-        self.navigationItem.compactAppearance = appearance;
-        self.navigationItem.scrollEdgeAppearance = appearance;
-    }
-    
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     [_locationManager requestWhenInUseAuthorization];
@@ -324,18 +313,16 @@ typedef enum ShareLocationSection {
 
 - (void)searchForPlacesWithString:(NSString *)searchString
 {
-    if (@available(iOS 13.0, *)) {
-        MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] initWithNaturalLanguageQuery:searchString];
-        MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
-        [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
-            if (response) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self->_searchedPlaces = response.mapItems;
-                    [self->_resultTableViewController.tableView reloadData];
-                });
-            }
-        }];
-    }
+    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] initWithNaturalLanguageQuery:searchString];
+    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+    [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
+        if (response) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self->_searchedPlaces = response.mapItems;
+                [self->_resultTableViewController.tableView reloadData];
+            });
+        }
+    }];
 }
 
 #pragma mark - Search controller
