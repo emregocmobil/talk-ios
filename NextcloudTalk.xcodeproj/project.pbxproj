@@ -1305,17 +1305,6 @@
 				2CA52AC92670D02800619610 /* VoiceMessageRecordingView.h */,
 				2CA52ACA2670D02800619610 /* VoiceMessageRecordingView.m */,
 				2CA52ACC2670D07900619610 /* VoiceMessageRecordingView.xib */,
-				2CC32E8C27F4540E00BB8C39 /* ReactionsView.swift */,
-				2CC32E9027F45AE000BB8C39 /* ReactionsViewCell.swift */,
-				2CC32E9127F45AE000BB8C39 /* ReactionsViewCell.xib */,
-				2C44B4D027FF05A000AD1C86 /* ReactionsSummaryView.swift */,
-				2C5BFBEE288A947800E75118 /* PollVotingView.swift */,
-				2C5BFBF528902E0300E75118 /* PollFooterView.swift */,
-				2C5BFBF728902E3700E75118 /* PollFooterView.xib */,
-				2C5BFBF92891598900E75118 /* PollResultTableViewCell.swift */,
-				2C5BFBFA2891598900E75118 /* PollResultTableViewCell.xib */,
-				2C5BFBFD2891C3DF00E75118 /* PollResultsDetailsViewController.swift */,
-				2C57CD8328C2255000B22E03 /* PollCreationViewController.swift */,
 			);
 			name = "Chat views";
 			sourceTree = "<group>";

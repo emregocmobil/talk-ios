@@ -53,6 +53,8 @@ extern NSString * const kSharedItemTypeRecording;
 
 typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictionary *referenceData, NSString *url);
 
+typedef void (^GetReferenceDataCompletionBlock)(NSDictionary *referenceData, NSString *url);
+
 @interface NCChatMessage : RLMObject <NSCopying>
 
 @property (nonatomic, strong) NSString *internalId; // accountId@token@messageId

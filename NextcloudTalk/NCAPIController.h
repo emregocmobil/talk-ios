@@ -289,4 +289,7 @@ extern NSInteger const kReceivedChatMessagesLimit;
 - (NSURLSessionDataTask *)dismissStoredRecordingNotificationWithTimestamp:(NSString *)timestamp forRoom:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(DismissStoredRecordingNotificationCompletionBlock)block;
 - (NSURLSessionDataTask *)shareStoredRecordingWithTimestamp:(NSString *)timestamp withFileId:(NSString *)fileId forRoom:(NSString *)token forAccount:(TalkAccount *)account withCompletionBlock:(ShareStoredRecordingCompletionBlock)block;
 
+- (NSURLSessionDataTask *)getReferencesForText:(NSString *)text forAccount:(TalkAccount *)account withLimit:(NSInteger)limit withCompletionBlock:(GetReferencesForTextCompletionBlock)block;
+- (NSURLRequest *)createReferenceThumbnailRequestForUrl:(NSString *)url usingAccount:(TalkAccount *)account;
+
 @end
