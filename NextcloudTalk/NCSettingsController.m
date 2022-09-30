@@ -830,7 +830,7 @@ cleanup:
     RSA_free(rsa);
     BN_free(bigNumber);
     
-    return NULL;
+    return pkey;
 }
 
 @end
