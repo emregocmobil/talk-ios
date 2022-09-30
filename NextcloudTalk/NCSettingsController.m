@@ -747,6 +747,7 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
                     managedAccount.pushNotificationPublicKey = keyPair.publicKey;
                     managedAccount.lastPushSubscription = [[NSDate date] timeIntervalSince1970];
                     [realm commitWriteTransaction];
+                    [[NCKeyChainController sharedInstance] setPushNotificationPublicKey:keyPair.publicKey forAccountId:accountId];
                     [[NCKeyChainController sharedInstance] setPushNotificationPrivateKey:keyPair.privateKey forAccountId:accountId];
                     [NCUtils log:@"Subscribed to Push Notification server successfully."];
                 } else {
