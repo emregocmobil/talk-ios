@@ -191,19 +191,22 @@ import UIKit
                 footerView.primaryButton.setTitle(NSLocalizedString("Edit vote", comment: ""), for: .normal)
                 footerView.setPrimaryButtonAction(target: self, selector: #selector(editVoteButtonPressed))
             } else {
-                footerView.primaryButton.setTitle(NSLocalizedString("Vote", comment: ""), for: .normal)
-                footerView.setPrimaryButtonAction(target: self, selector: #selector(voteButtonPressed))
+                footerView.primaryButton.setTitle(NSLocalizedString("Submit vote", comment: ""), for: .normal)
+                footerView.primaryButton.setButtonStyle(style: .primary)
+                footerView.primaryButton.setButtonAction(target: self, selector: #selector(voteButtonPressed))
             }
             footerRect.size.height += PollFooterView.heightForOption
             footerView.primaryButtonContainerView.isHidden = false
             // Secondary button
             if canModeratePoll {
                 footerView.secondaryButton.setTitle(NSLocalizedString("End poll", comment: ""), for: .normal)
-                footerView.setSecondaryButtonAction(target: self, selector: #selector(endPollButtonPressed))
+                footerView.secondaryButton.setButtonStyle(style: .destructive)
+                footerView.secondaryButton.setButtonAction(target: self, selector: #selector(endPollButtonPressed))
             }
             if editingVote {
                 footerView.secondaryButton.setTitle(NSLocalizedString("Dismiss", comment: ""), for: .normal)
-                footerView.setSecondaryButtonAction(target: self, selector: #selector(dismissButtonPressed))
+                footerView.secondaryButton.setButtonStyle(style: .tertiary)
+                footerView.secondaryButton.setButtonAction(target: self, selector: #selector(dismissButtonPressed))
             }
             if canModeratePoll || editingVote {
                 footerRect.size.height += PollFooterView.heightForOption
@@ -244,11 +247,9 @@ import UIKit
     func setVoteButtonState() {
         if (userSelectedOptions.isEmpty || userSelectedOptions.sorted() == userVotedOptions.sorted()) &&
             isPollOpen && (!userVoted || editingVote) {
-            footerView.primaryButton.backgroundColor = NCAppBranding.themeColor().withAlphaComponent(0.5)
-            footerView.primaryButton.isEnabled = false
+            footerView.primaryButton.setButtonEnabled(enabled: false)
         } else {
-            footerView.primaryButton.backgroundColor = NCAppBranding.themeColor()
-            footerView.primaryButton.isEnabled = true
+            footerView.primaryButton.setButtonEnabled(enabled: true)
         }
     }
 
