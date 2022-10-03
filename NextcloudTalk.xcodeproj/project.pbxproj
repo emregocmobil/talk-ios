@@ -169,8 +169,6 @@
 		2C5BFBFB2891598A00E75118 /* PollResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5BFBF92891598900E75118 /* PollResultTableViewCell.swift */; };
 		2C5BFBFC2891598A00E75118 /* PollResultTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C5BFBFA2891598900E75118 /* PollResultTableViewCell.xib */; };
 		2C5BFBFE2891C3DF00E75118 /* PollResultsDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5BFBFD2891C3DF00E75118 /* PollResultsDetailsViewController.swift */; };
-		2C5BFB63287326CC00E75118 /* NCSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5BFB62287326CC00E75118 /* NCSplitViewController.swift */; };
-		2C5BFBE828748BF400E75118 /* NCSplitViewPlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5BFBE728748BF400E75118 /* NCSplitViewPlaceholderViewController.swift */; };
 		2C5E957D227097E0009CA9BE /* NCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E957B227097E0009CA9BE /* NCUtils.m */; };
 		2C604BD9211988A700D34DCD /* SystemMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C604BD8211988A700D34DCD /* SystemMessageTableViewCell.m */; };
 		2C62AFAE24C08845007E460A /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2C62AFA324C08845007E460A /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -386,7 +384,6 @@
 		1F1C0D8829AFB89900D17C6D /* VLCKitVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCKitVideoViewController.swift; sourceTree = "<group>"; };
 		1F24B5A128E0648600654457 /* ReferenceGithubView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReferenceGithubView.swift; sourceTree = "<group>"; };
 		1F24B5A328E0649200654457 /* ReferenceGithubView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReferenceGithubView.xib; sourceTree = "<group>"; };
-		09F2987A7078CD7D1C7913D2 /* Pods-NotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-NotificationServiceExtension/Pods-NotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		1F3D3B20255F109E00230DAE /* BarButtonItemWithActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarButtonItemWithActivity.m; sourceTree = "<group>"; };
 		1F3D3B21255F109E00230DAE /* BarButtonItemWithActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarButtonItemWithActivity.h; sourceTree = "<group>"; };
 		1F468E7728DCC7310099597B /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
@@ -549,8 +546,6 @@
 		2C5BFBF92891598900E75118 /* PollResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollResultTableViewCell.swift; sourceTree = "<group>"; };
 		2C5BFBFA2891598900E75118 /* PollResultTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PollResultTableViewCell.xib; sourceTree = "<group>"; };
 		2C5BFBFD2891C3DF00E75118 /* PollResultsDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollResultsDetailsViewController.swift; sourceTree = "<group>"; };
-		2C5BFB62287326CC00E75118 /* NCSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NCSplitViewController.swift; sourceTree = "<group>"; };
-		2C5BFBE728748BF400E75118 /* NCSplitViewPlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NCSplitViewPlaceholderViewController.swift; sourceTree = "<group>"; };
 		2C5E957B227097E0009CA9BE /* NCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCUtils.m; sourceTree = "<group>"; };
 		2C5E957C227097E0009CA9BE /* NCUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCUtils.h; sourceTree = "<group>"; };
 		2C604A2A25E4556E00F23615 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -947,6 +942,7 @@
 				2C6085C11FB1063700B36A6E /* NextcloudTalk.entitlements */,
 				2CA1CCAB1F067F35002FE6A2 /* Images.xcassets */,
 				2C0574941EDD9E8E00D9E7F2 /* Info.plist */,
+				1FADF2E428EAE28F0074A532 /* iOS13Main.storyboard */,
 				2C05748C1EDD9E8E00D9E7F2 /* Main.storyboard */,
 				2C1D13A1253760EE00EC0533 /* LaunchScreen.xib */,
 				2C7F47AC20289B9600081CC7 /* Localizable.strings */,
@@ -1679,6 +1675,7 @@
 				2CC007BE20D8F24B0096D91F /* RoomCreation2TableViewController.xib in Resources */,
 				2CC32E9327F45AE000BB8C39 /* ReactionsViewCell.xib in Resources */,
 				2C330372255E6EBC00BDB4E4 /* InfoPlist.strings in Resources */,
+				1FADF2E528EAE28F0074A532 /* iOS13Main.storyboard in Resources */,
 				2C78EFA11F828C41008AFA74 /* CallViewController.xib in Resources */,
 				2C3780C5210F4A26003F9AE8 /* HeaderWithButton.xib in Resources */,
 				2CC007B920D8139D0096D91F /* RoomCreationTableViewController.xib in Resources */,

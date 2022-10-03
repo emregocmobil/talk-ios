@@ -25,6 +25,7 @@
 #import "UIImageView+AFNetworking.h"
 
 #import "NCAppBranding.h"
+#import "NCUserInterfaceController.h"
 #import "RoundedNumberView.h"
 
 #import "NCAppBranding.h"

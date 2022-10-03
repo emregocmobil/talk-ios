@@ -241,7 +241,11 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     
     self.clearsSelectionOnViewWillAppear = self.splitViewController.isCollapsed;
 
-    if (self.splitViewController.isCollapsed) {
+    if (@available(iOS 14.0, *)) {
+        if (self.splitViewController.isCollapsed) {
+            [self setSelectedRoomToken:nil];
+        }
+    } else {
         [self setSelectedRoomToken:nil];
     }
 }
@@ -1295,6 +1299,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
     
     // Present room chat
     [self presentChatForRoomAtIndexPath:indexPath];
+    [self setSelectedRoomToken:[self roomForIndexPath:indexPath].token];
 }
 
 - (void)setSelectedRoomToken:(NSString *)selectedRoomToken

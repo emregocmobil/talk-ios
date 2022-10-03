@@ -242,8 +242,8 @@
                                handler:nil];
     
     [alert addAction:okButton];
-    
-    [_mainNavigationController presentViewController:alert animated:YES completion:nil];
+
+    [_mainViewController presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)presentServerMaintenanceModeWarning:(NSNotification *)notification
@@ -366,6 +366,16 @@
     [_mainViewController popSecondaryColumnToRootViewController];
     [_mainViewController showColumn:UISplitViewControllerColumnPrimary];
 }
+
+- (void)presentConversationsList
+{
+    [_mainViewController dismissViewControllerAnimated:YES completion:nil];
+
+    if (@available(iOS 14.0, *)) {
+        [_mainSplitViewController showColumn:UISplitViewControllerColumnPrimary];
+    }
+}
+
 
 - (void)presentChatViewController:(NCChatViewController *)chatViewController
 {
