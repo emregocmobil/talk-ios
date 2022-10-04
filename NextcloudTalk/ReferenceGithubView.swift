@@ -146,7 +146,7 @@ import Foundation
         }
 
         if let body = reference["body"] as? String {
-            referenceBody.text = body
+            referenceBody.text = NCUtils.removeHTML(from: body)
         } else {
             referenceBody.text = NSLocalizedString("No description provided", comment: "")
         }
