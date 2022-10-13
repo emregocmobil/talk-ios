@@ -416,9 +416,22 @@ NSString * const kSharedItemTypeRecording   = @"recording";
     return messageParametersDict;
 }
 
-- (NSMutableAttributedString *)parsedMessage
+- (BOOL)shouldHideParsedMessage
 {
     if (!self.message) {
+        return YES;
+    }
+
+    if ([self getDeckCardUrlForReferenceProvider]) {
+        return YES;
+    }
+
+    return NO;
+}
+
+- (NSMutableAttributedString *)parsedMessage
+{
+    if ([self shouldHideParsedMessage]) {
         return nil;
     }
     
@@ -743,6 +756,23 @@ NSString * const kSharedItemTypeRecording   = @"recording";
     if (![self isReferenceApiSupported]) {
         _urlDetectionDone = YES;
         return NO;
+    }
+
+    NSString *deckCardUrl = [self getDeckCardUrlForReferenceProvider];
+
+    if (deckCardUrl != nil) {
+        _urlDetectionDone = YES;
+        _urlDetected = deckCardUrl;
+        return YES;
+    }
+
+    return nil;
+}
+
+- (BOOL)containsURL
+{
+    if (_urlDetectionDone) {
+        return ([_urlDetected length] != 0);
     }
 
     NSString *deckCardUrl = [self getDeckCardUrlForReferenceProvider];
