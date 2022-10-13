@@ -66,7 +66,6 @@ target "NextcloudTalk" do
 pod 'AFNetworking', "3.1.0"
 pod 'DateTools'
 pod 'JDStatusBarNotification'
-pod 'SocketRocket'
 pod 'DBImageColorPicker'
 pod 'Realm'
 pod "AFViewShaker", "~> 0.0.5"
