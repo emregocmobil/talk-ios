@@ -720,6 +720,7 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
         return;
     }
 
+    BGTaskHelper *bgTask = [BGTaskHelper startBackgroundTaskWithName:@"PushProxySubscription" expirationHandler:nil];
 
     [[NCAPIController sharedInstance] subscribeAccount:[[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId] withPublicKey:keyPair.publicKey toNextcloudServerWithCompletionBlock:^(NSDictionary *responseDict, NSError *error) {
         if (!error) {
@@ -749,12 +750,30 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
                     [[NCKeyChainController sharedInstance] setPushNotificationPublicKey:keyPair.publicKey forAccountId:accountId];
                     [[NCKeyChainController sharedInstance] setPushNotificationPrivateKey:keyPair.privateKey forAccountId:accountId];
                     [NCUtils log:@"Subscribed to Push Notification server successfully."];
+
+                    if (block) {
+                        block(YES);
+                    }
+
+                    [bgTask stopBackgroundTask];
                 } else {
                     [NCUtils log:@"Error while subscribing to Push Notification server."];
+
+                    if (block) {
+                        block(NO);
+                    }
+
+                    [bgTask stopBackgroundTask];
                 }
             }];
         } else {
             [NCUtils log:@"Error while subscribing to NC server."];
+
+            if (block) {
+                block(NO);
+            }
+
+            [bgTask stopBackgroundTask];
         }
     }];
 #endif
