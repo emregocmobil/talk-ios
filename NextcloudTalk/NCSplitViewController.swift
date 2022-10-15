@@ -32,6 +32,9 @@
         // As we always show the columns on iPads, we don't need gesture support
         self.presentsWithGesture = false
 
+        // As we always show the columns on iPads, we don't need gesture support
+        self.presentsWithGesture = false
+
         for viewController in self.viewControllers {
             if let navController = viewController as? UINavigationController {
                 navController.delegate = self
