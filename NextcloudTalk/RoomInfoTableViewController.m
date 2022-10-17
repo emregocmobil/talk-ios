@@ -431,7 +431,6 @@ typedef enum FileAction {
     if (_room.isUserOwnerOrModerator && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityMessageExpiration]) {
         [actions addObject:[NSNumber numberWithInt:kConversationActionMessageExpiration]];
     }
-
     if (_room.canModerate) {
         // Listable room action
         if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityListableRooms]) {
@@ -446,7 +445,6 @@ typedef enum FileAction {
         if ([[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityReadOnlyRooms]) {
             [actions addObject:[NSNumber numberWithInt:kConversationActionReadOnly]];
         }
-    }
 
     if (_room.type != kNCRoomTypeChangelog) {
         [actions addObject:[NSNumber numberWithInt:kConversationActionShareLink]];
