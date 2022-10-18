@@ -559,6 +559,19 @@
     }];
 }
 
+- (void)sendObjectShare
+{
+    [[NCAPIController sharedInstance] shareRichObject:_objectShareRichObject inRoom:_room.token forAccount:_account withCompletionBlock:^(NSError *error) {
+        if (error) {
+            [self.delegate shareConfirmationViewControllerDidFailed:self];
+            NSLog(@"Failed to send shared item");
+        } else {
+            [self.delegate shareConfirmationViewControllerDidFinish:self];
+        }
+        [self stopAnimatingSharingIndicator];
+    }];
+}
+
 - (void)updateHudProgress
 {
     if (!_hud) {
