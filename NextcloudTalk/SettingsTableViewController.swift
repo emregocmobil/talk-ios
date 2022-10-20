@@ -461,7 +461,7 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.present(errorDialog, animated: true, completion: nil)
     }
 
-    // MARK: Diagnostics actions
+    // MARK: Advanced actions
 
     func diagnosticsPressed() {
         let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
