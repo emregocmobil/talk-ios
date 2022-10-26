@@ -692,6 +692,7 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
 
 - (void)updatePendingMessage:(NSString *)message forRoom:(NCRoom *)room
 {
+    BGTaskHelper *bgTask = [BGTaskHelper startBackgroundTaskWithName:@"updatePendingMessage" expirationHandler:nil];
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm transactionWithBlock:^{
         NCRoom *managedRoom = [NCRoom objectsWhere:@"internalId = %@", room.internalId].firstObject;
@@ -699,6 +700,7 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
             managedRoom.pendingMessage = message;
         }
     }];
+    [bgTask stopBackgroundTask];
 }
 
 - (void)updateLastReadMessage:(NSInteger)lastReadMessage forRoom:(NCRoom *)room
