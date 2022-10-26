@@ -57,7 +57,7 @@ extern NSString * const NCPushNotificationJoinVideoCallAcceptedNotification;
 @property (nonatomic, copy) NSString *roomToken;
 @property (nonatomic, assign) NSInteger notificationId;
 @property (nonatomic, strong) NSArray *notificationIds;
-@property (nonatomic, copy) NSString *accountId;
+@property (nonatomic, copy) NSStriSng *accountId;
 @property (nonatomic, copy) NSString *jsonString;
 @property (nonatomic, copy) NSString *responseUserText;
 
