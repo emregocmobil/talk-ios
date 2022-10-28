@@ -195,14 +195,6 @@
     self.previewImageView.image = nil;
     self.playIconImageView.hidden = YES;
     
-    self.vPreviewSize[3].constant = kFileMessageCellFileMaxPreviewHeight;
-    self.hPreviewSize[3].constant = kFileMessageCellFileMaxPreviewHeight;
-    self.vGroupedPreviewSize[1].constant = kFileMessageCellFileMaxPreviewHeight;
-    self.hGroupedPreviewSize[1].constant = kFileMessageCellFileMaxPreviewHeight;
-    
-    self.vPreviewSize[7].constant = 0;
-    self.vGroupedPreviewSize[5].constant = 0;
-    
     self.vPreviewSize[3].constant = kFileMessageCellFilePreviewHeight;
     self.hPreviewSize[3].constant = kFileMessageCellFilePreviewHeight;
     self.vGroupedPreviewSize[1].constant = kFileMessageCellFilePreviewHeight;
@@ -448,8 +440,7 @@
     
     BOOL isMediaFile = [NCUtils isImageOrVideoFileType:message.file.mimetype];
     // NSLog(@"%@", [NSString stringWithFormat: @"FileMessageTableViewCell.setupForMessage: %@ is %@a media file", message.file.name, isMediaFile ? @"" : @"not "]);
-    
-    // TODO: if isMediaFile and isVideo, superimpose a play icon such that the user knows that  it's a video and not a photo
+    BOOL isVideoFile = [NCUtils isVideoFileType:message.file.mimetype];
     
     NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:message.timestamp];
     self.dateLabel.text = [NCUtils getTimeFromDate:date];
@@ -497,10 +488,15 @@
                                            else {
                                                weakSelf.previewImageView.layer.cornerRadius = isMediaFile ?  kFileMessageCellMediaFilePreviewCornerRadius : kFileMessageCellFilePreviewCornerRadius;
                                            }
+                                           // only show the play icon if there is an image preview (not on top of the default video placeholder)
+                                           weakSelf.playIconImageView.hidden = !isVideoFile;
+                                           if (isVideoFile) {
+                                               weakSelf.playIconImageView.center = CGPointMake(width / 2.0, height / 2.0);
+                                           }
                                            [weakSelf.previewImageView setImage:image];
                                            [weakSelf setNeedsLayout];
                                            [weakSelf layoutIfNeeded];
-                                            
+                                           
                                            if (weakSelf.delegate) {
                                                [weakSelf.delegate cellHasDownloadedImagePreviewWithHeight:height forMessage:message];
                                            }
