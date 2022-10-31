@@ -401,11 +401,14 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
 
         dispatch_group_enter(notificationsGroup);
 
-        [[NCAPIController sharedInstance] getServerNotificationsForAccount:account withLastETag:account.lastNotificationETag withCompletionBlock:^(NSArray *notifications, NSString* ETag, NSError *error) {
+        [[NCAPIController sharedInstance] getServerNotificationsForAccount:account withLastETag:account.lastNotificationETag withCompletionBlock:^(NSArray *notifications, NSString* ETag, NSString *userStatus, NSError *error) {
             if (error) {
                 dispatch_group_leave(notificationsGroup);
                 return;
             }
+
+            // Don't show notifications if the user has status "do not disturb"
+            BOOL suppressNotifications = (serverCapabilities.userStatus && [userStatus isEqualToString:kUserStatusDND]);
 
             NSInteger lastNotificationId = 0;
             NSMutableArray *activeServerNotificationsIds = [NSMutableArray new];
@@ -424,7 +427,11 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
                     lastNotificationId = serverNotification.notificationId;
                 }
 
-                if (account.lastNotificationId != 0 && serverNotification.notificationId > account.lastNotificationId && serverNotification.notificationType != kNCNotificationTypeChat) {
+                if (suppressNotifications || serverNotification.notificationType != kNCNotificationTypeChat) {
+                    continue;
+                }
+
+                if (account.lastNotificationId != 0 && serverNotification.notificationId > account.lastNotificationId) {
                     // Don't show notifications if this is the first time we retrieve notifications for this account
                     // Otherwise after adding a new account all unread notifications from the server would be shown
 
