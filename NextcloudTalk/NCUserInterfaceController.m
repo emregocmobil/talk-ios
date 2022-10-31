@@ -371,10 +371,8 @@
 {
     [_mainViewController dismissViewControllerAnimated:YES completion:nil];
 
-    if (@available(iOS 14.0, *)) {
-        [_mainSplitViewController popSecondaryColumnToRootViewController];
-        [_mainSplitViewController showColumn:UISplitViewControllerColumnPrimary];
-    }
+    [_mainSplitViewController popSecondaryColumnToRootViewController];
+    [_mainSplitViewController showColumn:UISplitViewControllerColumnPrimary];
 }
 
 

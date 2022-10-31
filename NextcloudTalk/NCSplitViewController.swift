@@ -80,8 +80,9 @@
                     navController.popToRootViewController(animated: false)
                 }
             }
+        }
 
-            super.showDetailViewController(vc, sender: sender)
+        super.showDetailViewController(vc, sender: sender)
 
             if self.isCollapsed {
                 // Make sure we don't have accidentally a placeholderView in our navigation
@@ -89,12 +90,11 @@
                 if let navController = self.viewController(for: .secondary) as? UINavigationController,
                    vc is NCChatViewController {
 
-                    // Only set the viewController if there's actually an active one shown by showDetailViewController
-                    // Otherwise UI might break or crash (view not loaded correctly)
-                    // This might happen if a chatViewController is shown by a push notification
-                    if self.hasActiveChatViewController() {
-                        navController.setViewControllers([vc], animated: false)
-                    }
+                // Only set the viewController if there's actually an active one shown by showDetailViewController
+                // Otherwise UI might break or crash (view not loaded correctly)
+                // This might happen if a chatViewController is shown by a push notification
+                if self.hasActiveChatViewController() {
+                    navController.setViewControllers([vc], animated: false)
                 }
             }
         }
