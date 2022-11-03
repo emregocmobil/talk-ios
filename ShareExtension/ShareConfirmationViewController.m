@@ -692,33 +692,31 @@
     } progressHandler:^(NSProgress *progress) {
         item.uploadProgress = progress.fractionCompleted;
         [self updateHudProgress];
-    } completionHandler:^(NSString *account, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSDictionary *allHeaderFields, NSInteger errorCode, NSString *errorDescription) {
-        NSLog(@"Upload completed with error code: %ld", (long)errorCode);
-
-        if (errorCode == 0) {
+    } completionHandler:^(NSString *accountId, NSString *ocId, NSString *etag, NSDate *date, int64_t size, NSDictionary *allHeaderFields, NKError *error) {
+        if (error.errorCode == 0) {
             [[NCAPIController sharedInstance] shareFileOrFolderForAccount:self->_account atPath:filePath toRoom:self->_room.token talkMetaData:nil withCompletionBlock:^(NSError *error) {
                 if (error) {
                     NSLog(@"Failed to send shared file");
-                    
+
                     self->_uploadFailed = YES;
                     [self->_uploadErrors addObject:error.description];
                 }
-                
+
                 dispatch_group_leave(self->_uploadGroup);
             }];
-        } else if (errorCode == 404 || errorCode == 409) {
+        } else if (error.errorCode == 404 || error.errorCode == 409) {
             [[NCAPIController sharedInstance] checkOrCreateAttachmentFolderForAccount:self->_account withCompletionBlock:^(BOOL created, NSInteger errorCode) {
                 if (created) {
                     [self uploadFileToServerURL:fileServerURL withFilePath:filePath withItem:item];
                 } else {
                     self->_uploadFailed = YES;
-                    [self->_uploadErrors addObject:errorDescription];
+                    [self->_uploadErrors addObject:error.errorDescription];
                     dispatch_group_leave(self->_uploadGroup);
                 }
             }];
         } else {
             self->_uploadFailed = YES;
-            [self->_uploadErrors addObject:errorDescription];
+            [self->_uploadErrors addObject:error.errorDescription];
             dispatch_group_leave(self->_uploadGroup);
         }
     }];
