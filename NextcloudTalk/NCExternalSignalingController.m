@@ -36,6 +36,14 @@ static NSTimeInterval kInitialReconnectInterval = 1;
 static NSTimeInterval kMaxReconnectInterval     = 16;
 static NSTimeInterval kWebSocketTimeoutInterval = 15;
 
+@interface WSMessage : NSObject
+@property NSDictionary *message;
+@property SendMessageCompletionBlock completionBlock;
+@end
+
+@implementation WSMessage
+@end
+
 @interface NCExternalSignalingController () <NSURLSessionWebSocketDelegate>
 
 @property (nonatomic, strong) NSURLSessionWebSocketTask *webSocket;
