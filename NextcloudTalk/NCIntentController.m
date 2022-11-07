@@ -83,7 +83,10 @@ typedef void (^GetAvatarForRoomCompletionBlock)(UIImage *image);
         }
 
         default:
+        {
+            block(nil);
             break;
+        }
     }
 }
 
