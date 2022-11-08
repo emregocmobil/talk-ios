@@ -1796,7 +1796,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 
 - (void)didPressCopy:(NCChatMessage *)message {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = message.parsedMessage.string;
+    pasteboard.string = message.parsedMessageForChat.string;
     [self.view makeToast:NSLocalizedString(@"Message copied", nil) duration:1.5 position:CSToastPositionCenter];
 }
 

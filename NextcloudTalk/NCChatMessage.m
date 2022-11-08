@@ -416,22 +416,9 @@ NSString * const kSharedItemTypeRecording   = @"recording";
     return messageParametersDict;
 }
 
-- (BOOL)shouldHideParsedMessage
-{
-    if (!self.message) {
-        return YES;
-    }
-
-    if ([self getDeckCardUrlForReferenceProvider]) {
-        return YES;
-    }
-
-    return NO;
-}
-
 - (NSMutableAttributedString *)parsedMessage
 {
-    if ([self shouldHideParsedMessage]) {
+    if (!self.message) {
         return nil;
     }
     
