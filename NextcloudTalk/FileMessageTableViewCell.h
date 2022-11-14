@@ -31,8 +31,7 @@ static CGFloat kFileMessageCellFileMaxPreviewHeight         = 120.0;
 static CGFloat kFileMessageCellFileMaxPreviewWidth          = 230.0;
 static CGFloat kFileMessageCellMediaFilePreviewHeight       = 230.0;
 static CGFloat kFileMessageCellMediaFileMaxPreviewWidth     = 230.0;
-static CGFloat kFileMessageCellFilePreviewCornerRadius      = 8.0;
-static CGFloat kFileMessageCellMediaFilePreviewCornerRadius = 16.0;
+static CGFloat kFileMessageCellFilePreviewCornerRadius      = 4.0;
 static CGFloat kFileMessageCellVideoPlayIconSize            = 48.0;
 
 static NSString *FileMessageCellIdentifier          = @"FileMessageCellIdentifier";
