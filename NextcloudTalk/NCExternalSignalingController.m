@@ -36,14 +36,6 @@ static NSTimeInterval kInitialReconnectInterval = 1;
 static NSTimeInterval kMaxReconnectInterval     = 16;
 static NSTimeInterval kWebSocketTimeoutInterval = 15;
 
-@interface WSMessage : NSObject
-@property NSDictionary *message;
-@property SendMessageCompletionBlock completionBlock;
-@end
-
-@implementation WSMessage
-@end
-
 @interface NCExternalSignalingController () <NSURLSessionWebSocketDelegate>
 
 @property (nonatomic, strong) NSURLSessionWebSocketTask *webSocket;
@@ -669,6 +661,14 @@ static NSTimeInterval kWebSocketTimeoutInterval = 15;
             });
         }
     }];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    if (error && task == _webSocket) {
+        NSLog(@"WebSocket session didCompleteWithError: %@", error.description);
+        [self reconnect];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
