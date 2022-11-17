@@ -228,7 +228,6 @@ static NSTimeInterval kWebSocketTimeoutInterval = 15;
 - (void)sendMessage:(NSDictionary *)jsonDict withCompletionBlock:(SendMessageCompletionBlock)block
 {
     WSMessage *wsMessage = [[WSMessage alloc] initWithMessage:jsonDict withCompletionBlock:block];
-    BOOL isHelloMessage = [[jsonDict objectForKey:@"type"] isEqualToString:@"hello"];
 
     // Add message as pending message if websocket is not connected
     if (!_helloResponseReceived && !wsMessage.isHelloMessage) {
@@ -250,7 +249,6 @@ static NSTimeInterval kWebSocketTimeoutInterval = 15;
     if (wsMessage.completionBlock) {
         NSString *messageIdString = [NSString stringWithFormat: @"%ld", (long)_messageId++];
         wsMessage.messageId = messageIdString;
-
         if (wsMessage.isHelloMessage) {
             [_helloMessage ignoreCompletionBlock];
             _helloMessage = wsMessage;
