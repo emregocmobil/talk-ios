@@ -122,7 +122,7 @@
     
     _fileStatusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kChatCellStatusViewHeight, kChatCellStatusViewHeight)];
     _fileStatusView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.contentView addSubview:_fileStatusView];
+    [self.statusStackView addArrangedSubview:_fileStatusView];
     
     [self.contentView addSubview:self.reactionsView];
     
@@ -452,6 +452,7 @@
     UIImage *filePreviewImage = [UIImage imageNamed:imageName];
     NSInteger requestedHeight = 3 * kFileMessageCellFileMaxPreviewHeight;
     __weak typeof(self) weakSelf = self;
+
     [self.previewImageView setImageWithURLRequest:[[NCAPIController sharedInstance] createPreviewRequestForFile:message.file.parameterId withMaxHeight:requestedHeight usingAccount:activeAccount]
                                      placeholderImage:filePreviewImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
         
@@ -529,7 +530,13 @@
         _vPreviewSize[7].constant = 40;
         _vGroupedPreviewSize[5].constant = 40;
     }
-    
+
+    if ([message.actorId isEqualToString:activeAccount.userId]) {
+        [self.statusView setHidden:NO];
+    } else {
+        [self.statusView setHidden:YES];
+    }
+
     ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
     BOOL shouldShowDeliveryStatus = [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityChatReadStatus forAccountId:activeAccount.accountId];
     BOOL shouldShowReadStatus = !serverCapabilities.readStatusPrivacy;
