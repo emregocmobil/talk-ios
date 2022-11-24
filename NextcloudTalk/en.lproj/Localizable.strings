@@ -686,6 +686,9 @@
 "Enable" = "Enable";
 
 /* No comment provided by engineer. */
+"End call" = "End call";
+
+/* No comment provided by engineer. */
 "End poll" = "End poll";
 
 /* External signaling used */
@@ -1407,6 +1410,9 @@
 
 /* No comment provided by engineer. */
 "Switching to another conversation …" = "Switching to another conversation …";
+
+/* No comment provided by engineer. */
+"Stop recording" = "Stop recording";
 
 /* No comment provided by engineer. */
 "STUN servers" = "STUN servers";
