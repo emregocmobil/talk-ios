@@ -152,14 +152,12 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
                     [self joinRoomHelper:token forCall:call];
                     return;
                 }
-
                 // Add error to user info
                 [userInfo setObject:error forKey:@"error"];
                 [userInfo setObject:@(statusCode) forKey:@"statusCode"];
                 [userInfo setObject:[self getJoinRoomErrorReason:statusCode] forKey:@"errorReason"];
                 [NCUtils log:[NSString stringWithFormat:@"Could not join room. Status code: %ld. Error: %@", (long)statusCode, error.description]];
             }
-
             // Send join room notification
             [userInfo setObject:token forKey:@"token"];
             [[NSNotificationCenter defaultCenter] postNotificationName:NCRoomsManagerDidJoinRoomNotification
