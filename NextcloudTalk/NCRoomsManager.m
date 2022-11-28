@@ -491,8 +491,6 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
 
 - (void)updateRoomsUpdatingUserStatus:(BOOL)updateStatus withCompletionBlock:(UpdateRoomsCompletionBlock)block
 {
-    [NCUtils log:@"Start updateRoomsUpdatingUserStatus"];
-
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
     [[NCAPIController sharedInstance] getRoomsForAccount:activeAccount updateStatus:updateStatus withCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
@@ -537,8 +535,6 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
         if (block) {
             block(roomsWithNewMessages, error);
         }
-
-        [NCUtils log:@"End getRoomsForAccount completionBlock"];
     }];
 }
 
