@@ -464,6 +464,7 @@
 
     [NCUtils log:@"Start performBackgroundFetchWithCompletionHandler"];
 
+    /* Disable checking for new messages for now, until we can prevent them from showing twice
     dispatch_group_enter(backgroundRefreshGroup);
     [[NCRoomsManager sharedInstance] resendOfflineMessagesWithCompletionBlock:^{
         [NCUtils log:@"CompletionHandler resendOfflineMessagesWithCompletionBlock"];
