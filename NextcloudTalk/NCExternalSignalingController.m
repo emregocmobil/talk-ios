@@ -664,10 +664,16 @@ static NSTimeInterval kWebSocketTimeoutInterval = 15;
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    if (error && task == _webSocket) {
-        NSLog(@"WebSocket session didCompleteWithError: %@", error.description);
-        [self reconnect];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (task != self->_webSocket) {
+            return;
+        }
+
+        if (error) {
+            NSLog(@"WebSocket session didCompleteWithError: %@", error.description);
+            [self reconnect];
+        }
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
