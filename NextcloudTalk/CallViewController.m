@@ -1597,6 +1597,11 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [self presentViewController:confirmDialog animated:YES completion:nil];
 }
 
+- (IBAction)videoRecordingButtonPressed:(id)sender
+{
+    [self->_callController stopRecording];
+}
+
 #pragma mark - CallParticipantViewCell delegate
 
 - (void)cellWantsToPresentScreenSharing:(CallParticipantViewCell *)participantCell
