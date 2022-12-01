@@ -1809,7 +1809,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 }
 
 - (void)didPressDelete:(NCChatMessage *)message {
-    if (message.sendingFailed) {
+    if (message.sendingFailed || message.isOfflineMessage) {
         [self removePermanentlyTemporaryMessage:message];
     } else {
         // Set deleting state
@@ -4512,7 +4512,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
     
     // Forward option (only normal messages for now)
-    if (!message.file && !message.poll && !message.isDeletedMessage && !_offlineMode) {
+    if (!message.file && !message.poll && !message.isDeletedMessage) {
         UIImage *forwardImage = [[UIImage imageNamed:@"forward"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIAction *forwardAction = [UIAction actionWithTitle:NSLocalizedString(@"Forward", nil) image:forwardImage identifier:nil handler:^(UIAction *action){
             
