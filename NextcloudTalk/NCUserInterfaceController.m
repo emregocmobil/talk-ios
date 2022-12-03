@@ -371,8 +371,8 @@
 {
     [_mainViewController dismissViewControllerAnimated:YES completion:nil];
 
-    [_mainSplitViewController popSecondaryColumnToRootViewController];
-    [_mainSplitViewController showColumn:UISplitViewControllerColumnPrimary];
+    [_mainViewController popSecondaryColumnToRootViewController];
+    [_mainViewController showColumn:UISplitViewControllerColumnPrimary];
 }
 
 

@@ -81,6 +81,7 @@
                 }
             }
         }
+    }
 
         super.showDetailViewController(vc, sender: sender)
 
@@ -97,6 +98,40 @@
                     navController.setViewControllers([vc], animated: false)
                 }
             }
+
+            super.showDetailViewController(vc, sender: sender)
+
+            if self.isCollapsed {
+                // Make sure we don't have accidentally a placeholderView in our navigation
+                // while in collapsed mode
+                if let navController = self.viewController(for: .secondary) as? UINavigationController,
+                   vc is NCChatViewController {
+
+                    // Only set the viewController if there's actually an active one shown by showDetailViewController
+                    // Otherwise UI might break or crash (view not loaded correctly)
+                    // This might happen if a chatViewController is shown by a push notification
+                    if self.hasActiveChatViewController() {
+                        navController.setViewControllers([vc], animated: false)
+                    }
+                }
+            }
+        }
+    }
+
+    func internalExecuteAfterTransition(action: @escaping () -> Void) {
+        if self.transitionCoordinator == nil {
+            // No ongoing animations -> execute action directly
+            action()
+        } else {
+            // Wait until the splitViewController finished all it's animations.
+            // Otherwise this can lead to different UI glitches, for example a chatViewController might
+            // end up in the wrong column. This mainly happens when being in a
+            // conversation and tapping a push notification of another conversation.
+            self.transitionCoordinator?.animate(alongsideTransition: nil, completion: { _ in
+                DispatchQueue.main.async {
+                    action()
+                }
+            })
         }
     }
 
