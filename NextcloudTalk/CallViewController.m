@@ -943,9 +943,9 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
         currentOutput = audioSession.currentRoute.outputs[0];
     }
     if ([currentOutput.portType isEqualToString:AVAudioSessionPortBuiltInSpeaker]) {
-        [self setSpeakerButtonActive:YES showInfoToast:NO];
+        [self setSpeakerButtonActive:YES];
     } else {
-        [self setSpeakerButtonActive:NO showInfoToast:NO];
+        [self setSpeakerButtonActive:NO];
     }
     
     // Show AirPlay button if there are more audio routes available
