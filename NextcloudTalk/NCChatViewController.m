@@ -3046,6 +3046,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)didLeaveRoom:(NSNotification *)notification
 {
     [self disableRoomControls];
+    [self checkRoomControlsAvailability];
 }
 
 #pragma mark - CallKit Manager notifications
