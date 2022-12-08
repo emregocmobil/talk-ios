@@ -830,6 +830,16 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
             self->_speakerButton.hidden = YES;
         }
 
+        // Make sure we get the correct frame for the stack view, after changing the visibility of buttons
+        [self->_topBarView setNeedsLayout];
+        [self->_topBarView layoutIfNeeded];
+
+        // Hide the speaker button to make some more room for higher priority buttons
+        // This should only be the case for iPhone SE (1st Gen) when recording is active and/or hand is raised
+        if (self->_topBarButtonStackView.frame.origin.x < 0) {
+            self->_speakerButton.hidden = YES;
+        }
+
         [self adjustMoreButtonMenu];
     });
 }
