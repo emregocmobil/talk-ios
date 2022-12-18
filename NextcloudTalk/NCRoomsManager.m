@@ -128,6 +128,7 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
 {
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
     NCRoomController *roomController = [_activeRooms objectForKey:token];
+
     if (!roomController) {
         _joiningRoomToken = token;
         [self joinRoomHelper:token forCall:call withCompletionBlock:^(NSString *sessionId, NSError *error, NSInteger statusCode) {
@@ -152,6 +153,7 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
                     [self joinRoomHelper:token forCall:call];
                     return;
                 }
+
                 // Add error to user info
                 [userInfo setObject:error forKey:@"error"];
                 [userInfo setObject:@(statusCode) forKey:@"statusCode"];
