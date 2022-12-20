@@ -227,6 +227,24 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
     NSLog(@"Created accounts file. Error: %@", error);
 }
 
+- (NSString *)copyUserAvatarInPath:(NSString *)path forAccount:(TalkAccount *)account
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = [[fileManager containerURLForSecurityApplicationGroupIdentifier:groupIdentifier] path];
+    NSString *fileName = [NSString stringWithFormat:@"%@-%@.png", account.userId, [[NSURL URLWithString:account.server] host]];
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:fileName];
+    NSString *copyPath = [path stringByAppendingPathComponent:fileName];
+
+    NSError *error = nil;
+    if ([fileManager fileExistsAtPath:copyPath]) {
+        [fileManager removeItemAtPath:copyPath error:&error];
+    }
+    [fileManager copyItemAtPath:filePath toPath:copyPath error:&error];
+    NSLog(@"Copied profile picture. Error: %@", error);
+
+    return error ? nil : copyPath;
+}
+
 #pragma mark - Notifications
 
 - (void)tokenRevokedResponseReceived:(NSNotification *)notification
