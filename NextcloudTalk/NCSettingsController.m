@@ -227,6 +227,16 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
     NSLog(@"Created accounts file. Error: %@", error);
 }
 
+- (void)removeAccountsFileAtPath:(NSString *)path
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    if ([fileManager fileExistsAtPath:path]) {
+        [fileManager removeItemAtPath:path error:&error];
+        NSLog(@"Removed accounts file. Error: %@", error);
+    }
+}
+
 - (NSString *)copyUserAvatarInPath:(NSString *)path forAccount:(TalkAccount *)account
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
