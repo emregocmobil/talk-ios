@@ -22,7 +22,11 @@
 
 #import "NCChatTitleView.h"
 
+#import "UIImageView+AFNetworking.h"
+
+#import "NCAPIController.h"
 #import "NCAppBranding.h"
+#import "NCUserStatus.h"
 
 @interface NCChatTitleView ()
 
