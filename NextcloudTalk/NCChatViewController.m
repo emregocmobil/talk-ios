@@ -4788,11 +4788,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 }
 
 - (void)cellWantsToDisplayOptionsForMessageActor:(NCChatMessage *)message {
-    NSIndexPath *indexPath = [self indexPathForMessage:message];
-    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    if (indexPath && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId]) {
-        [self presentOptionsForMessageActor:message fromIndexPath:indexPath];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSIndexPath *indexPath = [self indexPathForMessage:message];
+        TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+        if (indexPath && [message.actorType isEqualToString:@"users"] && ![message.actorId isEqualToString:activeAccount.userId]) {
+            [self presentOptionsForMessageActor:message fromIndexPath:indexPath];
+        }
+    });
 }
 
 - (void)cellDidSelectedReaction:(NCChatReaction *)reaction forMessage:(NCChatMessage *)message
