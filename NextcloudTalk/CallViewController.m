@@ -48,6 +48,8 @@
 
 #import "NextcloudTalk-Swift.h"
 
+#import "NextcloudTalk-Swift.h"
+
 typedef NS_ENUM(NSInteger, CallState) {
     CallStateJoining,
     CallStateWaitingParticipants,
@@ -1710,11 +1712,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     NCPeerConnection *peerConnection = [_peersInCall objectAtIndex:indexPath.row];
     
     [self updateParticipantCell:participantCell withPeerConnection:peerConnection];
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
-{
-    return kCallViewParticipantLineSpacing;
 }
 
 #pragma mark - Call Controller delegate
