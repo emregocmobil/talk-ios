@@ -242,6 +242,8 @@
         });
 
     }
+
+    [self.titleButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];
 }
 
 @end
