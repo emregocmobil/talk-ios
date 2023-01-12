@@ -44,6 +44,7 @@
 		1F7AE07D29158878009F72AD /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F90EFC225FE489B00F3FA55 /* IntentsUI.framework */; };
 		1F8995B32970644C00CABA33 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8995B22970644C00CABA33 /* ColorGenerator.swift */; };
 		1F8995B52973547700CABA33 /* WebRTCCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8995B42973547700CABA33 /* WebRTCCommon.swift */; };
+		1F8995B32970644C00CABA33 /* ColorGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8995B22970644C00CABA33 /* ColorGenerator.swift */; };
 		1F90EFBC25FE39F800F3FA55 /* NCIntentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90EFBB25FE39F800F3FA55 /* NCIntentController.m */; };
 		1F90EFBD25FE39F800F3FA55 /* NCIntentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90EFBB25FE39F800F3FA55 /* NCIntentController.m */; };
 		1F90EFBE25FE39F800F3FA55 /* NCIntentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F90EFBB25FE39F800F3FA55 /* NCIntentController.m */; };
@@ -405,6 +406,7 @@
 		1F785DDC2707865F00AC4B40 /* VoiceMessageTranscribeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoiceMessageTranscribeViewController.h; sourceTree = "<group>"; };
 		1F8995B22970644C00CABA33 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		1F8995B42973547700CABA33 /* WebRTCCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebRTCCommon.swift; sourceTree = "<group>"; };
+		1F8995B22970644C00CABA33 /* ColorGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorGenerator.swift; sourceTree = "<group>"; };
 		1F90EFBA25FE39F800F3FA55 /* NCIntentController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCIntentController.h; sourceTree = "<group>"; };
 		1F90EFBB25FE39F800F3FA55 /* NCIntentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCIntentController.m; sourceTree = "<group>"; };
 		1F90EFC225FE489B00F3FA55 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
