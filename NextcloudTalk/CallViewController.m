@@ -294,6 +294,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [self.collectionView.collectionViewLayout invalidateLayout];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [self adjustCollectionView];
         [self setLocalVideoRect];
         [self resizeScreensharingView];
         [self adjustTopBar];
