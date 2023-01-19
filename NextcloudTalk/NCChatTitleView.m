@@ -98,6 +98,12 @@
     self.userStatusImage.layer.cornerRadius = self.userStatusImage.bounds.size.width / 2;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.avatarimage.layer.cornerRadius = self.avatarimage.bounds.size.width / 2;
+}
+
 - (void)updateForRoom:(NCRoom *)room
 {
     // Set room image
