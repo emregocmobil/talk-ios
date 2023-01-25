@@ -294,7 +294,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [self.collectionView.collectionViewLayout invalidateLayout];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        [self adjustCollectionView];
+        [self adjustConstraints];
         [self setLocalVideoRect];
         [self resizeScreensharingView];
         [self adjustTopBar];
@@ -836,6 +836,17 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
         // Make sure we get the correct frame for the stack view, after changing the visibility of buttons
         [self->_topBarView setNeedsLayout];
         [self->_topBarView layoutIfNeeded];
+
+        // Hide titleView if we don't have enough space
+        // Don't do it in one go, as then we will have some jumping
+        if (self->_titleView.frame.size.width < 200) {
+            [self->_hangUpButton setTitle:@"" forState:UIControlStateNormal];
+            [self->_titleView setHidden:YES];
+
+            // Need to update the layout again, if we changed it here
+            [self->_topBarView setNeedsLayout];
+            [self->_topBarView layoutIfNeeded];
+        }
 
         // Hide the speaker button to make some more room for higher priority buttons
         // This should only be the case for iPhone SE (1st Gen) when recording is active and/or hand is raised
