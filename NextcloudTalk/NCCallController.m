@@ -505,25 +505,27 @@ static NSString * const kNCVideoTrackKind = @"video";
 
 - (void)raiseHand:(BOOL)raised
 {
-    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970] * 1000;
+    [[WebRTCCommon shared] dispatch:^{
+        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970] * 1000;
 
-    NSDictionary *payload = @{
-        @"state": @(raised),
-        @"timestamp": [NSString stringWithFormat:@"%.0f", timeStamp]
-    };
+        NSDictionary *payload = @{
+            @"state": @(raised),
+            @"timestamp": [NSString stringWithFormat:@"%.0f", timeStamp]
+        };
 
-    for (NCPeerConnection *peer in [_connectionsDict allValues]) {
-        NCRaiseHandMessage *message = [[NCRaiseHandMessage alloc] initWithFrom:[self signalingSessionId]
-                                                                        sendTo:peer.peerId
-                                                                   withPayload:payload
-                                                                   forRoomType:peer.roomType];
+        for (NCPeerConnection *peer in [self->_connectionsDict allValues]) {
+            NCRaiseHandMessage *message = [[NCRaiseHandMessage alloc] initWithFrom:[self signalingSessionId]
+                                                                            sendTo:peer.peerId
+                                                                       withPayload:payload
+                                                                       forRoomType:peer.roomType];
 
-        if ([_externalSignalingController isEnabled]) {
-            [_externalSignalingController sendCallMessage:message];
-        } else {
-            [_signalingController sendSignalingMessage:message];
+            if ([self->_externalSignalingController isEnabled]) {
+                [self->_externalSignalingController sendCallMessage:message];
+            } else {
+                [self->_signalingController sendSignalingMessage:message];
+            }
         }
-    }
+    }];
 }
 
 - (void)startRecording
@@ -554,6 +556,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         if (!peerConnectionWrapper.isMCUPublisherPeer) {
             [self.delegate callController:self peerLeft:peerConnectionWrapper];
         }
+
         peerConnectionWrapper.delegate = nil;
         [peerConnectionWrapper close];
     }
@@ -627,13 +630,20 @@ static NSString * const kNCVideoTrackKind = @"video";
     // Invalidate possible request timers
     NSString *peerVideoKey = [sessionId stringByAppendingString:kRoomTypeVideo];
     NSTimer *pendingVideoRequestTimer = [_pendingOffersDict objectForKey:peerVideoKey];
+
     if (pendingVideoRequestTimer) {
-        [pendingVideoRequestTimer invalidate];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [pendingVideoRequestTimer invalidate];
+        });
     }
+
     NSString *peerScreenKey = [sessionId stringByAppendingString:kRoomTypeVideo];
     NSTimer *pendingScreenRequestTimer = [_pendingOffersDict objectForKey:peerScreenKey];
+
     if (pendingScreenRequestTimer) {
-        [pendingScreenRequestTimer invalidate];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [pendingScreenRequestTimer invalidate];
+        });
     }
 }
 
@@ -840,7 +850,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         for (NCPeerConnection *peerConnection in connectionWrappers) {
             [peerConnection sendDataChannelMessageOfType:type withPayload:payload];
         }
-    }
+    }];
 }
 
 #pragma mark - External signaling support
@@ -1311,6 +1321,7 @@ static NSString * const kNCVideoTrackKind = @"video";
     if ([_externalSignalingController isEnabled]) {
         return [_externalSignalingController getUserIdFromSessionId:sessionId];
     }
+
     NSInteger callAPIVersion = [[NCAPIController sharedInstance] callAPIVersionForAccount:_account];
     NSString *userId = nil;
     for (NSMutableDictionary *user in _peersInCall) {
