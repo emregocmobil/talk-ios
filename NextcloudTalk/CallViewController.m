@@ -799,6 +799,13 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
             self->_recordingButton.tintColor = UIColor.systemRedColor;
         }
 
+        // Differ between starting a call recording and an actual running call recording
+        if (self->_room.callRecording == NCCallRecordingStateVideoStarting || self->_room.callRecording == NCCallRecordingStateAudioStarting) {
+            self->_recordingButton.tintColor = UIColor.systemGrayColor;
+        } else {
+            self->_recordingButton.tintColor = UIColor.systemRedColor;
+        }
+
         // When the horizontal size is compact (e.g. iPhone portrait) we don't show the 'End call' text on the button
         // Don't make assumptions about the device here, because with split screen even an iPad can have a compact width
         if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
