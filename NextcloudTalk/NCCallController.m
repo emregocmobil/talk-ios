@@ -411,7 +411,9 @@ static NSString * const kNCVideoTrackKind = @"video";
 
 - (void)switchCamera
 {
-    [_localVideoCaptureController switchCamera];
+    [[WebRTCCommon shared] dispatch:^{
+        [self->_localVideoCaptureController switchCamera];
+    }];
 }
 
 - (void)enableVideo:(BOOL)enable
@@ -850,7 +852,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         for (NCPeerConnection *peerConnection in connectionWrappers) {
             [peerConnection sendDataChannelMessageOfType:type withPayload:payload];
         }
-    }];
+    }
 }
 
 #pragma mark - External signaling support
