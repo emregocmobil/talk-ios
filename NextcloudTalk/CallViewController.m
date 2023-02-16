@@ -48,8 +48,6 @@
 
 #import "NextcloudTalk-Swift.h"
 
-#import "NextcloudTalk-Swift.h"
-
 typedef NS_ENUM(NSInteger, CallState) {
     CallStateJoining,
     CallStateWaitingParticipants,
