@@ -249,7 +249,27 @@
 
     }
 
-    [self.titleButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];
+    [self.titleTextView setAttributedText:attributedTitle];
+}
+
+-(void)handlGestureRecognizer:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        // Simulate a pressed stated. Don't use self.alpha here as it will interfere with NavigationController transitions
+        self.titleTextView.alpha = 0.7;
+        self.avatarimage.alpha = 0.7;
+        self.userStatusImage.alpha = 0.7;
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        // Call delegate & reset the pressed state -> use dispatch after to give the UI time to show the actual pressed state
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.titleTextView.alpha = 1.0;
+            self.avatarimage.alpha = 1.0;
+            self.userStatusImage.alpha = 1.0;
+            
+            [self.delegate chatTitleViewTapped:self];
+        });
+
+    }
 }
 
 @end
