@@ -797,6 +797,9 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
             self->_recordingButton.tintColor = UIColor.systemRedColor;
         }
 
+        BOOL hideRecordingButton = ![self->_room callRecordingIsInActiveState];
+        self->_recordingButton.hidden = hideRecordingButton;
+
         // Differ between starting a call recording and an actual running call recording
         if (self->_room.callRecording == NCCallRecordingStateVideoStarting || self->_room.callRecording == NCCallRecordingStateAudioStarting) {
             self->_recordingButton.tintColor = UIColor.systemGrayColor;
