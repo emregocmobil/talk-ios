@@ -53,9 +53,6 @@ extern NSString * const kSharedItemTypeRecording;
 
 typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictionary *referenceData, NSString *url);
 
-@class NCChatMessage;
-
-typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictionary *referenceData, NSString *url);
 
 @interface NCChatMessage : RLMObject <NSCopying>
 
