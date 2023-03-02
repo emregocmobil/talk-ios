@@ -4841,7 +4841,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     dispatch_async(dispatch_get_main_queue(), ^{
         self->_isPreviewControllerShown = YES;
         self->_previewControllerFilePath = fileStatus.fileLocalPath;
-        
+
         // When the keyboard is not dismissed, dismissing the previewController might result in a corrupted keyboardView
         [self dismissKeyboard:NO];
 
