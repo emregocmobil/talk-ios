@@ -2114,7 +2114,22 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     [recognizer setTranslation:CGPointZero inView:self->_screenView];
 
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-        [self adjustScreenViewPosition];
+        CGRect bounds = _screensharingView.bounds;
+        CGSize videoSize = _screensharingSize;
+        CGSize zoomedSize = recognizer.view.frame.size;
+
+        CGRect remoteVideoFrame = AVMakeRectWithAspectRatioInsideRect(videoSize, bounds);
+
+        // Don't zoom smaller than the original size
+        if (zoomedSize.width < remoteVideoFrame.size.width || zoomedSize.height < remoteVideoFrame.size.height) {
+            [UIView animateWithDuration:0.3 animations:^{
+                // We need to reset the transform here, because otherwise panning would be based on that invalid transform
+                self->_screenView.transform = CGAffineTransformIdentity;
+                [self resizeScreensharingView];
+            }];
+        } else {
+            [self adjustScreenViewPosition];
+        }
     }
 }
 
