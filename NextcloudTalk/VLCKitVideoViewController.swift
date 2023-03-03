@@ -167,6 +167,12 @@ import MobileVLCKit
         return mediaPlayer.remainingTime.stringValue == "00:00"
     }
 
+    private func mediaReachedEnd() -> Bool {
+        guard let mediaPlayer = self.mediaPlayer else { return false }
+
+        return mediaPlayer.remainingTime.stringValue == "00:00"
+    }
+
     // MARK: Controls Visibility
 
     private func updateIdleTimer() {
