@@ -272,12 +272,12 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
         return;
     }
     
-    [[NCSettingsController sharedInstance] getCapabilitiesWithCompletionBlock:^(NSError *error) {
+    [[NCSettingsController sharedInstance] getCapabilitiesForAccountId:accountId withCompletionBlock:^(NSError *error) {
         if (error) {
             return;
         }
 
-        [[NCSettingsController sharedInstance] getSignalingConfigurationWithCompletionBlock:^(NSError *error) {
+        [[NCSettingsController sharedInstance] getSignalingConfigurationForAccountId:accountId withCompletionBlock:^(NSError *error) {
             if (error) {
                 return;
             }
@@ -285,9 +285,8 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
             BGTaskHelper *bgTask = [BGTaskHelper startBackgroundTaskWithName:@"NCUpdateSignalingConfiguration" expirationHandler:nil];
 
             // SetSignalingConfiguration should be called just once
-            TalkAccount *account = [[NCDatabaseManager sharedInstance] activeAccount];
-            [[NCSettingsController sharedInstance] setSignalingConfigurationForAccountId:account.accountId];
-            [[NCDatabaseManager sharedInstance] updateTalkConfigurationHashForAccountId:account.accountId withHash:configurationHash];
+            [[NCSettingsController sharedInstance] setSignalingConfigurationForAccountId:accountId];
+            [[NCDatabaseManager sharedInstance] updateTalkConfigurationHashForAccountId:accountId withHash:configurationHash];
 
             [bgTask stopBackgroundTask];
         }];
@@ -354,9 +353,20 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
 
 #pragma mark - User Profile
 
-- (void)getUserProfileWithCompletionBlock:(UpdatedProfileCompletionBlock)block
+- (void)getUserProfileForAccountId:(NSString *)accountId withCompletionBlock:(UpdatedProfileCompletionBlock)block
 {
-    [[NCAPIController sharedInstance] getUserProfileForAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NSDictionary *userProfile, NSError *error) {
+    TalkAccount *account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId];
+
+    if (!account) {
+        if (block) {
+            NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
+            block(error);
+        }
+
+        return;
+    }
+
+    [[NCAPIController sharedInstance] getUserProfileForAccount:account withCompletionBlock:^(NSDictionary *userProfile, NSError *error) {
         if (!error) {
             id emailObject = [userProfile objectForKey:kUserProfileEmail];
             NSString *email = emailObject;
@@ -381,12 +391,18 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
             managedActiveAccount.twitter = [userProfile objectForKey:kUserProfileTwitter];
             managedActiveAccount.twitterScope = [userProfile objectForKey:kUserProfileTwitterScope];
             managedActiveAccount.avatarScope = [userProfile objectForKey:kUserProfileAvatarScope];
+
             [realm commitWriteTransaction];
-            [[NCAPIController sharedInstance] saveProfileImageForAccount:[[NCDatabaseManager sharedInstance] activeAccount]];
-            if (block) block(nil);
+            [[NCAPIController sharedInstance] saveProfileImageForAccount:account];
+            
+            if (block) {
+                block(nil);
+            }
         } else {
             NSLog(@"Error while getting the user profile");
-            if (block) block(error);
+            if (block) {
+                block(error);
+            }
         }
     }];
 }
@@ -453,16 +469,25 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
 
 #pragma mark - Signaling Configuration
 
-- (void)getSignalingConfigurationWithCompletionBlock:(GetSignalingConfigCompletionBlock)block
+- (void)getSignalingConfigurationForAccountId:(NSString *)accountId withCompletionBlock:(GetSignalingConfigCompletionBlock)block
 {
-    [[NCAPIController sharedInstance] getSignalingSettingsForAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NSDictionary *settings, NSError *error) {
-        TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    TalkAccount *account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId];
 
+    if (!account) {
+        if (block) {
+            NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
+            block(error);
+        }
+
+        return;
+    }
+
+    [[NCAPIController sharedInstance] getSignalingSettingsForAccount:account withCompletionBlock:^(NSDictionary *settings, NSError *error) {
         if (!error) {
             NSDictionary *signalingConfiguration = [[settings objectForKey:@"ocs"] objectForKey:@"data"];
 
-            if (signalingConfiguration && activeAccount && activeAccount.accountId) {
-                [self->_signalingConfigutations setObject:signalingConfiguration forKey:activeAccount.accountId];
+            if (signalingConfiguration && account && account.accountId) {
+                [self->_signalingConfigutations setObject:signalingConfiguration forKey:account.accountId];
 
                 if (block) {
                     block(nil);
@@ -535,32 +560,44 @@ NSString * const kDidReceiveCallsFromOldAccount = @"receivedCallsFromOldAccount"
 
 #pragma mark - Server Capabilities
 
-- (void)getCapabilitiesWithCompletionBlock:(GetCapabilitiesCompletionBlock)block;
+- (void)getCapabilitiesForAccountId:(NSString *)accountId withCompletionBlock:(GetCapabilitiesCompletionBlock)block
 {
-    [[NCAPIController sharedInstance] getServerCapabilitiesForAccount:[[NCDatabaseManager sharedInstance] activeAccount] withCompletionBlock:^(NSDictionary *serverCapabilities, NSError *error) {
-        TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    TalkAccount *account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:accountId];
+
+    if (!account) {
+        if (block) {
+            NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
+            block(error);
+        }
+
+        return;
+    }
+
+    [[NCAPIController sharedInstance] getServerCapabilitiesForAccount:account withCompletionBlock:^(NSDictionary *serverCapabilities, NSError *error) {
         if (!error && [serverCapabilities isKindOfClass:[NSDictionary class]]) {
             BGTaskHelper *bgTask = [BGTaskHelper startBackgroundTaskWithName:@"NCUpdateCapabilitiesTransaction" expirationHandler:nil];
-            [NCUtils log:@"Start update capabilities transaction"];
-            [[NCDatabaseManager sharedInstance] setServerCapabilities:serverCapabilities forAccountId:activeAccount.accountId];
-            [self checkServerCapabilities];
+            [[NCDatabaseManager sharedInstance] setServerCapabilities:serverCapabilities forAccountId:account.accountId];
+            [self checkServerCapabilitiesForAccount:account];
             [bgTask stopBackgroundTask];
-            [NCUtils log:@"End update capabilities transaction"];
+
             [[NSNotificationCenter defaultCenter] postNotificationName:NCServerCapabilitiesUpdatedNotification
                                                                 object:self
                                                               userInfo:nil];
-            if (block) block(nil);
+            if (block) {
+                block(nil);
+            }
         } else {
             NSLog(@"Error while getting server capabilities");
-            if (block) block(error);
+            if (block) {
+                block(error);
+            }
         }
     }];
 }
 
-- (void)checkServerCapabilities
+- (void)checkServerCapabilitiesForAccount:(TalkAccount *)account
 {
-    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    ServerCapabilities *serverCapabilities  = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:account.accountId];
     if (serverCapabilities) {
         NSArray *talkFeatures = [serverCapabilities.talkCapabilities valueForKey:@"self"];
         if (!talkFeatures || [talkFeatures count] == 0) {

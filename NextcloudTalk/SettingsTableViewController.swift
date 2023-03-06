@@ -199,7 +199,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: User Profile
 
     func refreshUserProfile() {
-        NCSettingsController.sharedInstance().getUserProfile { _ in
+        let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
+        NCSettingsController.sharedInstance().getUserProfile(forAccountId: activeAccount.accountId) { _ in
             self.tableView.reloadData()
         }
         self.getActiveUserStatus()
@@ -267,7 +268,8 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: User phone number
 
     func checkUserPhoneNumber() {
-        NCSettingsController.sharedInstance().getUserProfile { _ in
+        let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
+        NCSettingsController.sharedInstance().getUserProfile(forAccountId: activeAccount.accountId) { _ in
             let activeAccount = NCDatabaseManager.sharedInstance().activeAccount()
             if activeAccount.phone.isEmpty {
                 self.presentSetPhoneNumberDialog()
@@ -434,9 +436,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
 
     @objc func readStatusValueChanged(_ sender: Any?) {
         readStatusSwitch.isEnabled = false
-        NCAPIController.sharedInstance().setReadStatusPrivacySettingEnabled(!readStatusSwitch.isOn, for: NCDatabaseManager.sharedInstance().activeAccount()) { error in
+        let account = NCDatabaseManager.sharedInstance().activeAccount()
+
+        NCAPIController.sharedInstance().setReadStatusPrivacySettingEnabled(!readStatusSwitch.isOn, for: account) { error in
             if error == nil {
-                NCSettingsController.sharedInstance().getCapabilitiesWithCompletionBlock { error in
+                NCSettingsController.sharedInstance().getCapabilitiesForAccountId(account.accountId) { error in
                     if error == nil {
                         self.readStatusSwitch.isEnabled = true
                         self.tableView.reloadData()
