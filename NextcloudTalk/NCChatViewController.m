@@ -59,6 +59,7 @@
 #import "NCChatTitleView.h"
 #import "NCConnectionController.h"
 #import "NCDatabaseManager.h"
+#import "NCExternalSignalingController.h"
 #import "NCMessageParameter.h"
 #import "NCMessageTextView.h"
 #import "NCNavigationController.h"
@@ -197,6 +198,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionStateHasChanged:) name:NCConnectionStateHasChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didFailRequestingCallTransaction:) name:CallKitManagerDidFailRequestingCallTransaction object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didUpdateParticipants:) name:NCExternalSignalingControllerDidUpdateParticipantsNotification object:nil];
 
         // Notifications when runing on Mac 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:@"NSApplicationDidBecomeActiveNotification" object:nil];
