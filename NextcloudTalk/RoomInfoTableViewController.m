@@ -1662,7 +1662,7 @@ typedef enum FileAction {
         case kRoomInfoSectionSIP:
             if (indexPath.row == kSIPActionSIPInfo) {
                 TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-                NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigutations] objectForKey:activeAccount.accountId];
+                NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigurations] objectForKey:activeAccount.accountId];
                 return [self heightForDescription:[activeAccountSignalingConfig objectForKey:@"sipDialinInfo"]];
             }
             break;
@@ -2257,7 +2257,7 @@ typedef enum FileAction {
                         cell = [[RoomDescriptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kRoomDescriptionCellIdentifier];
                     }
                     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-                    NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigutations] objectForKey:activeAccount.accountId];
+                    NSDictionary *activeAccountSignalingConfig  = [[[NCSettingsController sharedInstance] signalingConfigurations] objectForKey:activeAccount.accountId];
                     cell.textView.text = [activeAccountSignalingConfig objectForKey:@"sipDialinInfo"];
                     cell.selectionStyle = UITableViewCellSelectionStyleNone;
                     
