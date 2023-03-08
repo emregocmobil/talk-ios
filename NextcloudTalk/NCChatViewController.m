@@ -3083,6 +3083,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         if (notification.object != self->_chatController) {
             return;
         }
+
+        if ([self shouldPresentLobbyView]) {
+            self->_hasRequestedInitialHistory = NO;
+            [self startObservingRoomLobbyFlag];
+            
+            return;
+        }
         
         NSMutableArray *messages = [notification.userInfo objectForKey:@"messages"];
         if (messages.count > 0) {
@@ -3133,7 +3140,6 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
             }
             
             [self.tableView reloadData];
-            [self checkLobbyState];
             
             if (indexPathUnreadMessageSeparator) {
                 [self.tableView scrollToRowAtIndexPath:indexPathUnreadMessageSeparator atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
