@@ -1029,7 +1029,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         [self->_sendCurrentStateTimer invalidate];
         self->_sendCurrentStateTimer = nil;
 
-        [self sendCurrentStateWithTimeInterval:0];
+        [self sendCurrentStateWithTimer:nil];
     });
 }
 
@@ -1041,7 +1041,7 @@ static NSString * const kNCVideoTrackKind = @"video";
     });
 }
 
-- (void)sendCurrentStateWithTimeInterval:(NSTimer *)timer
+- (void)sendCurrentStateWithTimer:(NSTimer *)timer
 {
     __block NSInteger interval = [[timer.userInfo objectForKey:@"interval"] integerValue];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1059,7 +1059,7 @@ static NSString * const kNCVideoTrackKind = @"video";
         }
 
         NSDictionary *userInfo = @{@"interval" : @(interval)};
-        self->_sendCurrentStateTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(sendCurrentStateWithTimeInterval:) userInfo:userInfo repeats:NO];
+        self->_sendCurrentStateTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(sendCurrentStateWithTimer:) userInfo:userInfo repeats:NO];
     });
 }
 
