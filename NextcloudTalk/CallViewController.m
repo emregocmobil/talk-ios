@@ -79,7 +79,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     NCCallController *_callController;
     NCChatViewController *_chatViewController;
     UINavigationController *_chatNavigationController;
-    UIView <RTCVideoRenderer> *_screenView;
     CGSize _screensharingSize;
     UITapGestureRecognizer *_tapGestureForDetailedView;
     NSTimer *_detailedViewTimer;
@@ -103,9 +102,6 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     NSMutableArray *_pendingPeerDeletions;
     NSMutableArray *_pendingPeerUpdates;
     NSTimer *_batchUpdateTimer;
-    UIPinchGestureRecognizer *_screenViewPinchGestureRecognizer;
-    UIPanGestureRecognizer *_screenViewPanGestureRecognizer;
-    UITapGestureRecognizer *_screenViewDoubleTapGestureRecognizer;
 }
 
 @property (nonatomic, strong) IBOutlet UIButton *audioMuteButton;
@@ -294,7 +290,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [self setLocalVideoRect];
-        [self resizeScreensharingView];
+        [self->_screensharingView resizeContentView];
         [self adjustTopBar];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
     }];
@@ -1554,7 +1550,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
 
             strongSelf->_chatNavigationController = nil;
 
-            if ((!strongSelf->_isAudioOnly && strongSelf->_callState == CallStateInCall) || strongSelf->_screenView) {
+            if (!strongSelf->_isAudioOnly && strongSelf->_callState == CallStateInCall) {
                 [strongSelf addTapGestureForDetailedView];
                 [strongSelf showDetailedViewWithTimer];
             }
@@ -1988,35 +1984,16 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         RTCMTLVideoView *renderView = [self->_screenRenderersDict objectForKey:peerId];
-        [self->_screenView removeFromSuperview];
-        [self->_screenView removeGestureRecognizer:self->_screenViewPinchGestureRecognizer];
-        [self->_screenView removeGestureRecognizer:self->_screenViewPanGestureRecognizer];
-        [self->_screenView removeGestureRecognizer:self->_screenViewDoubleTapGestureRecognizer];
-        self->_screenView = nil;
 
-        self->_screenView = renderView;
-        self->_screensharingSize = renderView.frame.size;
-        [self->_screensharingView addSubview:self->_screenView];
+        [self->_screensharingView replaceContentView:renderView];
         [self->_screensharingView bringSubviewToFront:self->_closeScreensharingButton];
-
-        self->_screenViewPinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(screenViewPinch:)];
-        self->_screenViewPinchGestureRecognizer.delegate = self;
-        [self->_screenView addGestureRecognizer:self->_screenViewPinchGestureRecognizer];
-
-        self->_screenViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(screenViewPan:)];
-        self->_screenViewPanGestureRecognizer.delegate = self;
-        [self->_screenView addGestureRecognizer:self->_screenViewPanGestureRecognizer];
-
-        self->_screenViewDoubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(screenViewDoubleTap:)];
-        [self->_screenViewDoubleTapGestureRecognizer setNumberOfTapsRequired:2];
-        [self->_screenView addGestureRecognizer:self->_screenViewDoubleTapGestureRecognizer];
 
         [UIView transitionWithView:self->_screensharingView duration:0.4
                            options:UIViewAnimationOptionTransitionCrossDissolve
                         animations:^{self->_screensharingView.hidden = NO;}
                         completion:nil];
-        [self resizeScreensharingView];
     });
+
     // Enable/Disable detailed view with tap gesture
     // in voice only call when screensharing is enabled
     if (_isAudioOnly) {
@@ -2034,7 +2011,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
             [cell setScreenShared:NO];
         }];
 
-        if (self->_screenView == screenRenderer) {
+        if (self->_screensharingView.contentView == screenRenderer) {
             [self closeScreensharingButtonPressed:self];
         }
 
@@ -2044,39 +2021,15 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     });
 }
 
-- (void)resizeScreensharingView {
-    // We need to reset the transform here, because otherwise panning would be based on that invalid transform
-    _screenView.transform = CGAffineTransformIdentity;
-    
-    CGRect bounds = _screensharingView.bounds;
-    CGSize videoSize = _screensharingSize;
-    
-    if (videoSize.width > 0 && videoSize.height > 0) {
-        // Aspect fill remote video into bounds.
-        CGRect remoteVideoFrame = AVMakeRectWithAspectRatioInsideRect(videoSize, bounds);
-        CGFloat scale = 1;
-        remoteVideoFrame.size.height *= scale;
-        remoteVideoFrame.size.width *= scale;
-        _screenView.frame = remoteVideoFrame;
-        _screenView.center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
-    } else {
-        _screenView.frame = bounds;
-    }
-}
-
 - (IBAction)closeScreensharingButtonPressed:(id)sender
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self->_screenView removeFromSuperview];
-        [self->_screenView removeGestureRecognizer:self->_screenViewPinchGestureRecognizer];
-        [self->_screenView removeGestureRecognizer:self->_screenViewPanGestureRecognizer];
-        self->_screenView = nil;
-        
         [UIView transitionWithView:self->_screensharingView duration:0.4
                            options:UIViewAnimationOptionTransitionCrossDissolve
                         animations:^{self->_screensharingView.hidden = YES;}
                         completion:nil];
     });
+
     // Back to normal voice only UI
     if (_isAudioOnly) {
         [self invalidateDetailedViewTimer];
@@ -2247,9 +2200,10 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
         for (RTCMTLVideoView *rendererView in [self->_screenRenderersDict allValues]) {
             if ([videoView isEqual:rendererView]) {
                 rendererView.frame = CGRectMake(0, 0, size.width, size.height);
-                if ([self->_screenView isEqual:rendererView]) {
+                if ([self.screensharingView.contentView isEqual:rendererView]) {
                     self->_screensharingSize = rendererView.frame.size;
-                    [self resizeScreensharingView];
+                    [self->_screensharingView setContentViewSize:rendererView.frame.size];
+                    [self->_screensharingView resizeContentView];
                 }
             }
         }
