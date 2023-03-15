@@ -23,6 +23,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <ContactsUI/ContactsUI.h>
 #import <QuickLook/QuickLook.h>
+#import <PhotosUI/PhotosUI.h>
 
 @import NextcloudKit;
 
@@ -98,7 +99,29 @@ typedef enum NCChatMessageAction {
 
 NSString * const kActionTypeTranscribeVoiceMessage   = @"transcribe-voice-message";
 
-@interface NCChatViewController () <UIGestureRecognizerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UIDocumentPickerDelegate, ShareViewControllerDelegate, ShareConfirmationViewControllerDelegate, FileMessageTableViewCellDelegate, NCChatFileControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource, ChatMessageTableViewCellDelegate, ShareLocationViewControllerDelegate, LocationMessageTableViewCellDelegate, VoiceMessageTableViewCellDelegate, ObjectShareMessageTableViewCellDelegate, PollCreationViewControllerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, CNContactPickerDelegate, NCChatTitleViewDelegate, VLCKitVideoViewControllerDelegate>
+@interface NCChatViewController () <UIGestureRecognizerDelegate,
+                                    UINavigationControllerDelegate,
+                                    UITextFieldDelegate,
+                                    PHPickerViewControllerDelegate,
+                                    UIImagePickerControllerDelegate,
+                                    UIDocumentPickerDelegate,
+                                    ShareViewControllerDelegate,
+                                    ShareConfirmationViewControllerDelegate,
+                                    FileMessageTableViewCellDelegate,
+                                    NCChatFileControllerDelegate,
+                                    QLPreviewControllerDelegate,
+                                    QLPreviewControllerDataSource,
+                                    ChatMessageTableViewCellDelegate,
+                                    ShareLocationViewControllerDelegate,
+                                    LocationMessageTableViewCellDelegate,
+                                    VoiceMessageTableViewCellDelegate,
+                                    ObjectShareMessageTableViewCellDelegate,
+                                    PollCreationViewControllerDelegate,
+                                    AVAudioRecorderDelegate,
+                                    AVAudioPlayerDelegate,
+                                    CNContactPickerDelegate,
+                                    NCChatTitleViewDelegate,
+                                    VLCKitVideoViewControllerDelegate>
 
 @property (nonatomic, strong) NCChatController *chatController;
 @property (nonatomic, strong) NCChatTitleView *titleView;
@@ -147,6 +170,7 @@ NSString * const kActionTypeTranscribeVoiceMessage   = @"transcribe-voice-messag
 @property (nonatomic, strong) NSIndexPath *lastMessageBeforeReaction;
 @property (nonatomic, strong) NSTimer *messageExpirationTimer;
 @property (nonatomic, strong) UIButton *scrollToBottomButton;
+@property (nonatomic, strong) PHPickerViewController *photoPicker;
 
 @end
 
@@ -1544,11 +1568,15 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
 - (void)presentPhotoLibrary
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self->_imagePicker = [[UIImagePickerController alloc] init];
-        self->_imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        self->_imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:self->_imagePicker.sourceType];
-        self->_imagePicker.delegate = self;
-        [self presentViewController:self->_imagePicker animated:YES completion:nil];
+        PHPickerConfiguration *config = [[PHPickerConfiguration alloc] init];
+        config.selectionLimit = 5;
+
+        PHPickerFilter *filter = [PHPickerFilter anyFilterMatchingSubfilters:@[[PHPickerFilter imagesFilter], [PHPickerFilter videosFilter]]];
+        config.filter = filter;
+
+        self->_photoPicker = [[PHPickerViewController alloc] initWithConfiguration:config];
+        self->_photoPicker .delegate = self;
+        [self presentViewController:self->_photoPicker animated:YES completion:nil];
     });
 }
 
