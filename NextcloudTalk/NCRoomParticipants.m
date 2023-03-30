@@ -187,7 +187,7 @@ NSString * const NCAttendeeTypeEmail    = @"emails";
         return @"phone";
     }
     
-    return @"audio";
+    return @"mic";
 }
 
 @end
