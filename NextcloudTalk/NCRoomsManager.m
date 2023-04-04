@@ -445,14 +445,19 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }
 }
 
-- (void)updateRoomsUpdatingUserStatus:(BOOL)updateStatus
+- (void)updateRoomsUpdatingUserStatus:(BOOL)updateStatus onlyLastModified:(BOOL)onlyLastModified
 {
-    [self updateRoomsUpdatingUserStatus:updateStatus withCompletionBlock:nil];
+    [self updateRoomsUpdatingUserStatus:updateStatus onlyLastModified:onlyLastModified withCompletionBlock:nil];
 }
 
-- (void)updateRoomsAndChatsUpdatingUserStatus:(BOOL)updateStatus withCompletionBlock:(UpdateRoomsAndChatsCompletionBlock)block
+- (void)updateRoomsAndChatsUpdatingUserStatus:(BOOL)updateStatus onlyLastModified:(BOOL)onlyLastModified withCompletionBlock:(UpdateRoomsAndChatsCompletionBlock)block
 {
-    [self updateRoomsUpdatingUserStatus:updateStatus withCompletionBlock:^(NSArray *roomsWithNewMessages, TalkAccount *account, NSError *error) {
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    if (onlyLastModified && [activeAccount.lastReceivedModifiedSince integerValue] == 0) {
+        return;
+    }
+
+    [self updateRoomsUpdatingUserStatus:updateStatus onlyLastModified:onlyLastModified withCompletionBlock:^(NSArray *roomsWithNewMessages, TalkAccount *account, NSError *error) {
         if (error) {
             if (block) {
                 block(error);
@@ -488,10 +493,11 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
     }];
 }
 
-- (void)updateRoomsUpdatingUserStatus:(BOOL)updateStatus withCompletionBlock:(UpdateRoomsCompletionBlock)block
+- (void)updateRoomsUpdatingUserStatus:(BOOL)updateStatus onlyLastModified:(BOOL)onlyLastModified withCompletionBlock:(UpdateRoomsCompletionBlock)block
 {
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
-    [[NCAPIController sharedInstance] getRoomsForAccount:activeAccount updateStatus:updateStatus withCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
+    NSInteger modifiedSince = onlyLastModified ? [activeAccount.lastReceivedModifiedSince integerValue] : 0;
+    [[NCAPIController sharedInstance] getRoomsForAccount:activeAccount updateStatus:updateStatus modifiedSince:modifiedSince withCompletionBlock:^(NSArray *rooms, NSError *error, NSInteger statusCode) {
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         NSMutableArray *roomsWithNewMessages = [NSMutableArray new];
         if (!error) {
@@ -501,9 +507,9 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
             }];
 
             RLMRealm *realm = [RLMRealm defaultRealm];
+            NSInteger updateTimestamp = [[NSDate date] timeIntervalSince1970];
             [realm transactionWithBlock:^{
                 // Add or update rooms
-                NSInteger updateTimestamp = [[NSDate date] timeIntervalSince1970];
                 for (NSDictionary *roomDict in rooms) {
                     BOOL roomContainsNewMessages = [self updateRoomWithDict:roomDict withAccount:activeAccount withTimestamp:updateTimestamp withRealm:realm];
                     if (roomContainsNewMessages) {
@@ -523,6 +529,21 @@ static NSInteger kNotJoiningAnymoreStatusCode = 999;
                 [realm deleteObjects:managedRoomsToBeDeleted];
                 NSLog(@"Rooms updated");
             }];
+            // Only delete rooms if it was a complete rooms update (not using modifiedSince)
+            if (!onlyLastModified) {
+                [realm transactionWithBlock:^{
+                    // Delete old rooms
+                    NSPredicate *query = [NSPredicate predicateWithFormat:@"accountId = %@ AND lastUpdate != %ld", activeAccount.accountId, (long)updateTimestamp];
+                    RLMResults *managedRoomsToBeDeleted = [NCRoom objectsWithPredicate:query];
+                    // Delete messages and chat blocks from old rooms
+                    for (NCRoom *managedRoom in managedRoomsToBeDeleted) {
+                        NSPredicate *query2 = [NSPredicate predicateWithFormat:@"accountId = %@ AND token = %@", activeAccount.accountId, managedRoom.token];
+                        [realm deleteObjects:[NCChatMessage objectsWithPredicate:query2]];
+                        [realm deleteObjects:[NCChatBlock objectsWithPredicate:query2]];
+                    }
+                    [realm deleteObjects:managedRoomsToBeDeleted];
+                }];
+            }
 
             [bgTask stopBackgroundTask];
         } else {

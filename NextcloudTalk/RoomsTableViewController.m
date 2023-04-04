@@ -299,7 +299,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)notificationWillBePresented:(NSNotification *)notification
 {
-    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:NO withCompletionBlock:nil];
+    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:NO onlyLastModified:NO withCompletionBlock:nil];
     [self setUnreadMessageForInactiveAccountsIndicator];
     [self updateAccountPickerMenu];
 }
@@ -318,7 +318,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 - (void)appWillEnterForeground:(NSNotification *)notification
 {
     if ([NCConnectionController sharedInstance].appState == kAppStateReady) {
-        [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES withCompletionBlock:nil];
+        [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES onlyLastModified:NO withCompletionBlock:nil];
         [self startRefreshRoomsTimer];
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -369,7 +369,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)refreshRooms
 {
-    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES withCompletionBlock:nil];
+    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES onlyLastModified:NO withCompletionBlock:nil];
 
     if ([NCConnectionController sharedInstance].connectionState == kConnectionStateConnected) {
         [[NCRoomsManager sharedInstance] resendOfflineMessagesWithCompletionBlock:nil];
@@ -402,7 +402,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)refreshControlTarget
 {
-    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES withCompletionBlock:nil];
+    [[NCRoomsManager sharedInstance] updateRoomsAndChatsUpdatingUserStatus:YES onlyLastModified:NO withCompletionBlock:nil];
     // Actuate `Peek` feedback (weak boom)
     AudioServicesPlaySystemSound(1519);
 }
@@ -637,7 +637,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
         {
             [self setProfileButton];
             BOOL isAppActive = [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
-            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:isAppActive];
+            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:isAppActive onlyLastModified:NO];
             [self startRefreshRoomsTimer];
             [self setupNavigationBar];
         }
@@ -800,7 +800,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
 
 - (void)trustedCerticateAccepted
 {
-    [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:NO];
+    [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:NO onlyLastModified:NO];
 }
 
 #pragma mark - Room actions
@@ -837,7 +837,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
                                                            if (error) {
                                                                NSLog(@"Error renaming the room: %@", error.description);
                                                            }
-                                                           [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+                                                           [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
                                                        }];
                                                    }];
     if (room.notificationLevel == level) {
@@ -888,7 +888,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
         if (error) {
             NSLog(@"Error marking room as read: %@", error.description);
         }
-        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
     }];
 }
 
@@ -900,7 +900,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
         if (error) {
             NSLog(@"Error marking chat as unread: %@", error.description);
         }
-        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
     }];
 }
 
@@ -912,7 +912,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
         if (error) {
             NSLog(@"Error adding room to favorites: %@", error.description);
         }
-        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
     }];
 }
 
@@ -924,7 +924,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
         if (error) {
             NSLog(@"Error removing room from favorites: %@", error.description);
         }
-        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+        [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
     }];
 }
 
@@ -955,7 +955,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
             } else if (error) {
                 NSLog(@"Error leaving room: %@", error.description);
             }
-            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
         }];
     }];
     [confirmDialog addAction:confirmAction];
@@ -980,7 +980,7 @@ typedef void (^FetchRoomsCompletionBlock)(BOOL success);
             if (error) {
                 NSLog(@"Error deleting room: %@", error.description);
             }
-            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES];
+            [[NCRoomsManager sharedInstance] updateRoomsUpdatingUserStatus:YES onlyLastModified:NO];
         }];
     }];
     [confirmDialog addAction:confirmAction];
