@@ -34,7 +34,7 @@
 #import "NCAPIController.h"
 #import "NCDatabaseManager.h"
 
-typedef void (^GetAvatarForRoomCompletionBlock)(UIImage *image);
+#import "NextcloudTalk-Swift.h"
 
 @implementation NCIntentController
 
@@ -92,12 +92,18 @@ typedef void (^GetAvatarForRoomCompletionBlock)(UIImage *image);
 
 - (void)getInteractionForRoom:(NCRoom *)room withTitle:(NSString *)title withCompletionBlock:(GetInteractionForRoomCompletionBlock)block
 {
-    [self getAvatarForRoom:room withCompletionBlock:^(UIImage *avatarImage) {
+    TalkAccount *account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:room.accountId];
+    (void)[[AvatarManager shared] getAvatarFor:room with:UIUserInterfaceStyleLight using:account completionBlock:^(UIImage *avatarImage) {
         if (!avatarImage) {
             if (block) {
                 block(nil);
             }
             return;
+        }
+
+        if (avatarImage.sd_isVector) {
+            // INImage does not support SVGs -> render them
+            avatarImage = [[AvatarManager shared] createRenderedImageWithImage:avatarImage];
         }
 
         INSpeakableString *groupName = [[INSpeakableString alloc] initWithSpokenPhrase:title];
@@ -149,8 +155,14 @@ typedef void (^GetAvatarForRoomCompletionBlock)(UIImage *image);
                                                                                       sender:nil
                                                                                  attachments:nil];
 
-    [self getAvatarForRoom:room withCompletionBlock:^(UIImage *image) {
+    TalkAccount *account = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:room.accountId];
+    (void)[[AvatarManager shared] getAvatarFor:room with:UIUserInterfaceStyleLight using:account completionBlock:^(UIImage *image) {
         if (image) {
+            if (image.sd_isVector) {
+                // INImage does not support SVGs -> render them
+                image = [[AvatarManager shared] createRenderedImageWithImage:image];
+            }
+
             [sendMessageIntent setImage:[INImage imageWithUIImage:image] forParameterNamed:@"speakableGroupName"];
             [self donateMessageSentIntent:sendMessageIntent];
         }

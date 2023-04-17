@@ -22,15 +22,11 @@
 
 #import "RoomTableViewCell.h"
 
-#import "UIImageView+AFNetworking.h"
-
 #import "NCAppBranding.h"
 #import "NCUserInterfaceController.h"
 #import "RoundedNumberView.h"
 
-#import "NCAppBranding.h"
-#import "NCUserInterfaceController.h"
-#import "RoundedNumberView.h"
+#import "NextcloudTalk-Swift.h"
 
 #define kTitleOriginY       12
 #define kTitleOnlyOriginY   28
@@ -61,7 +57,7 @@ CGFloat const kRoomTableCellHeight = 74.0f;
     self.roomImage.layer.cornerRadius = 24.0;
     self.roomImage.layer.masksToBounds = YES;
     self.roomImage.backgroundColor = [NCAppBranding placeholderColor];
-    self.roomImage.contentMode = UIViewContentModeCenter;
+
     self.favoriteImage.contentMode = UIViewContentModeCenter;
     
     if ([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:_dateLabel.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft) {
@@ -99,10 +95,9 @@ CGFloat const kRoomTableCellHeight = 74.0f;
     [super prepareForReuse];
     
     // Fix problem of rendering downloaded image in a reused cell
-    [self.roomImage cancelImageDownloadTask];
+    [self.roomImage cancelCurrentRequest];
     
     self.roomImage.image = nil;
-    self.roomImage.contentMode = UIViewContentModeCenter;
     self.favoriteImage.image = nil;
     self.subtitleLabel.text = @"";
     self.dateLabel.text = @"";

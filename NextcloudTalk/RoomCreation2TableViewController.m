@@ -22,8 +22,6 @@
 
 #import "RoomCreation2TableViewController.h"
 
-#import "UIImageView+AFNetworking.h"
-
 #import "ContactsTableViewCell.h"
 #import "NCAPIController.h"
 #import "NCDatabaseManager.h"
@@ -38,6 +36,8 @@
 #import "NCDatabaseManager.h"
 #import "NCUser.h"
 #import "RoomNameTableViewCell.h"
+
+#import "NextcloudTalk-Swift.h"
 
 typedef enum CreationSection {
     kCreationSectionName = 0,
@@ -370,9 +370,9 @@ NSString * const NCRoomCreatedNotification  = @"NCRoomCreatedNotification";
             }
             
             if (_publicRoom) {
-                [cell.roomImage setImage:[UIImage imageNamed:@"public"]];
+                [cell.roomImage setImage:[UIImage imageNamed:@"public-avatar"]];
             } else {
-                [cell.roomImage setImage:[UIImage imageNamed:@"group"]];
+                [cell.roomImage setImage:[UIImage imageNamed:@"group-avatar"]];
             }
             cell.roomNameTextField.text = _roomName;
             _roomNameTextField = cell.roomNameTextField;
@@ -409,13 +409,11 @@ NSString * const NCRoomCreatedNotification  = @"NCRoomCreatedNotification";
                 cell.labelTitle.text = participant.name;
                 
                 if ([participant.source isEqualToString:kParticipantTypeUser]) {
-                    [cell.contactImage setImageWithURLRequest:[[NCAPIController sharedInstance] createAvatarRequestForUser:participant.userId withStyle:self.traitCollection.userInterfaceStyle andSize:96 usingAccount:[[NCDatabaseManager sharedInstance] activeAccount]]
-                                             placeholderImage:nil success:nil failure:nil];
-                    [cell.contactImage setContentMode:UIViewContentModeScaleToFill];
+                    [cell.contactImage setUserAvatarFor:participant.userId with:self.traitCollection.userInterfaceStyle];
                 } else if ([participant.source isEqualToString:kParticipantTypeEmail]) {
-                    [cell.contactImage setImage:[UIImage imageNamed:@"mail"]];
+                    [cell.contactImage setImage:[UIImage imageNamed:@"mail-avatar"]];
                 } else {
-                    [cell.contactImage setImage:[UIImage imageNamed:@"group"]];
+                    [cell.contactImage setImage:[UIImage imageNamed:@"group-avatar"]];
                 }
                 
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
