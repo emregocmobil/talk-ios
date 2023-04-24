@@ -60,6 +60,7 @@ typedef enum CallFlag {
 - (void)callController:(NCCallController *)callController didReceiveNick:(NSString *)nick fromPeer:(NCPeerConnection *)peer;
 - (void)callController:(NCCallController *)callController didReceiveUnshareScreenFromPeer:(NCPeerConnection *)peer;
 - (void)callController:(NCCallController *)callController didReceiveForceMuteActionForPeerId:(NSString *)peerId;
+- (void)callController:(NCCallController *)callController didReceiveReaction:(NSString *)reaction fromPeer:(NCPeerConnection *)peer;
 - (void)callControllerIsReconnectingCall:(NCCallController *)callController;
 - (void)callControllerWantsToHangUpCall:(NCCallController *)callController;
 - (void)callControllerDidChangeRecording:(NCCallController *)callController;
@@ -87,6 +88,7 @@ typedef enum CallFlag {
 - (void)enableVideo:(BOOL)enable;
 - (void)enableAudio:(BOOL)enable;
 - (void)raiseHand:(BOOL)raised;
+- (void)sendReaction:(NSString *)reaction;
 - (void)startRecording;
 - (void)stopRecording;
 - (NSString *)getUserIdFromSessionId:(NSString *)sessionId;
