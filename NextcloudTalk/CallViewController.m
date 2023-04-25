@@ -54,7 +54,10 @@ typedef NS_ENUM(NSInteger, CallState) {
     CallStateSwitchingToAnotherRoom
 };
 
-CGFloat const kSidebarWidth = 350;
+CGFloat const kSidebarWidth                     = 350;
+CGFloat const kReactionViewAnimationDuration    = 2.0;
+CGFloat const kReactionViewHidingDuration       = 1.0;
+CGFloat const kMaxReactionsInScreen             = 5.0;
 
 typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell);
 
@@ -101,6 +104,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     NSMutableArray *_pendingPeerUpdates;
     NSTimer *_batchUpdateTimer;
     UIImageSymbolConfiguration *_barButtonsConfiguration;
+    CGFloat _lastScheduledReaction;
 }
 
 @property (nonatomic, strong) IBOutlet UIButton *audioMuteButton;
@@ -151,6 +155,7 @@ typedef void (^UpdateCallParticipantViewCellBlock)(CallParticipantViewCell *cell
     _pendingPeerInserts = [[NSMutableArray alloc] init];
     _pendingPeerDeletions = [[NSMutableArray alloc] init];
     _pendingPeerUpdates = [[NSMutableArray alloc] init];
+    _lastScheduledReaction = 0.0;
 
     _barButtonsConfiguration = [UIImageSymbolConfiguration configurationWithPointSize:20];
     
