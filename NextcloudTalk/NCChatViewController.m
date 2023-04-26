@@ -3230,7 +3230,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
             return;
         }
 
-        BOOL firstNewMessagesAfterHistory = [notification.userInfo objectForKey:@"firstNewMessagesAfterHistory"];
+        BOOL firstNewMessagesAfterHistory = [[notification.userInfo objectForKey:@"firstNewMessagesAfterHistory"] boolValue];
         
         NSMutableArray *messages = [notification.userInfo objectForKey:@"messages"];
         if (messages.count > 0) {
