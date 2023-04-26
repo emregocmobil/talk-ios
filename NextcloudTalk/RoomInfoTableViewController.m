@@ -102,8 +102,7 @@ typedef enum DestructiveAction {
 } DestructiveAction;
 
 typedef enum ModificationError {
-    kModificationErrorRename = 0,
-    kModificationErrorChatNotifications,
+    kModificationErrorChatNotifications = 0,
     kModificationErrorCallNotifications,
     kModificationErrorShare,
     kModificationErrorPassword,
@@ -127,15 +126,12 @@ typedef enum FileAction {
     kFileActionOpenInFilesApp
 } FileAction;
 
-#define k_set_password_textfield_tag    98
-
-@interface RoomInfoTableViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate, AddParticipantsTableViewControllerDelegate, NCChatFileControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource>
+@interface RoomInfoTableViewController () <UITextFieldDelegate, AddParticipantsTableViewControllerDelegate, NCChatFileControllerDelegate, QLPreviewControllerDelegate, QLPreviewControllerDataSource>
 
 @property (nonatomic, strong) NCRoom *room;
 @property (nonatomic, strong) NCChatViewController *chatViewController;
 @property (nonatomic, strong) NSString *roomName;
-@property (nonatomic, strong) NSMutableArray *roomParticipants;
-@property (nonatomic, strong) UITextField *roomNameTextField;
+@property (nonatomic, strong) NSMutableArray *roomParticipants;;
 @property (nonatomic, strong) UISwitch *publicSwitch;
 @property (nonatomic, strong) UISwitch *listableSwitch;
 @property (nonatomic, strong) UISwitch *listableForEveryoneSwitch;
@@ -246,10 +242,6 @@ typedef enum FileAction {
     [self.tableView registerNib:[UINib nibWithNibName:kRoomNameTableCellNibName bundle:nil] forCellReuseIdentifier:kRoomNameCellIdentifier];
     [self.tableView registerNib:[UINib nibWithNibName:kRoomDescriptionTableCellNibName bundle:nil] forCellReuseIdentifier:kRoomDescriptionCellIdentifier];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
-    tap.delegate = self;
-    [self.view addGestureRecognizer:tap];
-    
     if (!_chatViewController || [self.navigationController.viewControllers count] == 1) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                       target:self action:@selector(cancelButtonPressed)];
@@ -271,11 +263,6 @@ typedef enum FileAction {
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)dismissKeyboard
-{
-    [_roomNameTextField resignFirstResponder];
 }
 
 - (void)cancelButtonPressed
@@ -536,10 +523,6 @@ typedef enum FileAction {
     [self removeModifyingRoomUI];
     NSString *errorDescription = @"";
     switch (error) {
-        case kModificationErrorRename:
-            errorDescription = NSLocalizedString(@"Could not rename the conversation", nil);
-            break;
-            
         case kModificationErrorChatNotifications:
             errorDescription = NSLocalizedString(@"Could not change notifications setting", nil);
             break;
@@ -754,37 +737,6 @@ typedef enum FileAction {
 
 #pragma mark - Room options
 
-- (void)renameRoom
-{
-    NSString *newRoomName = [_roomNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ([newRoomName isEqualToString:_room.name]) {
-        return;
-    }
-    if ([newRoomName isEqualToString:@""]) {
-        _roomNameTextField.text = _room.name;
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Could not set conversation name", nil)
-                                       message:NSLocalizedString(@"Conversation name cannot be empty", nil)
-                                       preferredStyle:UIAlertControllerStyleAlert];
-
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {}];
-
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-        return;
-    }
-    [self setModifyingRoomUI];
-    [[NCAPIController sharedInstance] renameRoom:_room.token forAccount:[[NCDatabaseManager sharedInstance] activeAccount] withName:newRoomName andCompletionBlock:^(NSError *error) {
-        if (!error) {
-            [[NCRoomsManager sharedInstance] updateRoom:self->_room.token withCompletionBlock:nil];
-        } else {
-            NSLog(@"Error renaming the room: %@", error.description);
-            [self.tableView reloadData];
-            [self showRoomModificationError:kModificationErrorRename];
-        }
-    }];
-}
-
 - (void)setNotificationLevel:(NCRoomNotificationLevel)level
 {
     if (level == _room.notificationLevel) {
@@ -847,7 +799,6 @@ typedef enum FileAction {
         textField.placeholder = NSLocalizedString(@"Password", nil);
         textField.secureTextEntry = YES;
         textField.delegate = weakSelf;
-        textField.tag = k_set_password_textfield_tag;
     }];
     
     NSString *actionTitle = _room.hasPassword ? NSLocalizedString(@"Change password", nil) : NSLocalizedString(@"OK", nil);
@@ -1103,6 +1054,12 @@ typedef enum FileAction {
 {
     RoomSharedItemsTableViewController *sharedItemsVC = [[RoomSharedItemsTableViewController alloc] initWithRoom:_room];
     [self.navigationController pushViewController:sharedItemsVC animated:YES];
+}
+
+- (void)presentNameInfoViewController
+{
+    RoomAvatarInfoTableViewController *vc = [[RoomAvatarInfoTableViewController alloc] initWithRoom:_room];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)clearHistory
@@ -1555,31 +1512,21 @@ typedef enum FileAction {
     return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    if (textField == _roomNameTextField) {
-        [self renameRoom];
-    }
-}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField == _roomNameTextField || textField.tag == k_set_password_textfield_tag) {
-        // Prevent crashing undo bug
-        // https://stackoverflow.com/questions/433337/set-the-maximum-character-length-of-a-uitextfield
-        if (range.length + range.location > textField.text.length) {
-            return NO;
-        }
-        // Set maximum character length
-        NSUInteger newLength = [textField.text length] + [string length] - range.length;
-        BOOL hasAllowedLength = newLength <= 200;
-        // Enable/Disable password confirmation button
-        if (hasAllowedLength) {
-            NSString *newValue = [[textField.text stringByReplacingCharactersInRange:range withString:string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            _setPasswordAction.enabled = (newValue.length > 0);
-        }
-        return hasAllowedLength;
+    // Prevent crashing undo bug
+    // https://stackoverflow.com/questions/433337/set-the-maximum-character-length-of-a-uitextfield
+    if (range.length + range.location > textField.text.length) {
+        return NO;
     }
-    return YES;
+    // Set maximum character length
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    BOOL hasAllowedLength = newLength <= 200;
+    // Enable/Disable password confirmation button
+    if (hasAllowedLength) {
+        NSString *newValue = [[textField.text stringByReplacingCharactersInRange:range withString:string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        _setPasswordAction.enabled = (newValue.length > 0);
+    }
+    return hasAllowedLength;
 }
 
 #pragma mark - Table view data source
@@ -1768,22 +1715,18 @@ typedef enum FileAction {
             cell.roomNameTextField.text = _room.name;
 
             [cell.roomImage setAvatarFor:_room with:self.traitCollection.userInterfaceStyle];
-            
-            if (_room.isNameEditable) {
-                _roomNameTextField = cell.roomNameTextField;
-                _roomNameTextField.delegate = self;
-                [_roomNameTextField setReturnKeyType:UIReturnKeyDone];
-                cell.userInteractionEnabled = YES;
-            } else {
-                _roomNameTextField = nil;
-                cell.userInteractionEnabled = NO;
-            }
-            
+
             if (_room.isFavorite) {
                 [cell.favoriteImage setImage:[UIImage systemImageNamed:@"star.fill"]];
             }
-            
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+            if (_room.canModerate) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.userInteractionEnabled = YES;
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.userInteractionEnabled = NO;
+            }
             
             return cell;
         }
@@ -2428,6 +2371,11 @@ typedef enum FileAction {
     RoomInfoSection section = [[sections objectAtIndex:indexPath.section] intValue];
     switch (section) {
         case kRoomInfoSectionName:
+        {
+            if (_room.canModerate) {
+                [self presentNameInfoViewController];
+            }
+        }
             break;
         case kRoomInfoSectionFile:
         {
