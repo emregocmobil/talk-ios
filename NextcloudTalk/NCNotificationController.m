@@ -306,7 +306,7 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
     for (TalkAccount *account in [[NCDatabaseManager sharedInstance] allAccounts]) {
         ServerCapabilities *serverCapabilities  = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:account.accountId];
 
-        if (!serverCapabilities || !serverCapabilities.notificationsAppEnabled) {
+        if (!serverCapabilities || [serverCapabilities.notificationsCapabilities count] == 0) {
             continue;
         }
 
@@ -326,7 +326,7 @@ NSString * const NCNotificationActionReplyToChat                    = @"REPLY_CH
 
             for (NSDictionary *notification in notifications) {
                 NCNotification *serverNotification = [NCNotification notificationWithDictionary:notification];
-                
+
                 // Only process Talk notifications
                 if (!serverNotification || ![serverNotification.app isEqualToString:kNCPNAppIdKey]) {
                     continue;
