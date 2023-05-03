@@ -117,5 +117,6 @@ typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictio
 - (BOOL)containsURL;
 - (void)getReferenceDataWithCompletionBlock:(GetReferenceDataCompletionBlock)block;
 - (BOOL)isSameMessage:(NCChatMessage *)message;
+- (void)setPreviewImageHeight:(CGFloat)height;
 
 @end
