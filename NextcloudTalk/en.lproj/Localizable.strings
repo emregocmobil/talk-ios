@@ -7,9 +7,6 @@
 /* No comment provided by engineer. */
 "%@ invitation" = "%@ invitation";
 
-/* No comment provided by engineer. */
-"%@ is typing" = "%@ is typing";
-
 /* {app name} is not installed */
 "%@ not installed" = "%@ not installed";
 
@@ -173,6 +170,9 @@
 "An error occurred setting website" = "An error occurred setting website";
 
 /* No comment provided by engineer. */
+"An error occurred trying to translate message" = "An error occurred trying to translate message";
+
+/* No comment provided by engineer. */
 "An error occurred while adding %@ to the room" = "An error occurred while adding %@ to the room";
 
 /* No comment provided by engineer. */
@@ -220,6 +220,15 @@
 /* No comment provided by engineer. */
 "an hour" = "an hour";
 
+/* Alice and Bob */
+"and" = "and";
+
+/* Alice, Bob, Charlie and 3 others are typing… */
+"and %ld others are typing…" = "and %ld others are typing…";
+
+/* Alice, Bob, Charlie and 1 other is typing… */
+"and 1 other is typing…" = "and 1 other is typing…";
+
 /* No comment provided by engineer. */
 "Answer" = "Answer";
 
@@ -234,6 +243,9 @@
 
 /* No comment provided by engineer. */
 "Appear offline" = "Appear offline";
+
+/* Alice and Bob are typing… */
+"are typing…" = "are typing…";
 
 /* No comment provided by engineer. */
 "Ask a question" = "Ask a question";
@@ -545,6 +557,12 @@
 "Denied" = "Denied";
 
 /* No comment provided by engineer. */
+"detected" = "detected";
+
+/* No comment provided by engineer. */
+"Detecting language" = "Detecting language";
+
+/* No comment provided by engineer. */
 "Diagnostics" = "Diagnostics";
 
 /* No comment provided by engineer. */
@@ -748,6 +766,9 @@
 /* No comment provided by engineer. */
 "Forward to" = "Forward to";
 
+/* 'From' which language user wants to translate text */
+"From" = "From";
+
 /* No comment provided by engineer. */
 "Full name" = "Full name";
 
@@ -816,6 +837,9 @@
 
 /* No comment provided by engineer. */
 "Invitations resent" = "Invitations resent";
+
+/* Alice is typing… */
+"is typing…" = "is typing…";
 
 /* It seems that {app name} is not installed in your server. */
 "It seems that %@ is not installed in your server." = "It seems that %@ is not installed in your server.";
@@ -1298,6 +1322,9 @@
 "Search for places" = "Search for places";
 
 /* No comment provided by engineer. */
+"Select language" = "Select language";
+
+/* No comment provided by engineer. */
 "Send" = "Send";
 
 /* No comment provided by engineer. */
@@ -1341,9 +1368,6 @@
 
 /* No comment provided by engineer. */
 "Settings" = "Settings";
-
-/* No comment provided by engineer. */
-"Several people are typing" = "Several people are typing";
 
 /* No comment provided by engineer. */
 "Share" = "Share";
@@ -1483,6 +1507,9 @@
 /* No comment provided by engineer. */
 "This will impact the functionality of this app. Please review your settings." = "This will impact the functionality of this app. Please review your settings.";
 
+/* 'To' which language user wants to translate text */
+"To" = "To";
+
 /* No comment provided by engineer. */
 "To resolve this issue, use the web interface and go to \"Settings -> Security\"." = "To resolve this issue, use the web interface and go to \"Settings -> Security\".";
 
@@ -1497,6 +1524,15 @@
 
 /* TRANSLATORS transcript of a voice-message */
 "Transcript" = "Transcript";
+
+/* No comment provided by engineer. */
+"Translate" = "Translate";
+
+/* No comment provided by engineer. */
+"Translation" = "Translation";
+
+/* No comment provided by engineer. */
+"Translation failed" = "Translation failed";
 
 /* No comment provided by engineer. */
 "TURN servers" = "TURN servers";
