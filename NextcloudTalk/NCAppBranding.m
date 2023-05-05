@@ -43,9 +43,9 @@ NSString * const appsGroupIdentifier = @"group.tr.goc.gov.kirlangic.apps";
 NSString * const pushNotificationServer = @"https://bulut-bildirim.goc.gov.tr";
 BOOL const multiAccountEnabled = YES;
 BOOL const useAppsGroup = YES;
-BOOL const forceDomain = YES;
+BOOL const forceDomain = NO;
 NSString * const domain = @"https://bulut.goc.gov.tr";
-NSString * const appAlternateVersion = @"16.0.0 (beta 5)";
+NSString * const appAlternateVersion = @"17.0.0 Beta 1";
 
 + (NSString *)getAppVersionString
 {
