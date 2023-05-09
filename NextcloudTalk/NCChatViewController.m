@@ -3511,9 +3511,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         return;
     }
 
-    // Don't show a typing indicator for ourselves
+    // Don't show a typing indicator for ourselves or if typing indicator setting is disabled
     TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:_room.accountId];
-    if ([userId isEqualToString:activeAccount.userId]) {
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+    if ([userId isEqualToString:activeAccount.userId] || serverCapabilities.typingPrivacy) {
         return;
     }
 
@@ -3526,6 +3527,13 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     NSString *userId = [notification.userInfo objectForKey:@"userId"];
 
     if (![roomToken isEqualToString:_room.token] || !userId) {
+        return;
+    }
+
+    // Don't handle stop typing indicator from ourselves or if typing indicator setting is disabled
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] talkAccountForAccountId:_room.accountId];
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+    if ([userId isEqualToString:activeAccount.userId] || serverCapabilities.typingPrivacy) {
         return;
     }
 
