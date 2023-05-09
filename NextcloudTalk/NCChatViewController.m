@@ -1794,8 +1794,129 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 }
 
-- (void)didPressReply:(NCChatMessage *)message {
-    // Use dispatch here to have a smooth animation with native contextmenu
+
+#pragma mark UITextViewDelegate
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    [self stopTyping];
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    [self startTyping];
+}
+
+#pragma mark TypingIndicator support
+
+- (void)sendStartedTypingMessageToSessionId:(NSString *)sessionId
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+
+    if (serverCapabilities.typingPrivacy) {
+        return;
+    }
+
+    NCExternalSignalingController *signalingController = [[NCSettingsController sharedInstance] externalSignalingControllerForAccountId:_room.accountId];
+
+    if (signalingController) {
+        NSString *mySessionId = [signalingController sessionId];
+        NCStartedTypingMessage *message = [[NCStartedTypingMessage alloc] initWithFrom:mySessionId
+                                                                                sendTo:sessionId
+                                                                           withPayload:@{}
+                                                                           forRoomType:@""];
+
+        [signalingController sendCallMessage:message];
+
+    }
+}
+
+- (void)sendStartedTypingMessageToAll
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+
+    if (serverCapabilities.typingPrivacy) {
+        return;
+    }
+
+    NCExternalSignalingController *signalingController = [[NCSettingsController sharedInstance] externalSignalingControllerForAccountId:_room.accountId];
+
+    if (signalingController) {
+        NSString *mySessionId = [signalingController sessionId];
+        NSMutableDictionary *participantMap = [signalingController getParticipantMap];
+
+        for(id sessionId in participantMap) {
+            NCStartedTypingMessage *message = [[NCStartedTypingMessage alloc] initWithFrom:mySessionId
+                                                                                    sendTo:sessionId
+                                                                               withPayload:@{}
+                                                                               forRoomType:@""];
+
+            [signalingController sendCallMessage:message];
+        }
+    }
+}
+
+- (void)sendStoppedTypingMessageToAll
+{
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+    ServerCapabilities *serverCapabilities = [[NCDatabaseManager sharedInstance] serverCapabilitiesForAccountId:activeAccount.accountId];
+
+    if (serverCapabilities.typingPrivacy) {
+        return;
+    }
+
+    NCExternalSignalingController *signalingController = [[NCSettingsController sharedInstance] externalSignalingControllerForAccountId:_room.accountId];
+
+    if (signalingController) {
+        NSString *mySessionId = [signalingController sessionId];
+        NSMutableDictionary *participantMap = [signalingController getParticipantMap];
+
+        for(id sessionId in participantMap) {
+            NCStoppedTypingMessage *message = [[NCStoppedTypingMessage alloc] initWithFrom:mySessionId
+                                                                                    sendTo:sessionId
+                                                                               withPayload:@{}
+                                                                               forRoomType:@""];
+
+            [signalingController sendCallMessage:message];
+        }
+    }
+}
+
+- (void)startTyping
+{
+    if (!_isTyping) {
+        _isTyping = YES;
+
+        [self sendStartedTypingMessageToAll];
+    }
+
+    [self setTypingTimer];
+}
+
+- (void)stopTyping
+{
+    if (_isTyping) {
+        _isTyping = NO;
+        [self invalidateTypingTimer];
+        [self sendStoppedTypingMessageToAll];
+    }
+}
+
+- (void)setTypingTimer
+{
+    [self invalidateTypingTimer];
+    _typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(stopTyping) userInfo:nil repeats:NO];
+}
+
+- (void)invalidateTypingTimer
+{
+    [_typingTimer invalidate];
+    _typingTimer = nil;
+}
+
+
+- (void)addTypingIndicatorWithUserId:(NSString *)userId withDisplayName:(NSString *)displayName
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.replyMessageView = (ReplyMessageView *)self.typingIndicatorProxyView;
         [self.replyMessageView presentReplyViewWithMessage:message withUserId:activeAccount.userId];
