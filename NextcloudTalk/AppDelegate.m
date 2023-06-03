@@ -299,7 +299,7 @@
 
     // Recording actions/category
     UNNotificationAction *recordingShareAction = [UNNotificationAction actionWithIdentifier:NCNotificationActionShareRecording
-                                                                                      title:NSLocalizedString(@"Share recording to chat", nil)
+                                                                                      title:NSLocalizedString(@"Share to chat", nil)
                                                                                     options:UNNotificationActionOptionAuthenticationRequired];
 
     UNNotificationAction *recordingDismissAction = [UNNotificationAction actionWithIdentifier:NCNotificationActionDismissRecordingNotification
