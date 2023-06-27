@@ -106,6 +106,9 @@
 /* No comment provided by engineer. */
 "AirPlay button" = "AirPlay button";
 
+/* 'All' meaning 'All conversations' */
+"All" = "All";
+
 /* No comment provided by engineer. */
 "All messages" = "All messages";
 
@@ -961,6 +964,9 @@
 /* No comment provided by engineer. */
 "Meeting settings" = "Meeting settings";
 
+/* 'Mentioned' meaning 'Mentioned conversations' */
+"Mentioned" = "Mentioned";
+
 /* No comment provided by engineer. */
 "Message copied" = "Message copied";
 
@@ -1602,6 +1608,9 @@
 
 /* No comment provided by engineer. */
 "Unknown error occurred" = "Unknown error occurred";
+
+/* 'Unread' meaning 'Unread conversations' */
+"Unread" = "Unread";
 
 /* No comment provided by engineer. */
 "Unread mentions" = "Unread mentions";
