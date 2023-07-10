@@ -161,7 +161,8 @@
                 image = [[AvatarManager shared] createRenderedImageWithImage:image];
             }
 
-            [sendMessageIntent setImage:[INImage imageWithUIImage:image] forParameterNamed:@"speakableGroupName"];
+            INImage *intentImage = [INImage imageWithUIImage:image];
+            [sendMessageIntent setImage:intentImage forParameterNamed:@"speakableGroupName"];
             [self donateMessageSentIntent:sendMessageIntent];
         }
     }];
