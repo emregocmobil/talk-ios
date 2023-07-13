@@ -67,7 +67,9 @@
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         self.internalExecuteAfterTransition {
-            super.present(viewControllerToPresent, animated: flag, completion: completion)
+            if !viewControllerToPresent.isBeingPresented {
+                super.present(viewControllerToPresent, animated: flag, completion: completion)
+            }
         }
     }
 
