@@ -449,6 +449,10 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     // We can't use UIColor with systemBlueColor directly, because it will switch to indigo. So make sure we actually get a blue tint here
     [self.textView setTintColor:[UIColor colorWithCGColor:[UIColor systemBlueColor].CGColor]];
 
+    [self.textView registerMarkdownFormattingSymbol:@"**" withTitle:NSLocalizedString(@"Bold", @"Bold text")];
+    [self.textView registerMarkdownFormattingSymbol:@"_" withTitle:NSLocalizedString(@"Italic", @"Italic text")];
+    [self.textView registerMarkdownFormattingSymbol:@"~~" withTitle:NSLocalizedString(@"Strikethrough", @"Strikethrough text")];
+
     [self addMenuToLeftButton];
 }
 
