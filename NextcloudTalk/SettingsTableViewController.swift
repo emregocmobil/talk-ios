@@ -248,12 +248,11 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: Notifications
 
     @objc func appStateHasChanged(notification: NSNotification) {
-             let appState = notification.userInfo?["appState"]
-             if let rawAppState = appState as? UInt32 {
-                 let appState = AppState(rawValue: rawAppState)
-                 self.adaptInterfaceForAppState(appState: appState)
-             }
-         }
+        let appState = notification.userInfo?["appState"]
+        if let appState = appState as? AppState {
+            self.adaptInterfaceForAppState(appState: appState)
+        }
+    }
 
     @objc func contactsHaveBeenUpdated(notification: NSNotification) {
         DispatchQueue.main.async {
@@ -289,15 +288,6 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         let userProfileVC = UserProfileTableViewController(withAccount: activeAccount)
         self.navigationController?.pushViewController(userProfileVC, animated: true)
     }
-
-    // MARK: User Status (obsolete)
-
-    /*func presentUserStatusOptions() {
-        if let activeUserStatus = activeUserStatus {
-            let viewController = UserStatusTableViewController(userStatus: activeUserStatus)
-            self.navigationController?.pushViewController(viewController, animated: true)
-        }
-    }*/
     
     // MARK: User Status (SwiftUI)
 
