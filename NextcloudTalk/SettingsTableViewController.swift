@@ -23,6 +23,7 @@ import UIKit
 import NextcloudKit
 import SafariServices
 import SDWebImage
+import SwiftUI
 
 enum SettingsSection: Int {
     case kSettingsSectionUser = 0
@@ -247,11 +248,12 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
     // MARK: Notifications
 
     @objc func appStateHasChanged(notification: NSNotification) {
-        let appState = notification.userInfo?["appState"]
-        if let appState = appState as? AppState {
-            self.adaptInterfaceForAppState(appState: appState)
-        }
-    }
+             let appState = notification.userInfo?["appState"]
+             if let rawAppState = appState as? UInt32 {
+                 let appState = AppState(rawValue: rawAppState)
+                 self.adaptInterfaceForAppState(appState: appState)
+             }
+         }
 
     @objc func contactsHaveBeenUpdated(notification: NSNotification) {
         DispatchQueue.main.async {
@@ -288,12 +290,22 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
         self.navigationController?.pushViewController(userProfileVC, animated: true)
     }
 
-    // MARK: User Status
+    // MARK: User Status (obsolete)
 
-    func presentUserStatusOptions() {
+    /*func presentUserStatusOptions() {
         if let activeUserStatus = activeUserStatus {
             let viewController = UserStatusTableViewController(userStatus: activeUserStatus)
             self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }*/
+    
+    // MARK: User Status (SwiftUI)
+
+    func presentUserStatusOptions() {
+        if let activeUserStatus = activeUserStatus {
+            let userStatusView = UserStatusSwiftUIView(userStatus: activeUserStatus)
+            let hostingController = UIHostingController(rootView: userStatusView)
+            self.present(hostingController, animated: true)
         }
     }
 
