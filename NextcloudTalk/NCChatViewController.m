@@ -5290,7 +5290,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     NSDate *sectionDate = [_dateSections objectAtIndex:indexPath.section];
     NCChatMessage *message = [[_messages objectForKey:sectionDate] objectAtIndex:indexPath.row];
     
-    if (message.isSystemMessage || message.messageId == kUnreadMessagesSeparatorIdentifier) {
+    if (message.isSystemMessage || message.isDeletedMessage || message.messageId == kUnreadMessagesSeparatorIdentifier) {
         return nil;
     }
         
@@ -5369,7 +5369,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 
     // Remind me later
-    if (!message.sendingFailed && !message.isOfflineMessage && !message.isDeletedMessage && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityRemindMeLater]) {
+    if (!message.sendingFailed && !message.isOfflineMessage && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityRemindMeLater]) {
         UIImage *remindMeLaterImage = [UIImage systemImageNamed:@"alarm"];
 
         __weak typeof(self) weakSelf = self;
@@ -5436,7 +5436,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [actions addObject:copyAction];
     
     // Translate
-    if (!message.isDeletedMessage && !_offlineMode && [[NCSettingsController sharedInstance] availableTranslations].count > 0) {
+    if (!_offlineMode && [[NCSettingsController sharedInstance] availableTranslations].count > 0) {
         UIImage *translateImage = [UIImage systemImageNamed:@"character.book.closed"];
         UIAction *translateAction = [UIAction actionWithTitle:NSLocalizedString(@"Translate", nil) image:translateImage identifier:nil handler:^(UIAction *action){
 
