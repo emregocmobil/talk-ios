@@ -3642,6 +3642,12 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     if (notification.object != _chatController) {
         return;
     }
+
+    int lastCommonReadMessage = [[notification.userInfo objectForKey:@"lastCommonReadMessage"] intValue];
+
+    if (lastCommonReadMessage > self.room.lastCommonReadMessage) {
+        self.room.lastCommonReadMessage = lastCommonReadMessage;
+    }
     
     [self checkLastCommonReadMessage];
 }
