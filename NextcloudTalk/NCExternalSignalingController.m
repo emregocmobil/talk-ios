@@ -242,6 +242,7 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
             _pendingMessages = [NSMutableArray new];
         }
 
+        [NCUtils log:@"Trying to send message before we received a hello response -> adding to pendingMessages"];
         [_pendingMessages addObject:wsMessage];
         return;
     }
@@ -297,6 +298,8 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
                               }
                       };
     }
+
+    [NCUtils log:@"Sending hello message"];
     
     [self sendMessage:helloDict withCompletionBlock:^(NSURLSessionWebSocketTask *task, NCExternalSignalingSendMessageStatus status) {
         if (status == SendMessageSocketError && task == self->_webSocket) {
@@ -309,6 +312,8 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
 - (void)helloResponseReceived:(NSDictionary *)messageDict
 {
     _helloResponseReceived = YES;
+
+    [NCUtils log:[NSString stringWithFormat:@"Hello received with %ld pending messages", _pendingMessages.count]];
 
     NSString *messageId = [messageDict objectForKey:@"id"];
     [self executeCompletionBlockForMessageId:messageId withStatus:SendMessageSuccess];
@@ -673,7 +678,7 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
         }
 
 
-        NSLog(@"WebSocket Connected!");
+        [NCUtils log:@"WebSocket Connected!"];
         self->_reconnectInterval = kInitialReconnectInterval;
         [self sendHelloMessage];
     });
@@ -686,7 +691,7 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
             return;
         }
 
-        NSLog(@"WebSocket didCloseWithCode:%ld reason:%@", (long)closeCode, reason);
+        [NCUtils log:[NSString stringWithFormat:@"WebSocket didCloseWithCode:%ld reason:%@", (long)closeCode, reason]];
         [self reconnect];
     });
 }
@@ -699,7 +704,7 @@ NSString * const NCExternalSignalingControllerDidReceiveStoppedTypingNotificatio
         }
 
         if (error) {
-            NSLog(@"WebSocket session didCompleteWithError: %@", error.description);
+            [NCUtils log:[NSString stringWithFormat:@"WebSocket session didCompleteWithError: %@", error.description]];
             [self reconnect];
         }
     });
