@@ -29,7 +29,6 @@
 #import "NCMessageParameter.h"
 #import "NCMessageFileParameter.h"
 #import "NCMessageLocationParameter.h"
-#import "NCRoomParticipant.h"
 
 extern NSInteger const kChatMessageGroupTimeDifference;
 
@@ -53,6 +52,7 @@ extern NSString * const kSharedItemTypeRecording;
 
 typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictionary *referenceData, NSString *url);
 
+@class NCRoom;
 
 @interface NCChatMessage : RLMObject <NSCopying>
 
@@ -101,7 +101,7 @@ typedef void (^GetReferenceDataCompletionBlock)(NCChatMessage *message, NSDictio
 - (BOOL)isVoiceMessage;
 - (BOOL)isCommandMessage;
 - (BOOL)isMessageFromUser:(NSString *)userId;
-- (BOOL)isDeletableForAccount:(TalkAccount *)account andParticipantType:(NCParticipantType)participantType;
+- (BOOL)isDeletableForAccount:(TalkAccount *)account inRoom:(NCRoom *)room;
 - (BOOL)isObjectShare;
 - (NSDictionary *)richObjectFromObjectShare;
 - (NCMessageFileParameter *)file;
