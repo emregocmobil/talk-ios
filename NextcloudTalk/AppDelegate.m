@@ -291,6 +291,7 @@
     }
     
     pushKitToken = [self stringWithDeviceToken:credentials.token];
+    NSLog(@"%@", pushKitToken);
     [self checkForPushNotificationSubscription];
 }
 
