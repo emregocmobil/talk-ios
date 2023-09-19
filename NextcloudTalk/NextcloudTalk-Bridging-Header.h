@@ -63,4 +63,7 @@
 #import "UIImage+CropRotate.h"
 #import "MaterialActivityIndicator.h"
 
+#import "ScreenCapturer.h"
+#import "ScreenCaptureController.h"
+
 #endif /* NextcloudTalk_Bridging_Header_h */
