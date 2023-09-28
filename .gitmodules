@@ -4,3 +4,6 @@
 [submodule "ThirdParty/FTPopOverMenu"]
 	path = ThirdParty/FTPopOverMenu
 	url = https://github.com/Ivansss/FTPopOverMenu.git
+[submodule "talk-ios"]
+	path = talk-ios
+	url = https://github.com/nextcloud/talk-ios.git
