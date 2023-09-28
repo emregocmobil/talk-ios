@@ -1655,6 +1655,23 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     [self presentViewController:forwardMessageNC animated:YES completion:nil];
 }
 
+- (void)didPressNoteToSelf:(NCChatMessage *)message {
+    TalkAccount *activeAccount = [[NCDatabaseManager sharedInstance] activeAccount];
+
+    [[NCAPIController sharedInstance] getNoteToSelfRoomForAccount:activeAccount withCompletionBlock:^(NSDictionary *roomDict, NSError *error) {
+        if (!error) {
+            NCRoom *room = [NCRoom roomWithDictionary:roomDict andAccountId:activeAccount.accountId];
+            if (room) {
+                [[NCAPIController sharedInstance] sendChatMessage:message.parsedMessage.string toRoom:room.token displayName:nil replyTo:-1 referenceId:nil silently:NO forAccount:activeAccount withCompletionBlock:^(NSError *error) {
+                    if (!error) {
+                        [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
+                    }
+                }];
+            }
+        }
+    }];
+}
+
 - (void)didPressResend:(NCChatMessage *)message {
     // Make sure there's no unread message separator, as the indexpath could be invalid after removing a message
     [self removeUnreadMessagesSeparator];
@@ -4704,6 +4721,17 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         }];
         
         [actions addObject:forwardAction];
+    }
+
+    // Note to self
+    if (!message.file && !message.isObjectShare && !message.isDeletedMessage && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityNoteToSelf]) {
+        UIImage *noteImage = [UIImage systemImageNamed:@"square.and.pencil"];
+        UIAction *noteAction = [UIAction actionWithTitle:NSLocalizedString(@"Note to self", nil) image:noteImage identifier:nil handler:^(UIAction *action){
+
+            [self didPressNoteToSelf:message];
+        }];
+
+        [actions addObject:noteAction];
     }
 
     // Remind me later
