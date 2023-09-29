@@ -1662,11 +1662,19 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
         if (!error) {
             NCRoom *room = [NCRoom roomWithDictionary:roomDict andAccountId:activeAccount.accountId];
             if (room) {
-                [[NCAPIController sharedInstance] sendChatMessage:message.parsedMessage.string toRoom:room.token displayName:nil replyTo:-1 referenceId:nil silently:NO forAccount:activeAccount withCompletionBlock:^(NSError *error) {
-                    if (!error) {
-                        [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
-                    }
-                }];
+                if (message.isObjectShare) {
+                    [[NCAPIController sharedInstance] shareRichObject:message.richObjectFromObjectShare inRoom:room.token forAccount:activeAccount withCompletionBlock:^(NSError *error) {
+                        if (!error) {
+                            [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
+                        }
+                    }];
+                } else {
+                    [[NCAPIController sharedInstance] sendChatMessage:message.parsedMessage.string toRoom:room.token displayName:nil replyTo:-1 referenceId:nil silently:NO forAccount:activeAccount withCompletionBlock:^(NSError *error) {
+                        if (!error) {
+                            [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
+                        }
+                    }];
+                }
             }
         }
     }];
@@ -4724,7 +4732,7 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
     }
 
     // Note to self
-    if (!message.file && !message.isObjectShare && !message.isDeletedMessage && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityNoteToSelf]) {
+    if (!message.file && !message.poll && !message.isDeletedMessage && [[NCDatabaseManager sharedInstance] serverHasTalkCapability:kCapabilityNoteToSelf]) {
         UIImage *noteImage = [UIImage systemImageNamed:@"square.and.pencil"];
         UIAction *noteAction = [UIAction actionWithTitle:NSLocalizedString(@"Note to self", nil) image:noteImage identifier:nil handler:^(UIAction *action){
 
