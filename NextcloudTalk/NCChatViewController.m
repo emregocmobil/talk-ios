@@ -1666,16 +1666,24 @@ NSString * const NCChatViewControllerTalkToUserNotification = @"NCChatViewContro
                     [[NCAPIController sharedInstance] shareRichObject:message.richObjectFromObjectShare inRoom:room.token forAccount:activeAccount withCompletionBlock:^(NSError *error) {
                         if (!error) {
                             [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
+                        } else {
+                            [self.view makeToast:NSLocalizedString(@"An error occurred while adding note", nil) duration:1.5 position:CSToastPositionCenter];
                         }
                     }];
                 } else {
                     [[NCAPIController sharedInstance] sendChatMessage:message.parsedMessage.string toRoom:room.token displayName:nil replyTo:-1 referenceId:nil silently:NO forAccount:activeAccount withCompletionBlock:^(NSError *error) {
                         if (!error) {
                             [self.view makeToast:NSLocalizedString(@"Added note to self", nil) duration:1.5 position:CSToastPositionCenter];
+                        } else {
+                            [self.view makeToast:NSLocalizedString(@"An error occurred while adding note", nil) duration:1.5 position:CSToastPositionCenter];
                         }
                     }];
                 }
+            } else {
+                [self.view makeToast:NSLocalizedString(@"An error occurred while adding note", nil) duration:1.5 position:CSToastPositionCenter];
             }
+        } else {
+            [self.view makeToast:NSLocalizedString(@"An error occurred while adding note", nil) duration:1.5 position:CSToastPositionCenter];
         }
     }];
 }
